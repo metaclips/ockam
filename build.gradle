@@ -2,6 +2,8 @@
 ['lint', 'build', 'test', 'clean', 'veryClean'].each { taskName ->
   def taskDeps = []
 
+  println "hello"
+
   ['rust', 'c', 'elixir'].each { implementation ->
     def wrapper = "${taskName}_${implementation}"
     task "${wrapper}" { dependsOn gradle.includedBuild(implementation).task(":${taskName}") }
