@@ -141,7 +141,7 @@ jobs:
     steps:
       - uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579
       - uses: ./.github/actions/gradle_cache
-      - uses: Swatinem/rust-cache@ce325b60658c1b38465c06cc965b79baf32c1e72
+      - uses: Swatinem/rust-cache@842ef286fff290e445b90b4002cc9807c3669641
       - uses: ./.github/actions/elixir_cache
       - run: cd implementations/elixir && ../../gradlew test_ockam_vault_software
 
@@ -153,7 +153,7 @@ jobs:
     steps:
       - uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579
       - uses: ./.github/actions/gradle_cache
-      - uses: Swatinem/rust-cache@ce325b60658c1b38465c06cc965b79baf32c1e72
+      - uses: Swatinem/rust-cache@842ef286fff290e445b90b4002cc9807c3669641
       - uses: ./.github/actions/elixir_cache
       - run: cd implementations/elixir && ../../gradlew test_ockam
 
@@ -165,7 +165,7 @@ jobs:
     steps:
       - uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579
       - uses: ./.github/actions/gradle_cache
-      - uses: Swatinem/rust-cache@ce325b60658c1b38465c06cc965b79baf32c1e72
+      - uses: Swatinem/rust-cache@842ef286fff290e445b90b4002cc9807c3669641
       - uses: ./.github/actions/elixir_cache
       - run: cd implementations/elixir && ../../gradlew test_ockam_kafka
 
@@ -177,6 +177,6 @@ jobs:
     steps:
       - uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579
       - uses: ./.github/actions/gradle_cache
-      - uses: Swatinem/rust-cache@ce325b60658c1b38465c06cc965b79baf32c1e72
+      - uses: Swatinem/rust-cache@842ef286fff290e445b90b4002cc9807c3669641
       - uses: ./.github/actions/elixir_cache
       - run: cd implementations/elixir && ../../gradlew test_ockam_hub

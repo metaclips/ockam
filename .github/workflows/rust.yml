@@ -48,7 +48,7 @@ jobs:
         with:
           ref: ${{ github.event.inputs.commit_sha }}
       - uses: ./.github/actions/gradle_cache
-      - uses: Swatinem/rust-cache@ce325b60658c1b38465c06cc965b79baf32c1e72
+      - uses: Swatinem/rust-cache@842ef286fff290e445b90b4002cc9807c3669641
       - run: cd implementations/rust && ../../gradlew lint_cargo_fmt_check
 
   lint_cargo_clippy:
@@ -61,7 +61,7 @@ jobs:
         with:
           ref: ${{ github.event.inputs.commit_sha }}
       - uses: ./.github/actions/gradle_cache
-      - uses: Swatinem/rust-cache@ce325b60658c1b38465c06cc965b79baf32c1e72
+      - uses: Swatinem/rust-cache@842ef286fff290e445b90b4002cc9807c3669641
       - run: cd implementations/rust && ../../gradlew lint_cargo_clippy
 
   lint_cargo_deny:
@@ -74,7 +74,7 @@ jobs:
         with:
           ref: ${{ github.event.inputs.commit_sha }}
       - uses: ./.github/actions/gradle_cache
-      - uses: Swatinem/rust-cache@ce325b60658c1b38465c06cc965b79baf32c1e72
+      - uses: Swatinem/rust-cache@842ef286fff290e445b90b4002cc9807c3669641
       - run: cd implementations/rust && ../../gradlew lint_cargo_deny
 
   build_docs:
@@ -87,7 +87,7 @@ jobs:
         with:
           ref: ${{ github.event.inputs.commit_sha }}
       - uses: ./.github/actions/gradle_cache
-      - uses: Swatinem/rust-cache@ce325b60658c1b38465c06cc965b79baf32c1e72
+      - uses: Swatinem/rust-cache@842ef286fff290e445b90b4002cc9807c3669641
       - run: cd implementations/rust && ../../gradlew build_docs
 
   build:
@@ -100,7 +100,7 @@ jobs:
         with:
           ref: ${{ github.event.inputs.commit_sha }}
       - uses: ./.github/actions/gradle_cache
-      - uses: Swatinem/rust-cache@ce325b60658c1b38465c06cc965b79baf32c1e72
+      - uses: Swatinem/rust-cache@842ef286fff290e445b90b4002cc9807c3669641
       - run: cd implementations/rust && ../../gradlew build
 
   build_examples:
@@ -113,7 +113,7 @@ jobs:
         with:
           ref: ${{ github.event.inputs.commit_sha }}
       - uses: ./.github/actions/gradle_cache
-      - uses: Swatinem/rust-cache@ce325b60658c1b38465c06cc965b79baf32c1e72
+      - uses: Swatinem/rust-cache@842ef286fff290e445b90b4002cc9807c3669641
       - run: cd implementations/rust && ../../gradlew build_examples
 
   test:
@@ -126,7 +126,7 @@ jobs:
         with:
           ref: ${{ github.event.inputs.commit_sha }}
       - uses: ./.github/actions/gradle_cache
-      - uses: Swatinem/rust-cache@ce325b60658c1b38465c06cc965b79baf32c1e72
+      - uses: Swatinem/rust-cache@842ef286fff290e445b90b4002cc9807c3669641
       - run: cd implementations/rust && ../../gradlew test
 
   check_no_std:
@@ -139,7 +139,7 @@ jobs:
         with:
           ref: ${{ github.event.inputs.commit_sha }}
       - uses: ./.github/actions/gradle_cache
-      - uses: Swatinem/rust-cache@ce325b60658c1b38465c06cc965b79baf32c1e72
+      - uses: Swatinem/rust-cache@842ef286fff290e445b90b4002cc9807c3669641
       - run: |
           cd implementations/rust/ockam/ockam
           RUSTFLAGS='-Dwarnings' cargo check --no-default-features --features 'no_std alloc software_vault'
@@ -154,7 +154,7 @@ jobs:
         with:
           ref: ${{ github.event.inputs.commit_sha }}
       - uses: ./.github/actions/gradle_cache
-      - uses: Swatinem/rust-cache@ce325b60658c1b38465c06cc965b79baf32c1e72
+      - uses: Swatinem/rust-cache@842ef286fff290e445b90b4002cc9807c3669641
       - run: |
           cd examples/rust/get_started
           rm -rf Cargo.lock
@@ -172,7 +172,7 @@ jobs:
           ref: ${{ github.event.inputs.commit_sha }}
       - uses: ./.github/actions/gradle_cache
       - run: rustup default nightly
-      - uses: Swatinem/rust-cache@ce325b60658c1b38465c06cc965b79baf32c1e72
+      - uses: Swatinem/rust-cache@842ef286fff290e445b90b4002cc9807c3669641
       - run: RUSTFLAGS='-Dwarnings' cargo check
 
   build_nightly:
@@ -186,7 +186,7 @@ jobs:
           ref: ${{ github.event.inputs.commit_sha }}
       - uses: ./.github/actions/gradle_cache
       - run: rustup default nightly
-      - uses: Swatinem/rust-cache@ce325b60658c1b38465c06cc965b79baf32c1e72
+      - uses: Swatinem/rust-cache@842ef286fff290e445b90b4002cc9807c3669641
       - run: cd implementations/rust && ../../gradlew build
 
   test_nightly:
@@ -200,5 +200,5 @@ jobs:
           ref: ${{ github.event.inputs.commit_sha }}
       - uses: ./.github/actions/gradle_cache
       - run: rustup default nightly
-      - uses: Swatinem/rust-cache@ce325b60658c1b38465c06cc965b79baf32c1e72
+      - uses: Swatinem/rust-cache@842ef286fff290e445b90b4002cc9807c3669641
       - run: cd implementations/rust && ../../gradlew test
