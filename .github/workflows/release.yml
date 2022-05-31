@@ -1,0 +1,71 @@
+name: Realease Automation
+
+on:
+  workflow_dispatch:
+    inputs:
+      commit_sha:
+        description: SHA to test workflow
+        required: true
+
+permissions:
+  # Contents permission allows us write to this repository.
+  contents: write
+
+jobs:
+  create_release:
+    name: Rust - Lint Formatting
+    runs-on: ubuntu-20.04
+    outputs:
+      upload_url: ${{ steps.release_upload_url.outputs.upload_url }}
+      release_version: ${{ steps.release_version.outputs.version }}
+    steps:
+      - name: Checkout Ockam
+        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
+        with:
+          ref: ${{ github.event.inputs.commit_sha }}
+          fetch-depth: 0
+
+      - name: Get Release Text
+        shell: bash
+        id: release_version
+        run: |
+          cargo install tomlq
+          set -x
+          source tools/scripts/release/crates-to-publish.sh
+          text=""
+
+          for crate in ${updated_crates[@]}; do
+            version=$(eval "tomlq package.version -f implementations/rust/ockam/$crate/Cargo.toml")
+            name=$(eval "tomlq package.name -f implementations/rust/ockam/$crate/Cargo.toml")
+
+            if [[ $version == "ockam" ]]; then
+              echo "Skipping ockam crate"
+              continue
+            fi
+
+            text="$text
+          - \`$name $version\` ([Documentation](https://docs.rs/$name/$version/$name/), \
+            [CHANGELOG](https://github.com/build-trust/ockam/blob/${name}_v$version/implementations/rust/ockam/$name/CHANGELOG.md))";
+          done
+
+          # Add Ockam as first crate
+          version=$(eval "tomlq package.version -f implementations/rust/ockam/ockam/Cargo.toml")
+          name=$(eval "tomlq package.name -f implementations/rust/ockam/ockam/Cargo.toml")          
+
+          text="- \`$name $version\` ([Documentation](https://docs.rs/$name/$version/$name/), \
+            [CHANGELOG](https://github.com/build-trust/ockam/blob/${name}_v$version/implementations/rust/ockam/$name/CHANGELOG.md))$text";
+
+          echo "::set-output name=version::$version"
+
+          echo "$text" > release_note.md
+          cat release_note.md
+
+      - name: Create GitHub release
+        id: release_upload_url
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          release_name: 'Ockam ${{ steps.release_version.outputs.version }}'
+          tag_name: 'ockam_${{ steps.release_version.outputs.version }}'
+          body_path: 'release_note.md'
