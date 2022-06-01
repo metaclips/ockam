@@ -1,4 +1,4 @@
-name: Realease Automation
+name: Release Automation
 
 on:
   workflow_dispatch:
@@ -13,7 +13,7 @@ permissions:
 
 jobs:
   create_release:
-    name: Rust - Lint Formatting
+    name: Create Release
     runs-on: ubuntu-20.04
     outputs:
       upload_url: ${{ steps.release_upload_url.outputs.upload_url }}
@@ -38,7 +38,7 @@ jobs:
             version=$(eval "tomlq package.version -f implementations/rust/ockam/$crate/Cargo.toml")
             name=$(eval "tomlq package.name -f implementations/rust/ockam/$crate/Cargo.toml")
 
-            if [[ $version == "ockam" ]]; then
+            if [[ $name == "ockam" ]]; then
               echo "Skipping ockam crate"
               continue
             fi
@@ -62,10 +62,72 @@ jobs:
 
       - name: Create GitHub release
         id: release_upload_url
-        uses: actions/create-release@v1
+        uses: actions/create-release@4c11c9fe1dcd9636620a16455165783b20fc7ea0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           release_name: 'Ockam ${{ steps.release_version.outputs.version }}'
           tag_name: 'ockam_${{ steps.release_version.outputs.version }}'
           body_path: 'release_note.md'
+
+
+  build_release:
+    name: Build Release
+    needs: create_release
+    strategy:
+      fail-fast: false
+      matrix:
+        build: [linux, linux_86, macos, macos_86]
+        include:
+        - build: linux
+          os: ubuntu-16.04
+          rust: stable
+          target: aarch64-unknown-linux-gnu
+        - build: linux_86
+          os: ubuntu-16.04
+          rust: stable
+          target: x86_64-unknown-linux-gnu
+        - build: macos
+          os: macos-latest
+          rust: stable
+          target: aarch64-apple-darwin
+        - build: macos_86
+          os: macos-latest
+          rust: stable
+          target: x86_64-apple-darwin
+    runs-on: ${{ matrix.os }}
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - name: Install Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: ${{ matrix.rust }}
+        profile: minimal
+        override: true
+        target: ${{ matrix.target }}
+    - name: Install packages (Ubuntu)
+      if: matrix.os == 'ubuntu-16.04'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y --no-install-recommends pkg-config xz-utils liblz4-tool libssl-dev
+    - name: Build release binary
+      run: cargo build --bin ockam --target ${{ matrix.target }} --verbose --release
+    - name: Build archive
+      shell: bash
+      run: |
+        set -x
+        ls target
+        cd target/${{ matrix.target }}/release
+        tar czf "$GITHUB_WORKSPACE/ockam_${{ matrix.target }}.tar.gz" ockam
+        echo "ASSET=ockam_${{ matrix.target }}.tar.gz" >> $GITHUB_ENV
+        ls $GITHUB_WORKSPACE
+    - name: Upload release archive
+      uses: actions/upload-release-asset@v1.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ needs.create_release.outputs.upload_url }}
+        asset_path: ${{ env.ASSET }}
+        asset_name: ${{ env.ASSET }}
+        asset_content_type: application/octet-stream
