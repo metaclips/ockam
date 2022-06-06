@@ -202,7 +202,7 @@ jobs:
         cosign sign-blob --key env://PRIVATE_KEY ${{ env.ASSET }} > ${{ env.ASSET }}.sig
 
     - name: Upload release archive
-      uses: actions/upload-release-asset@v1.0.1
+      uses: actions/upload-release-asset@v1.0.2
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -212,7 +212,7 @@ jobs:
         asset_content_type: application/octet-stream
 
     - name: Upload Signature
-      uses: actions/upload-release-asset@v1.0.1
+      uses: actions/upload-release-asset@v1.0.2
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -248,7 +248,7 @@ jobs:
         run: cosign sign-blob --key env://PRIVATE_KEY sha256sums.txt > sha256sums.txt.sig
 
       - name: Upload SHASum File
-        uses: actions/upload-release-asset@v1.0.1
+        uses: actions/upload-release-asset@v1.0.2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -258,7 +258,7 @@ jobs:
           asset_content_type: application/octet-stream
 
       - name: Upload SHASum Signature File
-        uses: actions/upload-release-asset@v1.0.1
+        uses: actions/upload-release-asset@v1.0.2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
