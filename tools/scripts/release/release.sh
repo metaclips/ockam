@@ -1,36 +1,41 @@
 #!/usr/bin/env bash
+set -ex
 
-source "$(dirname "$0")/common.sh"
+if [[ -z $GITHUB_USERNAME ]]; then 
+  echo "Please set your github username"
+  exit 1
+fi
 
-change_dir "$OCKAM_RUST"
+# Ockam Binary Release
+#
+# Run bump CI
+gh workflow run create-release-pull-request.yml --ref metaclips/release_automation -R metaclips/ockam
 
-  # Read and bump versions
-  while read line
-  do
-    read -ra arr <<< "$line"
-    CRATE="${arr[0]}"
+# Sleep for 10 seconds to ensure we are not affected by Github API downtime.
+sleep 10
 
-    change_dir "$CRATE"
-      export VERSION=$(crate_version $CRATE)
-      echo "Updating $CRATE README.md to $VERSION"
-      "$SCRIPT_DIR"/upgrade-crate.sh "$PWD/README.md" "$CRATE" "$VERSION"
-    pop_dir
+# TODO Show workflow run
+run_id=$(gh run list --workflow=create-release-pull-request.yml -b metaclips/release_automation -u $GITHUB_USERNAME -L 1 -R metaclips/ockam --json databaseId | jq -r .[0].databaseId)
+echo $run_id
+gh run watch $run_id --exit-status -R metaclips/ockam
 
-    echo "Updating dependants of $CRATE to $VERSION"
-    find . -maxdepth 2 -name Cargo.toml -exec "$SCRIPT_DIR/upgrade-crate.sh" '{}' "$CRATE" "$VERSION" \;
-  done < "${1:-/dev/stdin}"
+read -p "Crate bump pull request created.... Press enter to start binaries release."
+exit 0
 
-  echo "Generating lock files for crates"
-  all_crates generate-lockfile
+# Release workflow
+gh workflow run release.yml --ref develop -R build-trust/ockam
 
-  echo "Generate lock files for examples"
-  change_dir "$OCKAM_HOME/examples/rust/get_started"
-  cargo -q generate-lockfile
-  pop_dir
-  echo "Checking all crates"
-  all_crates check
-pop_dir
+# Wait for workflow run
+gh workflow list 
+gh run watch
 
-echo "All updates complete. Testing"
-"$PWD/gradlew" test_rust
 
+# Homebrew Release
+#
+# Create PR
+gh workflow run create-release-pull-request.yml --ref main
+# Show workflow run
+
+# Terraform Release
+gh workflow run release.yml --ref main
+# Show workflow run
