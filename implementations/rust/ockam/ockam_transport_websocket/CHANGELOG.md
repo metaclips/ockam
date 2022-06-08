@@ -4,6 +4,36 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## unreleased
+
+### Added
+
+- Add basic test for ws transport
+- Add documentation for all public functions
+- Add examples to transport.rs
+
+### Changed
+
+- Ws transport
+- Implement miniature `ockam` command for demo
+- Clean up ockam_core import paths
+- Update broken tests
+- Rename error2 to error
+- Return socket address when starting a transport listener
+- Code block and imports
+
+### Fixed
+
+- Insert a temporary mechanism to improve error messages
+- Errors: fix ockam_transport_websocket
+- Fix various clippy and rustfmt lints
+- Fix flaky transport tests
+
+### Removed
+
+- Remove thiserror as it does not support no_std
+- Remove unnecessary error conversion
+
 ## 0.46.0 - 2022-06-06
 
 ### Changed
