@@ -4,6 +4,33 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## unreleased
+
+### Added
+
+- Add doc comments to `SecureChannel`
+
+### Changed
+
+- Implement miniature `ockam` command for demo
+- Vault updates
+- Clean up ockam_core import paths
+- Rename error2 to error
+- Use u64 nonce
+- Rename new_context to new_detached
+- Split worker into `Encryptor` and `Decryptor` in ockam_channel crate
+
+### Fixed
+
+- Insert a temporary mechanism to improve error messages
+- Errors: fix ockam_channel
+- Fix various clippy and rustfmt lints
+- Fix flaky transport tests
+
+### Removed
+
+- Remove thiserror as it does not support no_std
+
 ## 0.54.0 - 2022-06-06
 
 ### Added

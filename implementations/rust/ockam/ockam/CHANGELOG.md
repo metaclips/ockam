@@ -4,6 +4,55 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## unreleased
+
+### Added
+
+- Add "crate" attribute to ockam_macros::test macro
+- Add docs and rename some of the request/response types in `ockam`
+- Add "crate" attribute to async_try_clone_derive macro
+- Add basic node manager service
+- Add pid query to nodeman worker
+
+### Changed
+
+- Rename heartbeat to delayed event
+- Sketch initial pipe2 api
+- Provide builder init mechanism for system handers
+- Very basic pipe example with new api
+- Implement basic sender resend handler
+- Pipe2 dynamic pipe handshakes
+- Various clippy fixes
+- Get rid of common `RouterMessage` in favor of transport-specific structs (ble, ws)
+- Reorganize and document `ockam` crate
+- Tune up some of the documentation
+- Rename `mod remote_forwarder` module to `mod remote`, fix examples
+- Ensure more documentation ends up in the right place
+- Implement miniature `ockam` command for demo
+- Re-export `DelayedEvent` from ockam crate
+- Vault updates
+- Rename error2 to error
+- Change description of the ockam crate
+- Implement new `Vault` serialization
+- Rename new_context to new_detached
+- Implement basic ockam_command config module
+
+### Fixed
+
+- Message_derive macro
+- Vault_test macro
+- Clean up node_test tests
+- Fix ockam::node macro tests
+- Insert a temporary mechanism to improve error messages
+- Fix clippy warnings
+- Errors: fix ockam
+- Fix various clippy and rustfmt lints
+- Fix flaky transport tests
+
+### Removed
+
+- Remove thiserror as it does not support no_std
+
 ## 0.60.0 - 2022-06-06
 
 ### Added

@@ -4,6 +4,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## unreleased
+
+### Changed
+
+- Rename `mod remote_forwarder` module to `mod remote`, fix examples
+- Implement miniature `ockam` command for demo
+- Make `Identity` trait immutable
+- Update broken tests
+- Rename error2 to error
+
+### Fixed
+
+- Insert a temporary mechanism to improve error messages
+- Errors: fix ockam_transport_ble
+- Fix various clippy and rustfmt lints
+
+### Removed
+
+- Remove thiserror as it does not support no_std
+
 ## 0.15.0 - 2022-06-06
 
 ### Changed
