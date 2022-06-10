@@ -1,36 +1,55 @@
 #!/usr/bin/env bash
+set -ex
 
-source "$(dirname "$0")/common.sh"
+if [[ -z $GITHUB_USERNAME ]]; then 
+  echo "Please set your github username"
+  exit 1
+fi
 
-change_dir "$OCKAM_RUST"
+owner="metaclips"
 
-  # Read and bump versions
-  while read line
-  do
-    read -ra arr <<< "$line"
-    CRATE="${arr[0]}"
+# Ockam crate bump
+gh workflow run create-release-pull-request.yml --ref metaclips/release_automation -R $owner/ockam
+# Sleep for 10 seconds to ensure we are not affected by Github API downtime.
+sleep 10
+# Wait for workflow run
+run_id=$(gh run list --workflow=create-release-pull-request.yml -b metaclips/release_automation -u $GITHUB_USERNAME -L 1 -R $owner/ockam --json databaseId | jq -r .[0].databaseId)
+gh run watch $run_id --exit-status -R $owner/ockam
 
-    change_dir "$CRATE"
-      export VERSION=$(crate_version $CRATE)
-      echo "Updating $CRATE README.md to $VERSION"
-      "$SCRIPT_DIR"/upgrade-crate.sh "$PWD/README.md" "$CRATE" "$VERSION"
-    pop_dir
+read -p "Crate bump pull request created.... Please merge pull request and press enter to start binaries release."
+read -p "Script requires draft release has been published and tag created to accurately use latest tag.... Press enter if draft release has been published."
 
-    echo "Updating dependants of $CRATE to $VERSION"
-    find . -maxdepth 2 -name Cargo.toml -exec "$SCRIPT_DIR/upgrade-crate.sh" '{}' "$CRATE" "$VERSION" \;
-  done < "${1:-/dev/stdin}"
+# Start release binaries workflow
+gh workflow run release-binaries.yml --ref metaclips/release_automation --field tag= -R $owner/ockam
+# Wait for workflow run
+sleep 10
+run_id=$(gh run list --workflow=release-binaries.yml -b metaclips/release_automation -u $GITHUB_USERNAME -L 1 -R $owner/ockam --json databaseId | jq -r .[0].databaseId)
+gh run watch $run_id --exit-status -R $owner/ockam
 
-  echo "Generating lock files for crates"
-  all_crates generate-lockfile
+read -p "Draft release has been created, please vet and release then press enter to start homebrew and terraform CI"
 
-  echo "Generate lock files for examples"
-  change_dir "$OCKAM_HOME/examples/rust/get_started"
-  cargo -q generate-lockfile
-  pop_dir
-  echo "Checking all crates"
-  all_crates check
-pop_dir
+# Get latest tag
+latest_tag_name=$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/${owner}/ockam/releases/latest | jq -r .tag_name)
 
-echo "All updates complete. Testing"
-"$PWD/gradlew" test_rust
+# Homebrew Release
+gh workflow run create-release-pull-request.yml --ref main -R $owner/homebrew-ockam -F tag=$latest_tag_name
+# Wait for workflow run
+sleep 10
+run_id=$(gh run list --workflow=create-release-pull-request.yml -b main -u $GITHUB_USERNAME -L 1 -R $owner/homebrew-ockam --json databaseId | jq -r .[0].databaseId)
+gh run watch $run_id --exit-status -R $owner/homebrew-ockam
 
+# Terraform Release
+gh workflow run create-release-pull-request.yml --ref main -R $owner/terraform-provider-ockam -F tag=$latest_tag_name
+# Wait for workflow run
+sleep 10
+run_id=$(gh run list --workflow=create-release-pull-request.yml -b main -u $GITHUB_USERNAME -L 1 -R $owner/terraform-provider-ockam  --json databaseId | jq -r .[0].databaseId)
+gh run watch $run_id --exit-status -R $owner/terraform-provider-ockam
+
+read -p "Terraform draft release has been created, please vet and release then press enter to start Terraform binary release"
+# GITHUB_USERNAME=metaclips ./tools/scripts/release/release.sh
+
+gh workflow run release.yml --ref main -R $owner/terraform-provider-ockam -F tag=$latest_tag_name
+# Wait for workflow run
+sleep 10
+run_id=$(gh run list --workflow=release.yml -b main -u $GITHUB_USERNAME -L 1 -R $owner/terraform-provider-ockam  --json databaseId | jq -r .[0].databaseId)
+gh run watch $run_id --exit-status -R $owner/terraform-provider-ockam
