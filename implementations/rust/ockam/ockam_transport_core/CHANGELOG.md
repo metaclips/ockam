@@ -4,6 +4,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## unreleased
+
+### Changed
+
+- Move `error_test.rs` into `error.rs` for project consistency
+- Implement tcp disconnection
+- Implement miniature `ockam` command for demo
+- Build error mapping for various crates
+- Clean up ockam_core import paths
+- Update broken tests
+- Rename error2 to error
+
+### Fixed
+
+- Insert a temporary mechanism to improve error messages
+- Fixing lints
+- Fix various clippy and rustfmt lints
+- Fix flaky transport tests
+
+### Removed
+
+- Remove thiserror as it does not support no_std
+
 ## 0.28.0 - 2022-06-06
 
 ### Changed

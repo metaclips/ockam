@@ -4,6 +4,35 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## unreleased
+
+### Added
+
+- Add `Tcp` disconnect test
+- Add tests for `ockam_transport_tcp`
+- Add "crate" attribute to async_try_clone_derive macro
+
+### Changed
+
+- Implement tcp disconnection
+- Implement manual disconnection for `Tcp`
+- Implemented tcp connection to already connected ip under different hostname
+- Clean up ockam_core import paths
+- Run rustfmt
+- Return socket address when starting a transport listener
+- Code block and imports
+- Rename new_context to new_detached
+
+### Fixed
+
+- Errors: fix ockam_transport_tcp
+- Fix various clippy and rustfmt lints
+- Fix flaky transport tests
+
+### Removed
+
+- Remove outdated tcprouter docs
+
 ## 0.55.0 - 2022-06-06
 
 ### Changed

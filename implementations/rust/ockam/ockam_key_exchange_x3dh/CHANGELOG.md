@@ -4,6 +4,32 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## unreleased
+
+### Added
+
+- Add "crate" attribute to async_try_clone_derive macro
+
+### Changed
+
+- Don't re-export `hex` or `hashbrown` from `ockam_core`
+- Implement miniature `ockam` command for demo
+- Vault updates
+- Clean up ockam_core import paths
+- Rename error2 to error
+- Switch `Vault` to `String` `KeyId` instead of integer `Secret`
+
+### Fixed
+
+- Insert a temporary mechanism to improve error messages
+- Errors: fix ockam_key_exchange_x3dh
+- Fix various clippy and rustfmt lints
+
+### Removed
+
+- Remove thiserror as it does not support no_std
+- Remove `AsRef` from `PublicKey` to avoid confusion
+
 ## 0.49.0 - 2022-06-06
 
 ### Changed
