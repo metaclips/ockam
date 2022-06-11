@@ -4,6 +4,47 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## unreleased
+
+### Added
+
+- Add examples for all public functions in `ockam_core`
+- Add tests for `ockam_core`
+- Add ockam_api_nodes
+
+### Changed
+
+- Edit `ockam_core` documentation for typos, clarity and consistency
+- Move `traits` module into its own file
+- Move `ockam_core::println_no_std` to `ockam_core::compat::println`
+- Friendlify api for `ockam_core::access_control`
+- Don't re-export `hex` or `hashbrown` from `ockam_core`
+- Tune up some of the documentation
+- Ensure more documentation ends up in the right place
+- Implement miniature `ockam` command for demo
+- Introduce error type
+- Build error mapping for various crates
+- Clean up ockam_core import paths
+- Update broken tests
+- Move allow and deny utils to ockam_core root
+- Rename error2 to error
+- Move `TypeTag` to `ockam_core`
+
+### Fixed
+
+- Insert a temporary mechanism to improve error messages
+- Fix clippy warnings
+- Update `compat::sync::Mutex` to return `Result` instead of `Option`
+- Errors: fix ockam_core
+- Errors: fix ockam_vault
+- Fix various clippy and rustfmt lints
+
+### Removed
+
+- Remove unused type `ockam_core::ResultMessage`
+- Remove traits module from ockam_core
+- Remove thiserror as it does not support no_std
+
 ## 0.55.0 - 2022-06-06
 
 ### Added

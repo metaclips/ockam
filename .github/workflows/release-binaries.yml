@@ -1,11 +1,14 @@
-name: Release Automation
+name: Binary Release
 
 on:
   workflow_dispatch:
     inputs:
       commit_sha:
-        description: Commit SHA to create release
-        required: true
+        description: Commit SHA to create release. If not set default branch is used.
+        required: false
+      git_tag:
+        description: Git Tag To Release From. Last Git Tag Is Used If Omitted
+        required: false
 
 permissions:
   # Contents permission allows us write to this repository.
@@ -29,6 +32,8 @@ jobs:
       - name: Get Release Text
         shell: bash
         id: release_version
+        env:
+          GIT_TAG: '${{ github.event.inputs.git_tag }}'
         run: |
           cargo install tomlq
           set -x
@@ -109,6 +114,13 @@ jobs:
 
           echo "$text" > release_note.md
           cat release_note.md
+
+      - name: Import GPG key
+        id: import_gpg
+        uses: hashicorp/ghaction-import-gpg@78437f97569a473e42b227be84d4084c2dfb49ba
+        env:
+          GPG_PRIVATE_KEY: '${{ secrets.GPG_PRIVATE_KEY }}'
+          PASSPHRASE: '${{ secrets.GPG_PASSPHRASE }}'
 
       - name: Create GitHub release
         id: release_upload_url

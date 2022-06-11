@@ -20,7 +20,7 @@ keywords = [
 ]
 license = "Apache-2.0"
 name = "ockam_node"
-version = "0.57.0"
+version = "0.58.0"
 publish = true
 rust-version = "1.56.0"
 
@@ -43,8 +43,8 @@ alloc = ["ockam_core/alloc", "ockam_executor/alloc", "futures/alloc"]
 dump_internals = []
 
 [dependencies]
-ockam_core = { path = "../ockam_core", version = "^0.55.0", default_features = false }
-ockam_macros = { path = "../ockam_macros", version = "^0.15.0"}
+ockam_core = { path = "../ockam_core", version = "^0.56.0", default_features = false }
+ockam_macros = { path = "../ockam_macros", version = "^0.16.0" }
 tokio = { version = "1.8", default-features = false, optional = true, features = [
     "sync",
     "time",
@@ -60,7 +60,7 @@ tracing-subscriber = { version = "0.3", features = [
     "env-filter",
 ], optional = true }
 heapless = { version = "0.7", features = ["mpmc_large"], optional = true }
-ockam_executor = { path = "../ockam_executor", version = "^0.23.0", default-features = false, optional = true }
+ockam_executor = { path = "../ockam_executor", version = "^0.24.0", default-features = false, optional = true }
 serde_bare = { version = "0.5.0", default-features = false }
 
 [dev-dependencies]
