@@ -83,7 +83,7 @@ ockam_vault = { path = "../ockam_vault", version = "^0.50.0", default-features =
 ockam_channel = { path = "../ockam_channel", version = "^0.54.0", default-features = false }
 ockam_key_exchange_xx = { path = "../ockam_key_exchange_xx", version = "^0.50.0", default-features = false, optional = true }
 ockam_key_exchange_core = { path = "../ockam_key_exchange_core", version = "^0.46.0", default-features = false }
-ockam_api = { path = "../ockam_api", version = "^0.3.0", default_features = false, optional = true }
+ockam_api = { path = "../ockam_api", version = "^0.4.0", default_features = false, optional = true }
 minicbor = { version = "0.17.1", features = ["derive"], optional = true }
 serde_bare = { version = "0.5.0", default-features = false, optional = true }
 cfg-if = "1.0.0"
