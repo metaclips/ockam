@@ -4,6 +4,45 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## unreleased
+
+### Added
+
+- Add timeout to `SecureChannel` creation
+- Add "crate" attribute to async_try_clone_derive macro
+- Add `Identity` service
+- Add import and export for `Contact` and `ExportedIdentity`
+- Add chain verififcation where needed
+
+### Changed
+
+- Friendlify api for `ockam_core::access_control`
+- Friendlify api for `ockam_core::vault::key_id_vault`
+- Reorganize and document `ockam` crate
+- Don't re-export `hex` or `hashbrown` from `ockam_core`
+- Implement miniature `ockam` command for demo
+- Vault updates
+- Make `Identity` trait immutable
+- Clean up ockam_core import paths
+- Update broken tests
+- Rename error2 to error
+- Switch `Vault` to `String` `KeyId` instead of integer `Secret`
+- Rename new_context to new_detached
+- Split secure channel worker in ockam_identity crate
+- Update identity service
+
+### Fixed
+
+- Insert a temporary mechanism to improve error messages
+- Fix clippy warnings
+- Errors: fix ockam_identity
+- Fix various clippy and rustfmt lints
+- Fix flaky transport tests
+
+### Removed
+
+- Remove thiserror as it does not support no_std
+
 ## 0.48.0 - 2022-06-06
 
 ### Changed

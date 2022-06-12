@@ -4,6 +4,37 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## unreleased
+
+### Added
+
+- Add "crate" attribute to ockam_macros::test macro
+- Add more docs to the ockam macros
+- Add "crate" attribute to "node" macro
+- Add "crate" attribute to async_try_clone_derive macro
+
+### Changed
+
+- Improve error handling and make "entry" functions "pub(crate)"
+- Rust docs for public functions in `ockam_macros`
+- Redesign `node` and `test` macros
+- `async_try_clone_derive` to follow new macro structure
+- Vault updates
+- Run rustfmt
+- Cleanup cargo.toml and readme.md
+
+### Fixed
+
+- Message_derive macro
+- Vault_test_sync macro
+- Imports ockam context as used in the input function
+- Errors: fix ockam_transport_tcp
+- Fix flaky transport tests
+
+### Removed
+
+- Remove `todo`
+
 ## 0.15.0 - 2022-05-09
 
 ### Changed

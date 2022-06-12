@@ -4,6 +4,59 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## unreleased
+
+### Added
+
+- Add "crate" attribute to ockam_macros::test macro
+- Add context usage documentation and update api docs
+- Add send_and_receive method to context
+- Add an async_drop mechanism for bare context drop
+- Add dedicated channel types for ockam_node, switch back to bounded channels
+- Add timeout function to context that takes duration
+
+### Changed
+
+- Update cancel documentation
+- Rename heartbeat to delayed event
+- Improve executor documentation
+- Friendlify api for `ockam_core::access_control`
+- Make `ockam_node::error` module public
+- Reorganize and document `ockam` crate
+- Don't re-export `hex` or `hashbrown` from `ockam_core`
+- Implement miniature `ockam` command for demo
+- Introduce error type
+- Build error mapping for various crates
+- Clean up ockam_core import paths
+- Run rustfmt
+- Rename error2 to error
+- Rebuilding the ockam_node error types
+- Move to unbound channel
+- Rename github organization to build-trust
+- Attempt to cut down memory usage via context drop
+- Rename new_context to new_detached
+
+### Fixed
+
+- Use serde_bare to prepend length to payload when missing
+- Insert a temporary mechanism to improve error messages
+- Ensure that the command supports `OCKAM_LOG`
+- Fix clippy warnings
+- Errors: fix ockam_core
+- Fixing lints
+- Fix various clippy and rustfmt lints
+- Do not drop control channel sender when processing stopworker messge
+- Fix typo
+- Fix flaky transport tests
+- Enable `SpanTrace` capture during tracing registration
+- Fix address de-allocation issues for bare contexts
+
+### Removed
+
+- Delete ockam_node context handle
+- Remove ockam_node errors and add new util module
+- Remove thiserror as it does not support no_std
+
 ## 0.57.0 - 2022-06-06
 
 ### Added

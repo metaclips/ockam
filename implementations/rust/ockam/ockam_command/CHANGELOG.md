@@ -4,6 +4,47 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## unreleased
+
+### Added
+
+- Add session management
+- Add command-line interface for nodes api
+- Add message subcommand
+- Add cloud enroll, space and project subcommands
+- Add auth api to ockam_command
+- Add clould invitation subcommands
+- Add enrollment token + fixes to other commands
+
+### Changed
+
+- Vault updates
+- Use multi-address in ockam command
+- Move old commands to a submodule
+- Hide old subcommands from command help
+- Rename dry_run command argument to test_argument_parser
+- Enroll, project and space commands
+- Improve ockam command help
+- Define command help template
+- Turn cloud commands into top level commands
+- Implement basic ockam_command config module
+- Integrate configuration and remote messaging
+- Basic node lifecycle management in ockam_command
+- Rename auth sub command to authenticated
+- Avoid `ockam_identity` dependency in `ockam_api`
+
+### Fixed
+
+- Ensure that the command supports `OCKAM_LOG`
+- Enable `SpanTrace` capture during tracing registration
+- Log when tracing logging failed to initialise
+- Hide tracing logging on client-side ockam cli instance
+
+### Removed
+
+- Remove ockam command spawn marker option
+- Remove reqwest dependency in ockam_api
+
 ## 0.60.0 - 2022-06-06
 
 ### Added
