@@ -7,6 +7,7 @@ if [[ -z $GITHUB_USERNAME ]]; then
 fi
 
 owner="build-trust"
+release_name="release_$(date +'%d-%m-%Y')"
 
 function ockam_bump() {
   gh workflow run create-release-pull-request.yml --ref develop\
@@ -19,6 +20,11 @@ function ockam_bump() {
   # Wait for workflow run
   run_id=$(gh run list --workflow=create-release-pull-request.yml -b develop -u $GITHUB_USERNAME -L 1 -R $owner/ockam --json databaseId | jq -r .[0].databaseId)
   gh run watch $run_id --exit-status -R $owner/ockam
+
+  # Merge PR to a new branch to kickstart workflow
+  gh pr merge ${release_name}_init -r $owner/ockam
+  gh pr create --title "Ockam Release $(date +'%d-%m-%Y')" --body "Ockam release"\
+    --base develop -H ${release_name} -r mrinalwadhwa
 }
 
 function ockam_crate_release() {
@@ -38,6 +44,14 @@ function release_ockam_binaries() {
   sleep 10
   run_id=$(gh run list --workflow=release-binaries.yml -b develop -u $GITHUB_USERNAME -L 1 -R $owner/ockam --json databaseId | jq -r .[0].databaseId)
   gh run watch $run_id --exit-status -R $owner/ockam
+}
+
+function release_ockam_package() {
+  gh workflow run docker_ockam.yml --ref docker -F tag=$1 -R $owner/artifacts
+  # Wait for workflow run
+  sleep 10
+  run_id=$(gh run list --workflow=docker_ockam.yml -b docker -u $GITHUB_USERNAME -L 1 -R $owner/artifacts --json databaseId | jq -r .[0].databaseId)
+  gh run watch $run_id --exit-status -R $owner/artifacts
 }
 
 function homebrew_repo_bump() {
@@ -80,39 +94,39 @@ if [[ -z $SKIP_OCKAM_BUMP || $SKIP_OCKAM_BUMP == false ]]; then
   dialog_info "Crate bump pull request created.... Please merge pull request and press enter to start binaries release."
 fi
 
-if [[ -z $SKIP_CRATES_IO_PUBLISH || $SKIP_CRATES_IO_PUBLISH == false ]]; then
-  ockam_crate_release
-  success_info "Crates.io publish successful"
-fi
+# if [[ -z $SKIP_CRATES_IO_PUBLISH || $SKIP_CRATES_IO_PUBLISH == false ]]; then
+#   ockam_crate_release
+#   success_info "Crates.io publish successful"
+# fi
 
-if [[ -z $SKIP_OCKAM_BINARY_RELEASE || $SKIP_OCKAM_BINARY_RELEASE == false ]]; then
-  release_ockam_binaries
-  dialog_info "Draft release has been created, please vet and publish release then press enter to start homebrew and terraform CI"
-  dialog_info "Script requires draft release to be published and tag created to accurately use latest tag.... Press enter if draft release has been published."
-fi
+# if [[ -z $SKIP_OCKAM_BINARY_RELEASE || $SKIP_OCKAM_BINARY_RELEASE == false ]]; then
+#   release_ockam_binaries
+#   dialog_info "Draft release has been created, please vet and publish release then press enter to start homebrew and terraform CI"
+#   dialog_info "Script requires draft release to be published and tag created to accurately use latest tag.... Press enter if draft release has been published."
+# fi
 
-# Get latest tag
-if [[ -z $LATEST_TAG_NAME ]]; then
-  latest_tag_name=$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/${owner}/ockam/releases/latest | jq -r .tag_name)
-  dialog_info "Latest tag is $latest_tag_name press enter if correct"
-else
-  latest_tag_name=$LATEST_TAG_NAME
-fi
+# # Get latest tag
+# if [[ -z $LATEST_TAG_NAME ]]; then
+#   latest_tag_name=$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/${owner}/ockam/releases/latest | jq -r .tag_name)
+#   dialog_info "Latest tag is $latest_tag_name press enter if correct"
+# else
+#   latest_tag_name=$LATEST_TAG_NAME
+# fi
 
-# Homebrew Release
-if [[ -z $SKIP_HOMEBREW_BUMP || $SKIP_HOMEBREW_BUMP == false ]]; then
-  homebrew_repo_bump $latest_tag_name
-  success_info "Homebrew bump successful."
-fi
+# # Homebrew Release
+# if [[ -z $SKIP_HOMEBREW_BUMP || $SKIP_HOMEBREW_BUMP == false ]]; then
+#   homebrew_repo_bump $latest_tag_name
+#   success_info "Homebrew bump successful."
+# fi
 
-if [[ -z $SKIP_TERRAFORM_BUMP || $SKIP_TERRAFORM_BUMP == false ]]; then
-  terraform_repo_bump $latest_tag_name
-fi
+# if [[ -z $SKIP_TERRAFORM_BUMP || $SKIP_TERRAFORM_BUMP == false ]]; then
+#   terraform_repo_bump $latest_tag_name
+# fi
 
-dialog_info "Terraform pull request created, please vet and merge pull request then press enter to start Terraform binary release"
+# dialog_info "Terraform pull request created, please vet and merge pull request then press enter to start Terraform binary release"
 
-if [[ -z $SKIP_TERRAFORM_BINARY_RELEASE || $SKIP_TERRAFORM_BINARY_RELEASE == false ]]; then
-  terraform_binaries_release $latest_tag_name
-fi
+# if [[ -z $SKIP_TERRAFORM_BINARY_RELEASE || $SKIP_TERRAFORM_BINARY_RELEASE == false ]]; then
+#   terraform_binaries_release $latest_tag_name
+# fi
 
-success_info "Release Done 🚀🚀🚀"
+# success_info "Release Done 🚀🚀🚀"
