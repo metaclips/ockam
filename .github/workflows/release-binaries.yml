@@ -299,15 +299,19 @@ jobs:
           os: macos-latest
           release_path: implementations/elixir/ockam/ockam_vault_software/priv/darwin_universal/native
           release_asset_name: ockam.darwin_universal_elixir_ffi.so
+          container: ""
         - build: linux_x86_64
           os: ubuntu-20.04
           release_path: implementations/elixir/ockam/ockam_vault_software/_build/dev/lib/ockam_vault_software/priv/native
           release_asset_name: ockam.linux_x86_64_elixir_ffi.so
+          container: ghcr.io/build-trust/ockam-builder:latest@sha256:fd4cae207079803c6bee65e8ca708a38f83df8b5926cdc9e165b876ae9037357
         - build: linux_aarch64
           os: ubuntu-20.04
           release_path: implementations/elixir/ockam/ockam_vault_software/_build/dev/lib/ockam_vault_software/priv/native
           release_asset_name: ockam.linux_aarch64_elixir_ffi.so
+          container: ghcr.io/build-trust/ockam-builder:latest@sha256:c21e8fda4a4aaa82515b1ac0262e21a257b6605342c44c78a41e3431d21309e6
     runs-on: ${{ matrix.os }}
+    container: ${{ matrix.container }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
@@ -328,20 +332,12 @@ jobs:
             cd /tmp
             wget https://packages.erlang-solutions.com/erlang-solutions_2.0_all.deb && sudo dpkg -i erlang-solutions_2.0_all.deb
             sudo apt-get update
-            sudo apt-get -y install esl-erlang elixir libdbus-1-dev pkg-config
+            sudo apt-get -y install esl-erlang elixir libdbus-1-dev pkg-config build-essentials
           fi
 
-      - name: Build For Linux X86_64
-        if: matrix.build == 'linux_x86_64'
-        run: |
-          rustup target add x86_64-unknown-linux-gnu
-          cargo build --release --target x86_64-unknown-linux-gnu
-
-      - name: Build For Linux AARCH64
-        if: matrix.build == 'linux_aarch64'
-        run: |
-          rustup target add aarch64-unknown-linux-gnu
-          cargo build --release --target aarch64-unknown-linux-gnu
+      - name: Build For Linux
+        if: matrix.build != 'macos'
+        run: cargo build --release
 
       - name: Install Targets For MacOS
         if: matrix.build == 'macos'
