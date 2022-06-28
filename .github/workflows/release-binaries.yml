@@ -293,20 +293,20 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        build: [macos, linux_amd64, linux_aarch64]
+        build: [macos, linux_x86_64, linux_aarch64]
         include:
         - build: macos
           os: macos-latest
           release_path: implementations/elixir/ockam/ockam_vault_software/priv/darwin_universal/native
           release_asset_name: ockam.darwin_universal_elixir_ffi.so
-        - build: linux_amd64
+        - build: linux_x86_64
           os: ubuntu-20.04
           release_path: implementations/elixir/ockam/ockam_vault_software/_build/dev/lib/ockam_vault_software/priv/native
-          release_asset_name: ockam.linux_amd64_elixir_ffi.so
-        - build: linux_arm64
+          release_asset_name: ockam.linux_x86_64_elixir_ffi.so
+        - build: linux_aarch64
           os: ubuntu-20.04
           release_path: implementations/elixir/ockam/ockam_vault_software/_build/dev/lib/ockam_vault_software/priv/native
-          release_asset_name: ockam.linux_arm64_elixir_ffi.so
+          release_asset_name: ockam.linux_aarch64_elixir_ffi.so
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout repository
@@ -332,7 +332,7 @@ jobs:
           fi
 
       - name: Build For Ockam Repository
-        if: matrix.build == 'linux'
+        if: matrix.build != 'macos'
         run: cargo build --release
 
       - name: Install Targets For MacOS
@@ -342,7 +342,7 @@ jobs:
           rustup target add x86_64-apple-darwin
 
       - name: Install Target For Linux ARM64
-        if: matrix.build == 'linux_arm64'
+        if: matrix.build == 'linux_aarch64'
         run: rustup target add aarch64-unknown-linux-gnu
 
       - name: Build NIF
