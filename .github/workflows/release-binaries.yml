@@ -157,7 +157,11 @@ jobs:
           PASSPHRASE: '${{ secrets.GPG_PASSPHRASE }}'
 
       - name: Ensure Tags Are Signed
-        run: git config --global commit.gpgsign true
+        run: |
+          git config --global user.email "${{ secrets.GPG_EMAIL }}"
+          git config --global user.name "${{ secrets.GPG_USER_NAME }}"
+          git config --global user.signingkey "${{ steps.import_gpg.outputs.fingerprint }}"
+          git config --global commit.gpgsign true
 
       - name: Create Signed Tag
         run: |
