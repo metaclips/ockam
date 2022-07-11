@@ -6,23 +6,46 @@ if [[ -z $GITHUB_USERNAME ]]; then
   exit 1
 fi
 
-owner="build-trust"
+owner="metaclips"
 release_name="release_$(date +'%d-%m-%Y')"
 
 if [[ -z $RECENT_FAILURE ]]; then
   RECENT_FAILURE=false
 fi
 
+function approve_deployment() {
+  repository="$1"
+  run_id="$2"
+
+  # Get actions that need to be approved
+  pending_deployments=$(gh api -H "Accept: application/vnd.github+json" /repos/$owner/$repository/actions/runs/$run_id/pending_deployments)
+  pending_length=$(echo "$pending_deployments" | jq '. | length')
+
+  environments=""
+  for (( c=0; c<$pending_length; c++ )); do
+    environment=$(echo "$pending_deployments" | jq ".[$c].environment.id" )
+    environments="$environments $environment"
+  done
+
+  jq -n  "{environment_ids: [$environments], state: \"approved\", comment: \"Ship It\"}" | gh api \
+    --method POST \
+    -H "Accept: application/vnd.github+json" \
+    /repos/$owner/$repository/actions/runs/$run_id/pending_deployments --input -
+}
+
 function ockam_bump() {
   gh workflow run create-release-pull-request.yml --ref develop\
-    -F git_tag="$GIT_TAG" -F modified_release="$MODIFIED_RELEASE"\
+    -F branch_name="$release_name" -F git_tag="$GIT_TAG" -F modified_release="$MODIFIED_RELEASE"\
     -F release_version="$RELEASE_VERSION" -F bumped_dep_crates_version="$BUMPED_DEP_CRATES_VERSION"\
     -R $owner/ockam
 
+  workflow_file_name="create-release-pull-request.yml"
   # Sleep for 10 seconds to ensure we are not affected by Github API downtime.
   sleep 10
   # Wait for workflow run
-  run_id=$(gh run list --workflow=create-release-pull-request.yml -b develop -u $GITHUB_USERNAME -L 1 -R $owner/ockam --json databaseId | jq -r .[0].databaseId)
+  run_id=$(gh run list --workflow="$workflow_file_name" -b develop -u $GITHUB_USERNAME -L 1 -R $owner/ockam --json databaseId | jq -r .[0].databaseId)
+  
+  approve_deployment "ockam" $run_id
   gh run watch $run_id --exit-status -R $owner/ockam
 
   # Merge PR to a new branch to kickstart workflow
@@ -32,36 +55,44 @@ function ockam_bump() {
 
 function ockam_crate_release() {
   gh workflow run publish-crates.yml --ref develop \
-    -F git_tag="$GIT_TAG" -F exclude_crates="$EXCLUDE_CRATES" \
+    -F release_branch="$release_name" -F git_tag="$GIT_TAG" -F exclude_crates="$EXCLUDE_CRATES" \
     -F recent_failure="$RECENT_FAILURE" -R $owner/ockam
   # Sleep for 10 seconds to ensure we are not affected by Github API downtime.
   sleep 10
   # Wait for workflow run
   run_id=$(gh run list --workflow=publish-crates.yml -b develop -u $GITHUB_USERNAME -L 1 -R $owner/ockam --json databaseId | jq -r .[0].databaseId)
+
+  approve_deployment "ockam" $run_id
   gh run watch $run_id --exit-status -R $owner/ockam
 }
 
 function release_ockam_binaries() {
-  gh workflow run release-binaries.yml --ref develop -F git_tag="$GIT_TAG" -R $owner/ockam
+  gh workflow run release-binaries.yml --ref develop -F git_tag="$GIT_TAG" -F release_branch="$release_name" -R $owner/ockam
   # Wait for workflow run
   sleep 10
   run_id=$(gh run list --workflow=release-binaries.yml -b develop -u $GITHUB_USERNAME -L 1 -R $owner/ockam --json databaseId | jq -r .[0].databaseId)
+
+  approve_deployment "ockam" $run_id
   gh run watch $run_id --exit-status -R $owner/ockam
 }
 
-function release_ockam_package() {
-  gh workflow run docker_ockam.yml --ref docker -F tag=$1 -R $owner/artifacts
-  # Wait for workflow run
-  sleep 10
-  run_id=$(gh run list --workflow=docker_ockam.yml -b docker -u $GITHUB_USERNAME -L 1 -R $owner/artifacts --json databaseId | jq -r .[0].databaseId)
-  gh run watch $run_id --exit-status -R $owner/artifacts
-}
+# function release_ockam_package() {
+#   gh workflow run docker_ockam.yml --ref docker -F tag=$1 -R $owner/artifacts
+#   # Wait for workflow run
+#   sleep 10
+#   run_id=$(gh run list --workflow=docker_ockam.yml -b docker -u $GITHUB_USERNAME -L 1 -R $owner/artifacts --json databaseId | jq -r .[0].databaseId)
+
+
+#   gh run watch $run_id --exit-status -R $owner/artifacts
+# }
 
 function homebrew_repo_bump() {
   gh workflow run create-release-pull-request.yml --ref main -F tag=$1 -R $owner/homebrew-ockam
   # Wait for workflow run
   sleep 10
   run_id=$(gh run list --workflow=create-release-pull-request.yml -b main -u $GITHUB_USERNAME -L 1 -R $owner/homebrew-ockam --json databaseId | jq -r .[0].databaseId)
+  
+  approve_deployment "homebrew-ockam" $run_id
   gh run watch $run_id --exit-status -R $owner/homebrew-ockam
 
   # Create PR to kickstart workflow
@@ -74,6 +105,8 @@ function terraform_repo_bump() {
   # Wait for workflow run
   sleep 10
   run_id=$(gh run list --workflow=create-release-pull-request.yml -b main -u $GITHUB_USERNAME -L 1 -R $owner/terraform-provider-ockam  --json databaseId | jq -r .[0].databaseId)
+
+  approve_deployment "terraform-provider-ockam" $run_id
   gh run watch $run_id --exit-status -R $owner/terraform-provider-ockam
 
   # Create PR to kickstart workflow
@@ -86,6 +119,8 @@ function terraform_binaries_release() {
   # Wait for workflow run
   sleep 10
   run_id=$(gh run list --workflow=release.yml -b main -u $GITHUB_USERNAME -L 1 -R $owner/terraform-provider-ockam  --json databaseId | jq -r .[0].databaseId)
+
+  approve_deployment "terraform-provider-ockam" $run_id
   gh run watch $run_id --exit-status -R $owner/terraform-provider-ockam
 }
 
@@ -102,47 +137,50 @@ function success_info() {
 
 if [[ -z $SKIP_OCKAM_BUMP || $SKIP_OCKAM_BUMP == false ]]; then
   ockam_bump
-  dialog_info "Crate bump pull request created.... Please merge pull request and press enter to start binaries release."
+  success_info "Crate bump pull request created.... Starting Ockam crates.io publish."
 fi
 
-if [[ -z $SKIP_CRATES_IO_PUBLISH || $SKIP_CRATES_IO_PUBLISH == false ]]; then
-  ockam_crate_release
-  success_info "Crates.io publish successful"
-fi
+# if [[ -z $SKIP_CRATES_IO_PUBLISH || $SKIP_CRATES_IO_PUBLISH == false ]]; then
+#   ockam_crate_release
+#   success_info "Crates.io publish successful.... Starting Ockam binary release."
+# fi
 
 if [[ -z $SKIP_OCKAM_BINARY_RELEASE || $SKIP_OCKAM_BINARY_RELEASE == false ]]; then
   release_ockam_binaries
-  dialog_info "Draft release has been created, please vet and publish release then press enter to start homebrew and terraform CI"
-  dialog_info "Script requires draft release to be published and tag created to accurately use latest tag.... Press enter if draft release has been published."
+  success_info "Draft release has been created.... Starting Homebrew release."
 fi
 
 # Get latest tag
 if [[ -z $LATEST_TAG_NAME ]]; then
-  latest_tag_name=$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/${owner}/ockam/releases/latest | jq -r .tag_name)
-  dialog_info "Latest tag is $latest_tag_name press enter if correct"
+  latest_tag_name=$(gh api -H "Accept: application/vnd.github+json" /repos/$owner/ockam/releases | jq -r .[0].tag_name)
+  if [[ $latest_tag_name != *"ockam_v"* ]]; then
+    echo "Invalid Git Tag gotten"
+  fi
+
+  success_info "Latest tag is $latest_tag_name press enter if correct"
 else
   latest_tag_name="$LATEST_TAG_NAME"
 fi
 
-if [[ -z $SKIP_OCKAM_PACKAGE_RELEASE || $SKIP_OCKAM_PACKAGE_RELEASE  == false ]]; then
-  release_ockam_package $latest_tag_name
-  success_info "Ockam package release successful."
-fi
+# if [[ -z $SKIP_OCKAM_PACKAGE_RELEASE || $SKIP_OCKAM_PACKAGE_RELEASE  == false ]]; then
+#   release_ockam_package $latest_tag_name
+#   success_info "Ockam package release successful."
+# fi
 
 # Homebrew Release
 if [[ -z $SKIP_HOMEBREW_BUMP || $SKIP_HOMEBREW_BUMP == false ]]; then
   homebrew_repo_bump $latest_tag_name
-  success_info "Homebrew bump successful."
+  success_info "Homebrew release successful.... Starting Terraform Release"
 fi
 
-if [[ -z $SKIP_TERRAFORM_BUMP || $SKIP_TERRAFORM_BUMP == false ]]; then
-  terraform_repo_bump $latest_tag_name
-fi
+# if [[ -z $SKIP_TERRAFORM_BUMP || $SKIP_TERRAFORM_BUMP == false ]]; then
+#   terraform_repo_bump $latest_tag_name
+# fi
 
-dialog_info "Terraform pull request created, please vet and merge pull request then press enter to start Terraform binary release"
+# dialog_info "Terraform pull request created, please vet and merge pull request then press enter to start Terraform binary release"
 
-if [[ -z $SKIP_TERRAFORM_BINARY_RELEASE || $SKIP_TERRAFORM_BINARY_RELEASE == false ]]; then
-  terraform_binaries_release $latest_tag_name
-fi
+# if [[ -z $SKIP_TERRAFORM_BINARY_RELEASE || $SKIP_TERRAFORM_BINARY_RELEASE == false ]]; then
+#   terraform_binaries_release $latest_tag_name
+# fi
 
 success_info "Release Done 🚀🚀🚀"
