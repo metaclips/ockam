@@ -6,6 +6,9 @@ on:
       git_tag:
         description: Git Tag To Release From. Last Git Tag Is Used If Omitted
         required: false
+      release_branch:
+        description: Release Branch Where Recent Bump Occured
+        required: true
 
 permissions:
   # Contents permission allows us write to this repository.
@@ -24,6 +27,7 @@ jobs:
         uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
         with:
           fetch-depth: 0
+          ref: ${{ github.event.inputs.release_branch }}
 
       - name: Get Release Text
         shell: bash
@@ -163,11 +167,6 @@ jobs:
           git config --global user.signingkey "${{ steps.import_gpg.outputs.fingerprint }}"
           git config --global commit.gpgsign true
 
-      - name: Create Signed Tag
-        run: |
-          git tag -s ${{ steps.release_version.outputs.tag_name }} -m "Ockam Release"
-          git push --tags
-
       - name: Create GitHub release
         id: release_upload_url
         uses: actions/create-release@4c11c9fe1dcd9636620a16455165783b20fc7ea0
@@ -212,8 +211,12 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
+      with:
+        ref: ${{ github.event.inputs.release_branch }}
+
     - name: Echo Link
       run: echo "${{ needs.create_release.outputs.upload_url }}"
+
     - name: Install Rust
       uses: actions-rs/toolchain@b3ea035039aa8cb07d1f4a5168b0f8065c4a2eeb
       with:
@@ -307,6 +310,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
+        with:
+          ref: ${{ github.event.inputs.release_branch }}
 
       - name: Install Rust
         uses: actions-rs/toolchain@b3ea035039aa8cb07d1f4a5168b0f8065c4a2eeb

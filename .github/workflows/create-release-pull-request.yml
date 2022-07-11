@@ -6,6 +6,9 @@ on:
       git_tag:
         description: Git Tag To Release From. Last Git Tag Is Used If Omitted
         required: false
+      branch_name:
+        description: New Branch To Bump Crates
+        required: true
       modified_release:
         description: Crates That Are To Follow A Different Release Version
         required: false
@@ -45,17 +48,12 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set Branch Name
-        id: branch
-        run: echo "::set-output name=name::release_$(date +'%d-%m-%Y')"
-
       - name: Checkout To New Release Branch
         id: commit
         run: |
-          git checkout -B ${{ steps.branch.outputs.name }}
+          git checkout -B ${{ github.event.inputs.branch_name }}
           sha=$(git rev-parse HEAD)
           echo "::set-output name=sha::$sha"
-
 
       - name: Import GPG key
         id: import_gpg
@@ -85,6 +83,15 @@ jobs:
           GIT_TAG: '${{ github.event.inputs.git_tag }}'
         run: bash -ex ./tools/scripts/release/changelog.sh
 
+      - name: Get Ockam Version
+        shell: bash
+        id: release_version
+        run: |
+          # Get Ockam Version
+          cargo install tomlq
+          version=$(eval "tomlq package.version -f implementations/rust/ockam/ockam/Cargo.toml")
+          echo "::set-output name=tag_name::ockam_v$version"
+
       - name: Push Update
         shell: bash
         run: |
@@ -93,4 +100,8 @@ jobs:
           git add .
           git commit -S -m "ci: crate release $(date +'%d-%m-%Y')"
 
-          git push --set-upstream origin ${{ steps.branch.outputs.name }}
+          # Add tag
+          git tag -s ${{ steps.release_version.outputs.tag_name }} -m "Ockam Release"
+          git push --tags
+
+          git push --set-upstream origin ${{ github.event.inputs.branch_name }}
