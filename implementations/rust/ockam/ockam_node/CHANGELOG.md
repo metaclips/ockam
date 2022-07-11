@@ -4,6 +4,34 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.61.0 - 2022-07-11
+
+### Added
+
+- Add metrics output to trace logs
+- Add `#[ockam::node]` macro attribute `access_control`
+
+### Changed
+
+- Generate simple csv metrics report
+- Collect router and (ockam) worker metrics
+- Rename context metrics field and add better docs
+- Implement initial access control prototype
+- Refinements to initial access control prototype
+- Move node manager service to ockam_api crate
+- Create node builder for easier node initialisation
+- Disable metrics by default
+- Create worker builder for cleaner worker access control initialisation
+- `Storage` -> `AuthenticatedTable`
+- `AuthenticatedTable` -> `AuthenticatedStorage`
+- Partially implemented node watchdog
+
+### Fixed
+
+- Clean up router metrics code lints
+- Gate metrics code behind metrics feature
+- Making ockam_node a bit less spammy on debug
+
 ## 0.60.0 - 2022-06-30
 
 ### Changed
