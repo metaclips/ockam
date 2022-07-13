@@ -9,6 +9,9 @@ on:
       exclude_crates:
         description: Exclude Specific Crates From Being Published
         required: false
+      release_branch:
+        description: Release Branch Where Recent Bump Occured
+        required: true
       recent_failure:
         description: Indicate A Recent Failure
         type: choice
@@ -32,6 +35,7 @@ jobs:
         uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
         with:
           fetch-depth: 0
+          ref: ${{ github.event.inputs.release_branch }}
 
       - name: Publish Ockam Crates
         shell: bash
