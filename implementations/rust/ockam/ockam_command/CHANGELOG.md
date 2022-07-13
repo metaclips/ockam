@@ -4,6 +4,38 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.64.0 - 2022-07-13
+
+### Added
+
+- Add commands to create and authenticate tokens
+- Add configuration management to ockam_command
+- Add email enrollment flow
+- Add secure channel support to ockam_command
+- Add command to create forwarders
+- Add basic `Identity` commands to `ockam_command`
+- Add `message-format` global arg
+
+### Changed
+
+- Move nodeman protocol definitions to submodule
+- Implement transport creation via ockam command
+- Minicbor typetags, cli-cloud advances
+- Flatten overwrite field
+- Strategy to enable/disable logs in ockam_command
+- Move `multiaddr_to_route` to `ockam_api`
+- Change transport create command to addon command
+- Make ockam command configuration thread safe
+- Use same variable names on some ockam_command commands
+
+### Fixed
+
+- Improve the usability of ockam command
+
+### Removed
+
+- Remove custom validator on authenticated command
+
 ## 0.63.0 - 2022-06-30
 
 ### Added
