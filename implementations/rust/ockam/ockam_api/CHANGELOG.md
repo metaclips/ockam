@@ -4,6 +4,35 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.7.0 - 2022-07-13
+
+### Added
+
+- Add `to_vec()` for `RequestBuilder` and `ResponseBuilder`
+- Add `Identity` basic functionality to `ockam_api`
+- Add schema validation tests for cloud api types
+
+### Changed
+
+- Move ockam_vault service to ockam_api
+- Move ockam_identity service to ockam_api
+- Update nodemanager service to ockam_api structures
+- Move node manager service to ockam_api crate
+- Minicbor typetags, cli-cloud advances
+- `Storage` -> `AuthenticatedTable`
+- Identity updates
+- `AuthenticatedTable` -> `AuthenticatedStorage`
+- Move `multiaddr_to_route` to `ockam_api`
+- Allow conversion from route to multiaddr
+- Partially convert ockam_command to use multiaddr
+- Use identity secure channels to communicate with orchestrator
+- Extract common utils to process api services req/res/err
+- Extract common utils to process api services req/res/err
+
+### Fixed
+
+- Apply style feedback
+
 ## 0.6.0 - 2022-06-30
 
 ### Changed
