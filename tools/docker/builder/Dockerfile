@@ -17,6 +17,9 @@ ENV RUSTUP_HOME=/opt/rust/rustup \
     MOLD_HOME=/opt/mold
 
 RUN set -xe; \
+    # Setup base tools
+    apt-get update; \
+    DEBIAN_FRONTEND=noninteractive apt-get install --assume-yes --no-install-recommends ca-certificates curl locales xz-utils clang; \
     case $(dpkg --print-architecture) in \
       "amd64") \
         echo "Using AMD64"; \
@@ -28,6 +31,12 @@ RUN set -xe; \
         JQ_SHA256="af986793a515d500ab2d35f8d2aecd656e764504b789b66d7e1a0b727a124c44" && JQ_OS="linux64"; \
         MOLD_SHA256="3893f89e5e0dcddcecc9f2ee17f14ad94fbf8b324eca45974b965353a50dac37" && MOLD_OS="x86_64-linux"; \
         OS="x86_64-unknown-linux-gnu"; \
+        # Setup brew
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"; \
+        echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> /root/.profile; \
+        eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"; \
+        brew tap kaos/shell; \
+        brew install bats-assert; \
       ;; \
       "arm64") \
         export CARGO_NET_GIT_FETCH_WITH_CLI=true; \
@@ -47,9 +56,6 @@ RUN set -xe; \
         exit 1; \
       ;; \
     esac; \
-# Setup base tools
-    apt-get update; \
-    DEBIAN_FRONTEND=noninteractive apt-get install --assume-yes --no-install-recommends ca-certificates curl locales xz-utils; \
 # Setup locale
     LANG=en_US.UTF-8; \
     echo $LANG UTF-8 > /etc/locale.gen; \

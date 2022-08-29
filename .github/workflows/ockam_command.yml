@@ -48,7 +48,7 @@ jobs:
         build: [linux_86, macos_86]
         include:
         - build: linux_86
-          os: ubuntu-18.04
+          os: ubuntu-20.04
           rust: stable
           target: x86_64-unknown-linux-gnu
         - build: macos_86
@@ -62,7 +62,8 @@ jobs:
         with:
           ref: ${{ github.event.inputs.release_branch }}
 
-      - name: Install Rust
+      - name: Install Rust If Mac-OS
+        if: matrix.build == 'macos_86'
         uses: dtolnay/rust-toolchain@4d318db07a155f99337e7fc8de813caea5e92c32
         with:
           toolchain: ${{ matrix.rust }}
@@ -72,22 +73,27 @@ jobs:
         shell: bash
         run: |
           set -x
-
-          if [[ "${{ matrix.os }}" == "ubuntu-18.04" ]]; then
-            sudo apt-get update
-            sudo apt-get install -y --no-install-recommends xz-utils liblz4-tool
-          fi
-
           cargo build --bin ockam
 
-      - name: Install Bats
+      - name: Install Bats If Mac-OS
+        if: matrix.build == 'macos_86'
         run: |
           brew tap kaos/shell
           brew install bats-assert
 
-      - name: Run Script
+      - name: Run Script On Mac-OS
+        if: matrix.build == 'macos_86'
         working-directory: implementations/rust/ockam/ockam_command/tests
         shell: bash
         run: |
           export PATH=$PATH:$GITHUB_WORKSPACE/target/debug
           bats commands.bats
+
+      - name: Run Script On Ubuntu
+        if: matrix.build == 'linux_86'
+        uses: docker://ghcr.io/build-trust/ockam-builder@sha256:f93fd0be2a53034563865e3d49256da148bb4dab90e72783b55bd0f4a1532bcc
+        with:
+          args: |
+            cd implementations/rust/ockam/ockam_command/tests
+            export PATH=$PATH:$GITHUB_WORKSPACE/target/debug
+            bats commands.bats
