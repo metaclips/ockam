@@ -81,6 +81,27 @@ jobs:
           brew tap kaos/shell
           brew install bats-assert
 
+      - name: Run Ockam Enroll
+        run: |
+          ockam_enroll_log=$(mktemp)
+          echo | ockam enroll &>$ockam_enroll_log &
+          sleep 2
+          log=$(cat $ockam_enroll_log)
+
+          regex="([A-Z]+\-[A-Z]+)"
+          if [[ $log =~ $regex ]]; then
+            code=${BASH_REMATCH[1]}
+          fi
+
+          if [[ -z $code ]]; then
+            echo "Error getting OTP"
+            exit 1
+          fi
+
+          ACTIVATION_CODE=$code python3 tools/scripts/ockam_enroll.py
+
+          # TODO wait till ockam enroll is complete
+
       - name: Run Script On Mac-OS
         if: matrix.build == 'macos_86'
         working-directory: implementations/rust/ockam/ockam_command/tests
