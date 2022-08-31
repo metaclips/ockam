@@ -86,9 +86,10 @@ jobs:
           ockam_enroll_log=$(mktemp)
           echo | ockam enroll &>$ockam_enroll_log &
           sleep 2
-          log=$(cat $ockam_enroll_log)
 
+          log=$(cat $ockam_enroll_log)
           regex="([A-Z]+\-[A-Z]+)"
+
           if [[ $log =~ $regex ]]; then
             code=${BASH_REMATCH[1]}
           fi
@@ -100,7 +101,18 @@ jobs:
 
           ACTIVATION_CODE=$code python3 tools/scripts/ockam_enroll.py
 
-          # TODO wait till ockam enroll is complete
+          regex="Authority identity: .+"
+
+          while true; do
+            echo "Checking if ockam enroll is complete"
+            log=$(cat $ockam_enroll_log)
+            echo "$log"
+
+            if [[ $log =~ $regex ]]; then
+              break
+            fi
+            sleep 3
+          done
 
       - name: Run Script On Mac-OS
         if: matrix.build == 'macos_86'
