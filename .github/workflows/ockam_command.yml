@@ -67,7 +67,7 @@ jobs:
 
       - name: Install Rust If Mac-OS
         if: matrix.build == 'macos_86'
-        uses: dtolnay/rust-toolchain@4d318db07a155f99337e7fc8de813caea5e92c32
+        uses: dtolnay/rust-toolchain@1ce4a7352a1efe5dede2e52c75512b34256e4f44
         with:
           toolchain: ${{ matrix.rust }}
           target: ${{ matrix.target }}
