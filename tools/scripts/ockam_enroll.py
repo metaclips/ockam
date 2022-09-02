@@ -12,7 +12,7 @@ activation_code = os.environ['ACTIVATION_CODE']
 if len(activation_code) == 0:
     exit(1)
 
-driver = webdriver.Chrome("chromedriver")
+driver = webdriver.Firefox()
 
 # head to activation page
 driver.get("https://account.ockam.io/activate")

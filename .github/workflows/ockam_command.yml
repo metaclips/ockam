@@ -51,11 +51,14 @@ jobs:
           os: ubuntu-20.04
           rust: stable
           target: x86_64-unknown-linux-gnu
+          container: "ghcr.io/build-trust/ockam-builder@sha256:61a48fb34a97b9de981f1a9a72885a6e1a0df1d486c131add220fdb26a1bd38b"
         - build: macos_86
           os: macos-latest
           rust: stable
           target: x86_64-apple-darwin
+          container: ""
     runs-on: ${{ matrix.os }}
+    container: ${{ matrix.container }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
@@ -81,38 +84,39 @@ jobs:
           brew tap kaos/shell
           brew install bats-assert
 
-      - name: Run Ockam Enroll
-        run: |
-          ockam_enroll_log=$(mktemp)
-          echo | ockam enroll &>$ockam_enroll_log &
-          sleep 2
+      # - name: Run Ockam Enroll
+      #   run: |
+      #     ockam_enroll_log=$(mktemp)
+      #     echo | ockam enroll &>$ockam_enroll_log &
+      #     sleep 4
 
-          log=$(cat $ockam_enroll_log)
-          regex="([A-Z]+\-[A-Z]+)"
+      #     log=$(cat $ockam_enroll_log)
+      #     echo "$log"
+      #     regex="([A-Z]+\-[A-Z]+)"
 
-          if [[ $log =~ $regex ]]; then
-            code=${BASH_REMATCH[1]}
-          fi
+      #     if [[ $log =~ $regex ]]; then
+      #       code=${BASH_REMATCH[1]}
+      #     fi
 
-          if [[ -z $code ]]; then
-            echo "Error getting OTP"
-            exit 1
-          fi
+      #     if [[ -z $code ]]; then
+      #       echo "Error getting OTP"
+      #       exit 1
+      #     fi
 
-          ACTIVATION_CODE=$code python3 tools/scripts/ockam_enroll.py
+      #     ACTIVATION_CODE=$code python3 tools/scripts/ockam_enroll.py
 
-          regex="Authority identity: .+"
+      #     regex="Authority identity: .+"
 
-          while true; do
-            echo "Checking if ockam enroll is complete"
-            log=$(cat $ockam_enroll_log)
-            echo "$log"
+      #     while true; do
+      #       echo "Checking if ockam enroll is complete"
+      #       log=$(cat $ockam_enroll_log)
+      #       echo "$log"
 
-            if [[ $log =~ $regex ]]; then
-              break
-            fi
-            sleep 3
-          done
+      #       if [[ $log =~ $regex ]]; then
+      #         break
+      #       fi
+      #       sleep 3
+      #     done
 
       - name: Run Script On Mac-OS
         if: matrix.build == 'macos_86'
@@ -124,9 +128,8 @@ jobs:
 
       - name: Run Script On Ubuntu
         if: matrix.build == 'linux_86'
-        uses: docker://ghcr.io/build-trust/ockam-builder@sha256:f93fd0be2a53034563865e3d49256da148bb4dab90e72783b55bd0f4a1532bcc
-        with:
-          args: |
-            cd implementations/rust/ockam/ockam_command/tests
-            export PATH=$PATH:$GITHUB_WORKSPACE/target/debug
-            bats commands.bats
+        shell: bash
+        run: |
+          export PATH=$(pwd)/target/debug:$PATH;
+          cd implementations/rust/ockam/ockam_command/tests;
+          bats commands.bats;

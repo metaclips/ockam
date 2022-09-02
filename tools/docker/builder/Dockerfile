@@ -24,6 +24,7 @@ RUN set -xe; \
       "amd64") \
         echo "Using AMD64"; \
         COSIGN_SHA256="47e2596a38e619b72e736fd171eeeaadaf6bd22d6e87a767b339168a87b62761" && COSIGN_OS="amd64"; \
+        CHROMEDRIVER_OS="amd64"; \
         RUSTUP_INIT_SHA256="3dc5ef50861ee18657f9db2eeb7392f9c2a6c95c90ab41e45ab4ca71476b4338"; \
         NODEJS_SHA256="a3721f87cecc0b52b0be8587c20776ac7305db413751db02c55aa2bffac15198" && NODEJS_OS="linux-x64"; \
         ERLANG_SHA256="89c98e177f70593a9f64f3c9962393a51e6730d16071820600d19d4aaa732412" && ERLANG_OS="amd64"; \
@@ -31,17 +32,22 @@ RUN set -xe; \
         JQ_SHA256="af986793a515d500ab2d35f8d2aecd656e764504b789b66d7e1a0b727a124c44" && JQ_OS="linux64"; \
         MOLD_SHA256="3893f89e5e0dcddcecc9f2ee17f14ad94fbf8b324eca45974b965353a50dac37" && MOLD_OS="x86_64-linux"; \
         OS="x86_64-unknown-linux-gnu"; \
+
         # Setup brew
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"; \
         echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> /root/.profile; \
         eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"; \
         brew tap kaos/shell; \
         brew install bats-assert; \
+        brew install python3; \
+        pip3 install selenium; \
+        pip3 -V; \
       ;; \
       "arm64") \
         export CARGO_NET_GIT_FETCH_WITH_CLI=true; \
         echo "Using ARM64"; \
         COSIGN_SHA256="abd7ec116dd7e7980f08e67d2c7478ae1cdc97adf778aff76d8a737a908670d8" && COSIGN_OS="arm64"; \
+        CHROMEDRIVER_OS="arm64"; \
         RUSTUP_INIT_SHA256="32a1532f7cef072a667bac53f1a5542c99666c4071af0c9549795bbdb2069ec1"; \
         NODEJS_SHA256="af1127594d6dae96d3f1d307174daa5084d9c9027eb6fc02548022257f4b0a6a" && NODEJS_OS="linux-arm64"; \
         ERLANG_SHA256="80e95df44cba03f9abefa54ab1452d97b9969a6d164792e827e59a1116377bbd" && ERLANG_OS="arm64"; \
@@ -61,6 +67,13 @@ RUN set -xe; \
     echo $LANG UTF-8 > /etc/locale.gen; \
     locale-gen; \
     update-locale LANG=$LANG; \
+# Install firefox and geckodriver
+    apt-get install firefox-esr --assume-yes; \
+    wget https://github.com/mozilla/geckodriver/releases/download/v0.31.0/geckodriver-v0.31.0-linux64.tar.gz -O /tmp/geckodriver.tar.gz \
+      && tar -C /opt -xzf /tmp/geckodriver.tar.gz \
+      && chmod 755 /opt/geckodriver \
+      && ln -fs /opt/geckodriver /usr/bin/geckodriver \
+      && ln -fs /opt/geckodriver /usr/local/bin/geckodriver; \
 # Setup nodejs
     NODEJS_PACKAGE="node-v${NODEJS_VERSION}-${NODEJS_OS}.tar.xz"; \
     curl --proto '=https' --tlsv1.2 -sSOL \
@@ -147,7 +160,7 @@ RUN set -xe; \
     apt-get clean; \
     rm -rf /var/lib/apt/lists/*
 
-ENV PATH="${JAVA_HOME}/bin:${RUSTUP_HOME}/bin:${CARGO_HOME}/bin:${CMAKE_HOME}/bin:${NODEJS_HOME}/bin:${MOLD_HOME}/bin:$PATH" \
+ENV PATH="/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:${JAVA_HOME}/bin:${RUSTUP_HOME}/bin:${CARGO_HOME}/bin:${CMAKE_HOME}/bin:${NODEJS_HOME}/bin:${MOLD_HOME}/bin:$PATH" \
     AR=/usr/bin/ar \
     AS=/usr/bin/as \
     CC=/usr/local/bin/gcc \
