@@ -21,7 +21,7 @@ if [[ -z $OCKAM_BUMP_BUMPED_DEP_CRATES_VERSION ]]; then
 fi
 
 declare -A specified_crate_version
-IFS=" " read -r -a crate_array <<< "$OCKAM_BUMP_MODIFIED_RELEASE"
+IFS=" " read -r -a crate_array <<<"$OCKAM_BUMP_MODIFIED_RELEASE"
 
 for word in "${crate_array[@]}"; do
   key="${word%%:*}"
