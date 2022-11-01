@@ -267,7 +267,7 @@ jobs:
         ls $GITHUB_WORKSPACE
 
     - name: Install Cosign
-      uses: sigstore/cosign-installer@b3413d484cc23cf8778c3d2aa361568d4eb54679
+      uses: sigstore/cosign-installer@9becc617647dfa20ae7b1151972e9b3a2c338a2b
 
     - name: Sign Binary
       shell: bash
@@ -355,7 +355,7 @@ jobs:
 
       - name: Install Cosign
         if: matrix.build == 'macos'
-        uses: sigstore/cosign-installer@b3413d484cc23cf8778c3d2aa361568d4eb54679
+        uses: sigstore/cosign-installer@9becc617647dfa20ae7b1151972e9b3a2c338a2b
 
       - name: Sign NIFs
         if: matrix.build == 'macos'
@@ -404,7 +404,7 @@ jobs:
         run: shasum -a 256 ockam.* > sha256sums.txt
 
       - name: Install Cosign
-        uses: sigstore/cosign-installer@b3413d484cc23cf8778c3d2aa361568d4eb54679
+        uses: sigstore/cosign-installer@9becc617647dfa20ae7b1151972e9b3a2c338a2b
 
       - name: Sign Files
         shell: bash
