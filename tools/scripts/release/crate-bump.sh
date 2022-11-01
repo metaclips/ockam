@@ -21,7 +21,7 @@ if [[ -z $OCKAM_BUMP_BUMPED_DEP_CRATES_VERSION ]]; then
 fi
 
 declare -A specified_crate_version
-IFS=" " read -r -a crate_array <<< "$OCKAM_BUMP_MODIFIED_RELEASE"
+IFS=" " read -r -a crate_array <<<"$OCKAM_BUMP_MODIFIED_RELEASE"
 
 for word in "${crate_array[@]}"; do
   key="${word%%:*}"
@@ -74,7 +74,7 @@ while [[ "$updated_crates" != "$recently_updated_crates" ]]; do
       echo "Bumping transitive dependent crate $crate version to $version"
     fi
 
-    name=$(eval "tomlq package.name -f implementations/rust/ockam/$crate/Cargo.toml")
+    name=$(eval "tomlq package.name -f $crate/Cargo.toml")
 
     # Check if crate version was specified manually
     if [[ -n "${specified_crate_version[$crate]}" ]]; then

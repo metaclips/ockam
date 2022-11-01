@@ -21,19 +21,19 @@ if [[ -n $GIT_TAG ]]; then
 fi
 
 for crate in implementations/rust/ockam/*; do
-  if [[ -f implementations/rust/ockam/$crate ]]; then
+  if [[ -f $crate ]]; then
     echo "$crate is a file, skipping."
     continue
   fi
 
-  is_publish=$(tomlq package.publish -f implementations/rust/ockam/"$crate"/Cargo.toml)
+  is_publish=$(tomlq package.publish -f "$crate"/Cargo.toml)
   if [[ $is_publish == false ]]; then
     echo "$crate indicate as not-publish"
     continue
   fi
 
-  if git diff "$last_git_tag" --quiet --name-status -- implementations/rust/ockam/"$crate"/src; then
-    git diff "$last_git_tag" --quiet --name-status -- implementations/rust/ockam/"$crate"/Cargo.toml || updated_crates="$updated_crates $crate"
+  if git diff "$last_git_tag" --quiet --name-status -- "$crate"/src; then
+    git diff "$last_git_tag" --quiet --name-status -- "$crate"/Cargo.toml || updated_crates="$updated_crates $crate"
   else
     updated_crates="$updated_crates $crate"
   fi
