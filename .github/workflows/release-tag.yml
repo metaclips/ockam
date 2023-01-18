@@ -27,7 +27,7 @@ jobs:
         id: develop_sha
         shell: bash
         run: |
-          develop_sha=$(git ls-remote https://github.com/build-trust/ockam.git refs/heads/develop | head -1 | cut -f 1)
+          develop_sha=$(git ls-remote https://github.com/${{ github.repository_owner }}/ockam.git refs/heads/develop | head -1 | cut -f 1)
           echo "sha=$develop_sha" >> $GITHUB_OUTPUT
 
       - name: Checkout To Ockam Repository
@@ -52,4 +52,5 @@ jobs:
       - name: Release GitHub Asset
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh release edit "${{ github.event.inputs.git_tag }}" --draft=false -R $owner/ockam
+        run: |
+          gh release edit "${{ github.event.inputs.git_tag }}" --draft=false -R ${{ github.repository_owner }}/ockam
