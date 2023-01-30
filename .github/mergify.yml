@@ -3,34 +3,35 @@
 queue_rules:
   - name: develop
     conditions: []
-
 pull_request_rules:
   - name: enqueue for merge to develop
-
     actions:
       queue:
         name: develop
         method: rebase
         update_method: rebase
         require_branch_protection: true
-
     conditions:
       - base=develop
       - label=auto-merge
-
       - or:
         - author=mrinalwadhwa
+        # During code freeze, we don't want to 
         - and:
           - "approved-reviews-by=@approvers"
           - "#approved-reviews-by>=1"
           - "#changes-requested-reviews-by=0"
-
+          - -files~=^(.*\.rs)
+        - and:
+          - "approved-reviews-by=@approvers"
+          - "#approved-reviews-by>=1"
+          - "#changes-requested-reviews-by=0"
+          #- schedule: Mon-Sun # https://blog.mergify.com/freezing-your-github-repository-after-a-merge/
       ####
       # The following checks should've succeeded
-
+      #
       - check-success=Commits - Check
       - check-success=Editorconfig - Lint
-
       ####
       # The following checks should not have failed
 
@@ -78,7 +79,6 @@ pull_request_rules:
       - check-failure!=Test Ockam Command
       # semgrep.yml
       - check-failure!=Semgrep - Lint
-
       ####
       # The following checks should not be pending
 
@@ -126,7 +126,6 @@ pull_request_rules:
       - check-pending!=Test Ockam Command
       # semgrep.yml
       - check-pending!=Semgrep - Lint
-
       ####
       # The following checks should not be stale
 
