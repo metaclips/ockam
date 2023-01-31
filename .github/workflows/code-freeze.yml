@@ -3,7 +3,7 @@ name: Code Freeze CI
 permission:
   contents: read
 
-on: 
+on:
   workflow_dispatch
     inputs:
       branch_name:
