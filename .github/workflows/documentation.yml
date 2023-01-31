@@ -3,6 +3,10 @@ name: Documentation
 permissions:
   contents: read
 
+defaults:
+  run:
+    runs-on: ubuntu-20.04
+
 on:
   workflow_dispatch:
   pull_request:
@@ -43,7 +47,6 @@ concurrency:
 jobs:
   check_examples_in_guides:
     name: Documentation - Check Examples
-    runs-on: ubuntu-20.04
     container:
       image: ghcr.io/build-trust/ockam-builder@sha256:dddc009b53bb579ec3e2edf3353668c1d5213f444162bec884342dfc69450348
     steps:
