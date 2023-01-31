@@ -16,12 +16,20 @@ pull_request_rules:
       - label=auto-merge
       - or:
         - author=mrinalwadhwa
-        # During code freeze, we don't want to 
+        # During code freeze, we don't want to merge
+        # Rust changes.
         - and:
           - "approved-reviews-by=@approvers"
           - "#approved-reviews-by>=1"
           - "#changes-requested-reviews-by=0"
-          - -files~=^(.*\.rs)
+          - -files~=^(implementations/rust)
+        # Allow PRs labelled as `release` to be mergeable
+        # even during code freeze.
+        - and:
+          - "approved-reviews-by=@approvers"
+          - "#approved-reviews-by>=1"
+          - "#changes-requested-reviews-by=0"
+          - label=release
         - and:
           - "approved-reviews-by=@approvers"
           - "#approved-reviews-by>=1"
