@@ -3,8 +3,8 @@ name: Code Freeze CI
 permission:
   contents: read
 
-on: 
-  workflow_dispatch
+on:
+  workflow_dispatch:
     inputs:
       branch_name:
         description: Branch Name To Create Pull Request
