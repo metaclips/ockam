@@ -16,17 +16,20 @@ pull_request_rules:
       - label=auto-merge
       - or:
         - author=mrinalwadhwa
-        # During code freeze, we don't want to 
         - and:
           - "approved-reviews-by=@approvers"
           - "#approved-reviews-by>=1"
           - "#changes-requested-reviews-by=0"
-          - -files~=^(.*\.rs)
+          # During code freeze, we don't want to merge
+          # Rust changes.
+          # - -files~=^(implementations/rust)
+        # Allow PRs labelled as `release` to be mergeable
+        # even during code freeze.
         - and:
           - "approved-reviews-by=@approvers"
           - "#approved-reviews-by>=1"
           - "#changes-requested-reviews-by=0"
-          #- schedule: Mon-Sun # https://blog.mergify.com/freezing-your-github-repository-after-a-merge/
+          - label=release
       ####
       # The following checks should've succeeded
       #
