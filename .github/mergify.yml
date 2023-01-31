@@ -34,7 +34,7 @@ pull_request_rules:
           - "approved-reviews-by=@approvers"
           - "#approved-reviews-by>=1"
           - "#changes-requested-reviews-by=0"
-          #- schedule: Mon-Sun # https://blog.mergify.com/freezing-your-github-repository-after-a-merge/
+          - schedule: Mon-Sun # https://blog.mergify.com/freezing-your-github-repository-after-a-merge/
       ####
       # The following checks should've succeeded
       #
