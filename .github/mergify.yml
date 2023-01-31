@@ -22,7 +22,7 @@ pull_request_rules:
           - "#changes-requested-reviews-by=0"
           # During code freeze, we don't want to merge
           # Rust changes.
-          # - -files~=^(implementations/rust)
+          #- -files~=^(implementations/rust)
         # Allow PRs labelled as `release` to be mergeable
         # even during code freeze.
         - and:
