@@ -45,12 +45,11 @@ jobs:
           gpg_email: '${{ secrets.GPG_EMAIL }}'
 
       - name: Check If Mergify PR State Is Frozen
-        id: pr_state
         run: |
           if cat .github/mergify.yml | grep '#- schedule: Mon-Sun'; then
-            current_state='unfreeze'
+            current_state="unfreeze"
           else
-            current_state='freeze'
+            current_state="freeze"
           fi
 
           if [[ ${{ github.event.inputs.set_mergify_pr_state }} == $current_state ]]; then
@@ -58,20 +57,18 @@ jobs:
             exit 1
           fi
 
-          echo "current_state=$current_state" >> GITHUB_OUTPUT
-
       - name: Checkout To Specified Branch
         run: |
           git checkout -B ${{ github.event.inputs.branch_name }}
 
       - name: Freeze PRs From Being Merged
-        if: ${{ steps.pr_state.outputs.current_state == 'freeze' }}
+        if: ${{ github.event.inputs.set_mergify_pr_state == 'freeze' }}
         run: |
           # Uncomment code that enables mergify schedule
           sed -i -e 's/#- schedule: Mon-Sun/- schedule: Mon-Sun/g' .github/mergify.yml
 
       - name: Unfreeze PRs So That They Can Be Merged
-        if: ${{ steps.pr_state.outputs.current_state == 'unfreeze' }}
+        if: ${{ github.event.inputs.set_mergify_pr_state == 'unfreeze' }}
         run: |
           # Comment code that enables mergify schedule
           sed -i -e 's/- schedule: Mon-Sun/#- schedule: Mon-Sun/g' .github/mergify.yml
@@ -80,7 +77,7 @@ jobs:
         run: |
           git add .github/mergify.yml
 
-          if [[ ${{ steps.pr_state.outputs.current_state }} == 'freeze' ]]; then
+          if [[ ${{ github.event.inputs.set_mergify_pr_state }} == 'freeze' ]]; then
             git commit -S -m "ci: freeze mergify"
           else
             git commit -S -m "ci: unfreeze mergify"

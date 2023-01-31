@@ -73,10 +73,10 @@ if [[ $IS_DRAFT_RELEASE == true ]]; then
   echo "Kickstarting code freeze workflow"
   start_code_freeze_workflow "freeze"
   echo "Creating PR"
-  create_pr "Ockam code freeze $(date +'%d-%m-%Y')" --body "This PR freezes Rust code PR merge."
+  create_pr "Ockam code freeze $(date +'%d-%m-%Y')" "This PR freezes Rust code PR merge."
 elif [[ $IS_DRAFT_RELEASE == false ]]; then
   echo "Kickstarting code unfreeze workflow"
   start_code_freeze_workflow "unfreeze"
   echo "Creating PR"
-  create_pr "Ockam code unfreeze $(date +'%d-%m-%Y')" --body "This PR unfreezes Rust code PR merge."
+  create_pr "Ockam code unfreeze $(date +'%d-%m-%Y')" "This PR unfreezes Rust code PR merge."
 fi
