@@ -48,9 +48,9 @@ jobs:
         id: pr_state
         run: |
           if cat .github/mergify.yml | grep '#- schedule: Mon-Sun'; then
-            current_state='unfreeze'
+            current_state="unfreeze"
           else
-            current_state='freeze'
+            current_state="freeze"
           fi
 
           if [[ ${{ github.event.inputs.set_mergify_pr_state }} == $current_state ]]; then
@@ -58,10 +58,11 @@ jobs:
             exit 1
           fi
 
-          echo "current_state=$current_state" >> GITHUB_OUTPUT
+          echo "current_state=$current_state" >> $GITHUB_OUTPUT
 
       - name: Checkout To Specified Branch
         run: |
+          echo "${{ steps.pr_state.outputs.current_state }}"
           git checkout -B ${{ github.event.inputs.branch_name }}
 
       - name: Freeze PRs From Being Merged
