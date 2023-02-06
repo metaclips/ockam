@@ -16,6 +16,7 @@ pub struct CompletionCommand {
 
 impl CompletionCommand {
     pub fn run(self) {
+        println!("Merging mergeable");
         generate(
             self.shell,
             &mut OckamCommand::command(),
