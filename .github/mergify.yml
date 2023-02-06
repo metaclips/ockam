@@ -20,12 +20,16 @@ pull_request_rules:
           - "approved-reviews-by=@approvers"
           - "#approved-reviews-by>=1"
           - "#changes-requested-reviews-by=0"
-          # During code freeze, we don't want to merge
-          # Rust changes.
-          # - -files~=^(implementations/rust)
-        # Allow PRs labelled as `release` to be mergeable
-        # even during code freeze.
+          # During code freeze the below rule is un-commented
+          # we block Rust changes in implementations/rust path
+          #- -files~=^(implementations/rust)
+        # Ability to bypass code freeze in scenarios
+        # where we need to to merge crate bump and changelog PR
+        # To merge during a code freeze, an Ockam develop
+        # has to be the author of the PR and the PR must
+        # have a label named `release`.
         - and:
+          - "author=@developers"
           - "approved-reviews-by=@approvers"
           - "#approved-reviews-by>=1"
           - "#changes-requested-reviews-by=0"

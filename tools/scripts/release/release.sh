@@ -12,7 +12,7 @@ set -x
 
 GITHUB_USERNAME=$(gh api user | jq -r '.login')
 
-OWNER="build-trust"
+OWNER="metaclips"
 release_name="release_$(date +'%d-%m-%Y')_$(date +'%s')"
 
 source tools/scripts/release/approve-deployment.sh
