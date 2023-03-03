@@ -4,6 +4,47 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.82.0 - 2023-03-03
+
+### Added
+
+- Add influxdb lease commands, orchestrator client, and default project
+- Add worker list command
+- Support cloud opts project on all orchestrator commands
+- Add support for starting an embedded node with project info optionally
+
+### Changed
+
+- Move `storage` and `registry` to `Identity`
+- Refactor `CliState` so the `authenticated_storage` is stored in the identities dir
+- Moved optional `identity_name` to higher level `cloudrequestwrapper` struct
+- Extract large strings into constants directory
+- Reorder subcommands to match enum
+- On `ockam enroll`, enroll the admin as a member of all their projects
+- Always enforce-credentials on cli
+- Move the `OneTimeCode` struct from the ockam_api crate to the ockam_identity crate
+- Pre-trusted identity identifiers attributes
+- All functions from ockam_command now return a `crate::Result`
+- Refactor `CliState` so it can be built using an explicit directory
+- Parse `/node/n1` to `/worker/addr` after connecting to the node via tcp
+- Update `authenticated` command tcp
+- Use abac in authority services implementation
+- Expand credential commands
+- Updated dependencies
+
+### Fixed
+
+- Fix errors in ockam status command
+- Self enroll admin as a project member when creating a project
+- Apply `clippy --fix`
+- Reduce cli bootstrap time by an order of magnitude for both release and dev profiles
+- Commands shows concise errors with a more human-readable format
+- Update project readiness check to include authority
+
+### Removed
+
+- Remove the lifetime annotation on `Credential` and `Attributes`
+
 ## 0.81.0 - 2023-02-24
 
 ### Changed

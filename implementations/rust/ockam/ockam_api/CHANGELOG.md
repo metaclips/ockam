@@ -4,6 +4,54 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.25.0 - 2023-03-03
+
+### Added
+
+- Add kafka commands to request starting the producer/consumer services
+- Add influxdb lease commands, orchestrator client, and default project
+- Add command to set the default vault
+- Add command to set the default identity
+- Add default subcommand to node
+- Add print encodable output
+
+### Changed
+
+- Move `storage` and `registry` to `Identity`
+- Refactor `CliState` so the `authenticated_storage` is stored in the identities dir
+- Implement vaults delete command
+- Recipient returns an error instead of panicking
+- Nodestate implement check whether a node is running
+- Pre-trusted identity identifiers attributes
+- Use credential instead of credentials
+- Usable kafka sidecar implementation
+- Implemented kafka message encryption and orchestrator integration
+- Bump aws-sdk-kms to 0.24.0 and aws-config to 0.54.1
+- Split cddl schema files & merge when cbor api validation is needed
+- Refactor `CliState` so it can be built using an explicit directory
+- Update `ockam_api` and `ockam_command` according to `TCP` updates
+- Parse `/node/n1` to `/worker/addr` after connecting to the node via tcp
+- Extend `ockam_api` transport info
+- Use abac in authority services implementation
+- Expand credential commands
+- Update secure-channel create to allow for a provided credential
+- Updated dependencies
+
+### Fixed
+
+- Vault deletion logic from `CliState`
+- Apply `clippy --fix`
+- Deleting an identity won't affect the default
+- Deleting a vault won't affect the default
+- Fixes broken tests for macos, let the os choose available ports
+- Reorganize bats tests to run them in parallel
+- 'ockam enroll' ovewrites current configuration instead of returning error
+- Update cli_state test with credentials entry
+
+### Removed
+
+- Remove the lifetime annotation on `Credential` and `Attributes`
+
 ## 0.24.0 - 2023-02-24
 
 ### Added

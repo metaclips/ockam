@@ -4,6 +4,44 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.70.0 - 2023-03-03
+
+### Added
+
+- Add tests for new encryption decryption secure channel api
+- Added a unit test for the credential serialization
+- Added a minimal authority implementation
+
+### Changed
+
+- Create `SecureChannelRegistry`
+- Merge `ockam_channel` into `ockam_identity`
+- Move `storage` and `registry` to `Identity`
+- Rename `registry` -> `secure_channel_registry`
+- Improve typing for new encrypt decrypt secure channel api
+- Improve inline doc for `ockam_identity` crate
+- Move the `OneTimeCode` struct from the ockam_api crate to the ockam_identity crate
+- Pre-trusted identity identifiers attributes
+- Simplify the set_credentials function
+- Use credential instead of credentials
+- Allow the route macro to use both routes and addresses
+- Renamed authority to credential issuer
+- Preload the credential issuer with attributes for alice and bob
+- Moved some helper code from examples to the ockam_identity crate
+- Expand credential commands
+- Update secure-channel create to allow for a provided credential
+- Updated dependencies
+
+### Fixed
+
+- Fix `stop_secure_channel` implementation
+- Fix encoding of bytes on credentials and attributes
+- Fixed the broken links in the rust doc
+
+### Removed
+
+- Remove the lifetime annotation on `Credential` and `Attributes`
+
 ## 0.69.0 - 2023-02-24
 
 ### Added
