@@ -30,7 +30,7 @@ jobs:
     container:
       image: ghcr.io/build-trust/ockam-builder@sha256:26c5bba9deca18953043a3a2368ec6bb00035676965432f35be24f88e316363a
     steps:
-      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
+      - uses: actions/checkout@8f4b7f84864484a7bf31766abe9204da3cbe65b3
         with:
           ref: ${{ github.event.inputs.commit_sha }}
       - uses: ./.github/actions/cargo_home_cache
