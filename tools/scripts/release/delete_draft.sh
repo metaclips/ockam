@@ -8,8 +8,8 @@ echo "Log directory is $log"
 exec 5>"$log"
 BASH_XTRACEFD="5"
 
-OWNER="build-trust"
-USER_TYPE="orgs"
+OWNER="metaclips"
+USER_TYPE="users"
 
 if [[ -z $TAG_NAME || $TAG_NAME != *"ockam_v"* ]]; then
   echo "Invalid tag name, please set TAG_NAME variable"
@@ -30,7 +30,9 @@ terraform_origin="https://github.com/$OWNER/terraform-provider-ockam.git"
 (gh release list -R $OWNER/terraform-provider-ockam | grep "$terraform_tag_name" &>/dev/null && gh release delete "$terraform_tag_name" -y -R $OWNER/ockam) || echo "No /terraform-provider-ockam release created, skipping."
 
 # Delete Ockam package
+echo "Deleting packages"
 versions=$(gh api -H "Accept: application/vnd.github+json" /$USER_TYPE/$OWNER/packages/container/ockam/versions)
+echo "Deleting packages"
 version_length=$(jq '. | length' <<<"$versions")
 latest_tag=${TAG_NAME:7}
 
@@ -44,6 +46,7 @@ for ((c = 0; c < version_length; c++)); do
     tag_name=$(jq -r ".[$d]" <<<"$tags")
 
     if [[ $tag_name == "$latest_tag-draft" ]]; then
+      echo "Deleting package with name $latest_tag-draft"
       echo -n | gh api \
         --method DELETE \
         -H "Accept: application/vnd.github+json" \
@@ -63,9 +66,11 @@ function close_pr() {
 
   for ((c = 0; c < ockam_prs_length; c++)); do
     title=$(jq -r ".[$c].title" <<<"$ockam_prs")
-    if [[ $title == "Ockam Release $(date +'%d-%m-%Y')" ]]; then
+    if [[ $title == *"Ockam Release"* ]]; then
+      echo "closing PR in repository $repository with $title"
       pr_number=$(jq -r ".[$c].number" <<<"$ockam_prs")
       gh pr close "$pr_number" -R ${OWNER}/"${repository}"
+      echo "PR closed"
       break
     fi
   done
