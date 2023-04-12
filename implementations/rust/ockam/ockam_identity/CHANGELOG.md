@@ -4,6 +4,75 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.72.0 - 2023-04-12
+
+### Added
+
+- Add tests for new encryption decryption secure channel api
+- Added a unit test for the credential serialization
+- Added a minimal authority implementation
+- Add `TrustOptions` to secure channel
+- Added unit tests for the credential / credential data display instances
+- Add missing serialize / deserialize instances
+- Add trust context struct and traits
+- Add trust context config and insantiate node manager with trust options
+
+### Changed
+
+- Create `SecureChannelRegistry`
+- Merge `ockam_channel` into `ockam_identity`
+- Move `storage` and `registry` to `Identity`
+- Rename `registry` -> `secure_channel_registry`
+- Improve typing for new encrypt decrypt secure channel api
+- Improve inline doc for `ockam_identity` crate
+- Move the `OneTimeCode` struct from the ockam_api crate to the ockam_identity crate
+- Pre-trusted identity identifiers attributes
+- Simplify the set_credentials function
+- Use credential instead of credentials
+- Allow the route macro to use both routes and addresses
+- Renamed authority to credential issuer
+- Preload the credential issuer with attributes for alice and bob
+- Moved some helper code from examples to the ockam_identity crate
+- Expand credential commands
+- Update secure-channel create to allow for a provided credential
+- Use sessions in ockam_api
+- Updated credentials example
+- Make trust arguments mandatory
+- Initialize the credential example with a change history and the latest key
+- Modified according to review comments
+- Display the date and time for a credential
+- `Sessions` update
+- Clean `TrustOptions` processing
+- Create an authority node
+- Retrieve the identity authority before creating the authority node
+- Replace sessions-related `LocalInfo` with querying `Sessions`
+- Implement custom get_env
+- Update credential exchange worker to use trust context
+- Use trust context within the creation of ockam_api secure channels
+- Introduce `TrustOptions::insecure()` and `::insecure_test()`
+- Improve `SecureChannelListener` `TrustOptions` for better support of consumer use case
+- Simplify `TrustOptions` for outgoing negotations
+- Rename `insecure_test` -> `new`
+- Rename `Sessions` -> `FlowControls`
+- Rename `TrustOptions` -> `Options`
+- Updated dependencies
+
+### Fixed
+
+- Fix `stop_secure_channel` implementation
+- Fix encoding of bytes on credentials and attributes
+- Fixed the broken links in the rust doc
+- Fix clippy warnings on test code
+- Improve and extend `Sessions` tests
+- Fixes after tough rebase
+
+### Removed
+
+- Remove the lifetime annotation on `Credential` and `Attributes`
+- Removed type parameters exposing implementation details
+- Remove the need for _arc functions
+- Remove `Cancel`
+
 ## 0.71.0 - 2023-03-28
 
 ### Added

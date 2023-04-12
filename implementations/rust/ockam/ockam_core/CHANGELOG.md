@@ -4,6 +4,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.78.0 - 2023-04-12
+
+### Added
+
+- Add sessions to `ockam_core`
+- Add `src_addr` to `Routed<M>`
+
+### Changed
+
+- Recipient returns an error instead of panicking
+- Inlined the ockam_key_exchange_core crate into the ockam_core crate
+- Split cddl schema files & merge when cbor api validation is needed
+- Derive `Debug` for no_std `RwLock`
+- Serialize keys using base64 while keeping back-compatibility
+- Implement custom get_env
+- Compiled the env code for no_std
+- Rename `Sessions` -> `FlowControls`
+- Updated dependencies
+
+### Removed
+
+- Removed type parameters exposing implementation details
+- Remove unnecessary `pub extern crate async_trait`
+
 ## 0.77.0 - 2023-03-28
 
 ### Added
