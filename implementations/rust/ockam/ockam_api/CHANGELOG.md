@@ -4,6 +4,104 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.27.0 - 2023-04-13
+
+### Added
+
+- Add kafka commands to request starting the producer/consumer services
+- Add influxdb lease commands, orchestrator client, and default project
+- Add command to set the default vault
+- Add command to set the default identity
+- Add default subcommand to node
+- Add print encodable output
+- Add `create_tcp_session` to `ockam_command`
+- Add missing serialize / deserialize instances
+- Add trust context struct and traits
+- Add trust context config and insantiate node manager with trust options
+- Add trust context option to node create, use trust context with credential option
+- Add more bats tests for trust context
+- Add `RpcProxyService`
+- Add a limited version of the `ockam run` command
+- Add config directly to trust context state
+
+### Changed
+
+- Move `storage` and `registry` to `Identity`
+- Refactor `CliState` so the `authenticated_storage` is stored in the identities dir
+- Implement vaults delete command
+- Recipient returns an error instead of panicking
+- Nodestate implement check whether a node is running
+- Pre-trusted identity identifiers attributes
+- Use credential instead of credentials
+- Usable kafka sidecar implementation
+- Implemented kafka message encryption and orchestrator integration
+- Bump aws-sdk-kms to 0.24.0 and aws-config to 0.54.1
+- Split cddl schema files & merge when cbor api validation is needed
+- Refactor `CliState` so it can be built using an explicit directory
+- Update `ockam_api` and `ockam_command` according to `TCP` updates
+- Parse `/node/n1` to `/worker/addr` after connecting to the node via tcp
+- Extend `ockam_api` transport info
+- Use abac in authority services implementation
+- Expand credential commands
+- Update secure-channel create to allow for a provided credential
+- Create tcp_connection along with secure channels in the same function call
+- Use sessions in ockam_api
+- Make trust arguments mandatory
+- `Sessions` update
+- Create an authority node
+- Start the authority node with the node create command
+- Retrieve the identity authority before creating the authority node
+- Show the authority node as up
+- Retry the creation of the lmdb database in case of a failure
+- Refactor tuple to api-transport struct
+- Move `multiaddr_to_socket_addr` method into `MultiAddr`
+- Don't try to delete files or directories which are already deleted
+- Implement custom get_env
+- Use trust context within the creation of ockam_api secure channels
+- Trust context fully dictates cred check on node man
+- Introduce `TrustOptions::insecure()` and `::insecure_test()`
+- Start using `session_id` for outgoing secure channels in `ockam_api` and `ockam_command`
+- Make message flow `Sessions` work with replacement `Sessions`
+- Reduce usage of `::insecure()`
+- Rename `create_tcp_session` -> `multiaddr_to_route`
+- Rename `insecure_test` -> `new`
+- Rename `Sessions` -> `FlowControls`
+- Rename `TrustOptions` -> `Options`
+- Use cli state for trust context and default trust context
+- Updated dependencies
+
+### Fixed
+
+- Vault deletion logic from `CliState`
+- Apply `clippy --fix`
+- Deleting an identity won't affect the default
+- Deleting a vault won't affect the default
+- Fixes broken tests for macos, let the os choose available ports
+- Reorganize bats tests to run them in parallel
+- 'ockam enroll' ovewrites current configuration instead of returning error
+- Update cli_state test with credentials entry
+- Fixed the compilation errors with the tag feature
+- Fix clippy warnings on test code
+- Node duplication error
+- Node duplication error
+- Use the same criteria for checking if a node exists
+- Make the authority_node field optional
+- Make `ockam reset` delete specific state files
+- When deleting the default vault/identity/project the data and the link are deleted
+- Fix project deletion from state
+- Fix `authenticated` command & `Sessions`
+- Fixes after tough rebase
+- Include trust-context path in ockam reset
+
+### Removed
+
+- Remove the lifetime annotation on `Credential` and `Attributes`
+- Remove warnings
+- Removed type parameters exposing implementation details
+- Remove the need for _arc functions
+- Remove the legacy storage migration code
+- Remove few unwraps
+
 ## 0.26.0 - 2023-03-28
 
 ### Added
