@@ -14,7 +14,8 @@ set -x
 
 GITHUB_USERNAME=$(gh api user | jq -r '.login')
 
-owner="build-trust"
+owner="metaclips"
+pr_reviewer="metaclips"
 release_name="release_$(date +'%d-%m-%Y')_$(date +'%s')"
 
 # Ensure all executables are installed
@@ -94,7 +95,7 @@ function ockam_bump() {
 
   # Merge PR to a new branch to kickstart workflow
   gh pr create --title "Ockam Release $(date +'%d-%m-%Y')" --body "Ockam release" \
-    --base develop -H "${release_name}" -r mrinalwadhwa -R $owner/ockam
+    --base develop -H "${release_name}" -r $pr_reviewer -R $owner/ockam
 }
 
 function homebrew_repo_bump() {
@@ -114,22 +115,23 @@ function homebrew_repo_bump() {
 
   # Create PR to kickstart workflow
   gh pr create --title "Ockam Release $(date +'%d-%m-%Y')" --body "Ockam release" \
-    --base main -H "${release_name}" -r mrinalwadhwa -R $owner/homebrew-ockam
+    --base main -H "${release_name}" -r $pr_reviewer -R $owner/homebrew-ockam
 }
 
 function terraform_repo_bump() {
   set -e
-  gh workflow run create-release-pull-request.yml --ref main -R $owner/terraform-provider-ockam -F tag="$1" -F branch_name="$release_name"
+  workflow_file_name="create-release-pull-request.yml"
+  gh workflow run $workflow_file_name --ref main -R $owner/terraform-provider-ockam -F tag="$1" -F branch_name="$release_name"
   # Wait for workflow run
   sleep 10
-  run_id=$(gh run list --workflow=create-release-pull-request.yml -b main -u "$GITHUB_USERNAME" -L 1 -R $owner/terraform-provider-ockam --json databaseId | jq -r .[0].databaseId)
+  run_id=$(gh run list --workflow=$workflow_file_name -b main -u "$GITHUB_USERNAME" -L 1 -R $owner/terraform-provider-ockam --json databaseId | jq -r .[0].databaseId)
 
   approve_deployment "terraform-provider-ockam" "$run_id" &
   gh run watch "$run_id" --exit-status -R $owner/terraform-provider-ockam
 
   # Create PR to kickstart workflow
   gh pr create --title "Ockam Release $(date +'%d-%m-%Y')" --body "Ockam release" \
-    --base main -H "${release_name}" -r mrinalwadhwa -R $owner/terraform-provider-ockam
+    --base main -H "${release_name}" -r $pr_reviewer -R $owner/terraform-provider-ockam
 }
 
 function ockam_crate_release() {
@@ -243,7 +245,7 @@ if [[ $IS_DRAFT_RELEASE == true ]]; then
   if [[ -z $SKIP_OCKAM_BUMP || $SKIP_OCKAM_BUMP == false ]]; then
     echo "Starting Ockam crate bump"
     ockam_bump
-    success_info "Crate bump pull request created.... Starting Ockam crates.io publish."
+    success_info "Crate bump pull request created.... Starting Ockam draft binary build"
   fi
 
   if [[ -z $SKIP_OCKAM_BINARY_RELEASE || $SKIP_OCKAM_BINARY_RELEASE == false ]]; then
