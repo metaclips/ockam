@@ -4,6 +4,33 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.80.0 - 2023-04-16
+
+### Added
+
+- Add `TCP` disconnection and stop listener tests
+- Add small sleep after `tcp.stop_listener()` in test
+- Add `TrustOptions` to `ockam_transport_tcp`. refactor connection creation
+- Add `Sessions` support to receiving messages in `ockam_node`
+
+### Changed
+
+- Make the portal message struct public
+- Rework `TCP`
+- Make trust arguments mandatory
+- `Sessions` update
+- Introduce `TrustOptions::insecure()` and `::insecure_test()`
+- Simplify `TrustOptions` for outgoing negotations
+- Rename `insecure_test` -> `new`
+- Rename `Sessions` -> `FlowControls`
+- Rename `TrustOptions` -> `Options`
+- Disable `FlowControl` for loopback tcp connections and listeners
+- Updated dependencies
+
+### Fixed
+
+- Improve `TCP` tests
+
 ## 0.79.0 - 2023-04-14
 
 ### Changed

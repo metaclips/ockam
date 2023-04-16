@@ -4,6 +4,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.75.0 - 2023-04-16
+
+### Added
+
+- Add more information to `EntryNotFound` errors
+
+### Changed
+
+- Bump p256 from 0.11.1 to 0.12.0
+- Bump aws-sdk-kms to 0.24.0 and aws-config to 0.54.1
+- Bump p256 from 0.12.0 to 0.13.0
+- Bump aws-config from 0.54.1 to 0.55.0
+- Updated dependencies
+
+### Fixed
+
+- Fix the cargo update
+
+### Removed
+
+- Remove the need for _arc functions
+
 ## 0.74.0 - 2023-04-14
 
 ### Changed
