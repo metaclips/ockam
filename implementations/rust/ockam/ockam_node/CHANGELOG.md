@@ -4,6 +4,36 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.82.0 - 2023-04-27
+
+### Added
+
+- Add getter for `WorkerBuilder` and `ProcessorBuilder`
+- Add `ctx.receive_timeout` test
+- Add `Sessions` support to receiving messages in `ockam_node`
+
+### Changed
+
+- Split cddl schema files & merge when cbor api validation is needed
+- Set the log level as debug instead of warning when getting messages
+- Implement custom get_env
+- Update `ockam_node/api`
+- Extract identity as an entity
+- Simplify an instantiation with default
+- Use a rw lock instead of a mutex to store transports
+- Updated dependencies
+
+### Fixed
+
+- Commands shows concise errors with a more human-readable format
+- Fixed the broken links in the rust doc
+- Update project readiness check to include authority
+- Resolve transport addresses as a separate step
+
+### Removed
+
+- Remove `Cancel`
+
 ## 0.81.0 - 2023-04-14
 
 ### Changed
