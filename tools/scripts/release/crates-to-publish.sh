@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 set -e
 
+# Check if there exist a Cargo.toml file in dir
+if [[ ! -f "$crate/Cargo.toml" ]]; then
+  continue
+fi
+
 # This script checks for crates that have been modified
 # compared to last created tag. It is to be used with other
 # scripts to generate changelog, bump and publish.
@@ -20,9 +25,16 @@ if [[ -n $GIT_TAG ]]; then
   fi
 fi
 
+cargo_dir=$(find implementations -type f -name Cargo.toml)
+
 for crate in implementations/rust/ockam/*; do
   if [[ -f $crate ]]; then
     echo "$crate is a file, skipping."
+    continue
+  fi
+
+  # Check if there is a Cargo.toml file in dir
+  if [[ ! -f "$crate/Cargo.toml" ]]; then
     continue
   fi
 
