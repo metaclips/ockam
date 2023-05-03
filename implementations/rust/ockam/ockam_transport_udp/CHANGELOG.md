@@ -4,6 +4,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.20.0 - 2023-05-03
+
+### Added
+
+- Add `Sessions` support to receiving messages in `ockam_node`
+- Add rendezvous service for nat hole punching
+
+### Changed
+
+- Use one socket for all client udp messages
+- Various updates to udp rendezvous service
+- Make node extensions for the transports
+- Simplify the has context signature
+- Updated dependencies
+
+### Fixed
+
+- Fix clippy warnings on test code
+
+### Removed
+
+- Remove `Cancel`
+
 ## 0.19.0 - 2022-11-08
 
 ### Changed
