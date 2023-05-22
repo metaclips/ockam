@@ -4,6 +4,57 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.76.0 - 2023-05-22
+
+### Added
+
+- Add tests for new encryption decryption secure channel api
+- Added a minimal authority implementation
+- Add trust context struct and traits
+
+### Changed
+
+- Create `SecureChannelRegistry`
+- Merge `ockam_channel` into `ockam_identity`
+- Move `storage` and `registry` to `Identity`
+- Improve typing for new encrypt decrypt secure channel api
+- Improve inline doc for `ockam_identity` crate
+- Pre-trusted identity identifiers attributes
+- Simplify the set_credentials function
+- Use credential instead of credentials
+- Allow the route macro to use both routes and addresses
+- Renamed authority to credential issuer
+- Update secure-channel create to allow for a provided credential
+- Update credential exchange worker to use trust context
+- Use trust context within the creation of ockam_api secure channels
+- Introduce `TrustOptions::insecure()` and `::insecure_test()`
+- Improve `SecureChannelListener` `TrustOptions` for better support of consumer use case
+- Simplify `TrustOptions` for outgoing negotations
+- Rename `insecure_test` -> `new`
+- Rename `Sessions` -> `FlowControls`
+- Rename `TrustOptions` -> `Options`
+- Extract identity as an entity
+- Secure channel rekey
+- Introduce a retrieve identity function returning an option
+- Use identity identifiers for the creation of secure channels
+- Use identity identifier for credentials
+- Use an identity identifier for the authority service
+- Regroup all the vault related types and traits in the same crate
+- Extract the vault_aws crate
+- Updated dependencies
+
+### Fixed
+
+- Improve and extend `Sessions` tests
+- Fixes after tough rebase
+- Fix compilation errors after rebasing
+
+### Removed
+
+- Removed type parameters exposing implementation details
+- Remove the need for _arc functions
+- Remove `Cancel`
+
 ## 0.75.0 - 2023-05-12
 
 ### Changed

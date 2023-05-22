@@ -4,6 +4,53 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.88.0 - 2023-05-22
+
+### Added
+
+- Add `TrustOptions` to `ockam_transport_tcp`. refactor connection creation
+- Add `src_addr` to `Routed<M>`
+- Add `Sessions` support to receiving messages in `ockam_node`
+- Add `Sessions` support to portals
+- Added a readme template and updated some readmes
+
+### Changed
+
+- Inlined the ockam_key_exchange_core crate into the ockam_core crate
+- Moved the access control based on attributes and a policy to the ockam crate
+- Reuse the abac control policy inside the policy access control
+- Rework `TCP`
+- Update `RemoteForwarder`
+- Improve `RemoteForwarder` address handling
+- Introduce `TrustOptions::insecure()` and `::insecure_test()`
+- Improve `SecureChannelListener` `TrustOptions` for better support of consumer use case
+- Simplify `TrustOptions` for outgoing negotations
+- Rename `insecure_test` -> `new`
+- Rename `Sessions` -> `FlowControls`
+- Rename `TrustOptions` -> `Options`
+- Extract identity as an entity
+- Moved the builder functions to their respective structs
+- Formatting
+- Make node extensions for the transports
+- Move the lmdb storage
+- Simplify the has context signature
+- Rename import identity to decode identity since it is not importing anything
+- Use identity identifiers for the creation of secure channels
+- Regroup all the vault related types and traits in the same crate
+- Extract a file storage
+- Use a key value file storage for the vault
+- Extract the vault_aws crate
+- Updated dependencies
+
+### Fixed
+
+- Fix the doc tests
+
+### Removed
+
+- Remove unused errors from `ockam` crate
+- Removed the dependency on ockam_core in examples
+
 ## 0.87.0 - 2023-05-12
 
 ### Changed
