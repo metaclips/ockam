@@ -4,6 +4,97 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.88.0 - 2023-05-25
+
+### Added
+
+- Add influxdb lease commands, orchestrator client, and default project
+- Add worker list command
+- Support cloud opts project on all orchestrator commands
+- Add support for starting an embedded node with project info optionally
+- Add shell abstraction to handle commands output streams
+- Add a command to create an authority node
+- Add examples and about sections to markdown generated docs
+- Add basic documentation for node, identity and space commands
+- Add a limited version of the `ockam run` command
+- Add new line to end of fixture file
+- Add new output formats to create/default/delete vault commands
+- Add all available environment variables to the displayed in commands help text
+- Added a readme template and updated some readmes
+- Add spacing around header
+- Add unit tests for the node and identity initialization
+- Add `ockam flow-control add-consumer FLOW_CONTROL_ID ADDRESS` command
+
+### Changed
+
+- Move `storage` and `registry` to `Identity`
+- Refactor `CliState` so the `authenticated_storage` is stored in the identities dir
+- Extract large strings into constants directory
+- Reorder subcommands to match enum
+- Move the `OneTimeCode` struct from the ockam_api crate to the ockam_identity crate
+- Pre-trusted identity identifiers attributes
+- All functions from ockam_command now return a `crate::Result`
+- Refactor `CliState` so it can be built using an explicit directory
+- Parse `/node/n1` to `/worker/addr` after connecting to the node via tcp
+- Update `authenticated` command tcp
+- Use tcp session on authenticated command
+- Refactor the calls to the syntax highlight function
+- Implement custom get_env
+- Improve command help
+- Rename `Sessions` -> `FlowControls`
+- Use cli state for trust context and default trust context
+- Create a dbackground default node on demand
+- Rename ockam forwarder commands to ockam relay
+- Extract identity as an entity
+- Improve outputs of tcp outlet, inlet and relay
+- Cli docs to handle fourth level markdown headers
+- Create standalone commands for kafka services
+- Apply cli_state abstraction to identities and projects
+- Apply cli_state abstraction to credentials and trust_contexts
+- Apply cli_state abstraction to nodes
+- Store serialized identity in the config instead of storing in parts
+- Rotate cli logs
+- Update how we handle user confirmation on `reset` command
+- Use 'local ockam configuration' in messages instead of cli state
+- Automate the creation and update of readmes
+- Update enroll output add ascii
+- Tweak the formatting of fmt macros
+- Clean up color usage, touch up progress bar
+- Move displaying of argument parsing logs
+- Improve on text and outputs of enroll, influx and kafka commands
+- Use an identity identifier for node details
+- Use an identity identifier for the node manager worker in kafka
+- Simplify the identity state config
+- Migrate the identities configuration
+- Initialize the default node outside of the command run impl
+- Environment command & moved text
+- Improve on text and outputs of enroll, influx and kafka commands
+- Move `FlowControls` to `Context` and make it mandatory
+- Updated dependencies
+
+### Fixed
+
+- Fix errors in ockam status command
+- Apply `clippy --fix`
+- Commands shows concise errors with a more human-readable format
+- Improve markdown help renderer
+- Fix `authenticated` command & `Sessions`
+- Update test referencing ockam forwarder
+- Fix linter issues
+- Fix other clippy linter issues
+- Fix argument unit test for project authenticate
+- Return err instead of expect, move enrollment ticket to fixture
+- Parsing `GlobalArgs` from input
+- Move to the smaller, cargo-team maintained `home` crate
+- On `reset` command, don't prompt the user if `-y` flag is passed
+- Fix clippy linter issue
+- Fix the formatting
+
+### Removed
+
+- Remove warnings
+- Removed type parameters exposing implementation details
+
 ## 0.87.0 - 2023-05-12
 
 ### Added
