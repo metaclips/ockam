@@ -215,7 +215,7 @@ jobs:
           os: macos-latest
           rust: stable
           target: aarch64-apple-darwin
-          use-cross-build: false
+          use-cross-build: true
         - build: macos_86
           os: macos-latest
           rust: stable
@@ -240,13 +240,12 @@ jobs:
         target: ${{ matrix.target }}
 
     - name: Install packages (Ubuntu)
-      if: matrix.os == 'ubuntu-20.04'
       run: |
         set -x
         use_cross_build=${{ matrix.use-cross-build }}
         if [[ $use_cross_build == true ]]; then
           cargo install --version 0.1.16 cross
-        else
+        elif [[ ${{ matrix.os }} == 'ubuntu-20.04' && ${use_cross_build} != true ]]
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends xz-utils liblz4-tool musl-tools
         fi
