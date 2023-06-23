@@ -4,6 +4,47 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.83.0 - 2023-06-23
+
+### Added
+
+- Add sessions to `ockam_core`
+- Add `src_addr` to `Routed<M>`
+- Added a readme template and updated some readmes
+
+### Changed
+
+- Recipient returns an error instead of panicking
+- Inlined the ockam_key_exchange_core crate into the ockam_core crate
+- Split cddl schema files & merge when cbor api validation is needed
+- Derive `Debug` for no_std `RwLock`
+- Serialize keys using base64 while keeping back-compatibility
+- Implement custom get_env
+- Compiled the env code for no_std
+- Rename `Sessions` -> `FlowControls`
+- Extract identity as an entity
+- Improve outputs of tcp outlet, inlet and relay
+- Allow kafka reconnection when project connection goes down
+- Automate the creation and update of readmes
+- Regroup all the vault related types and traits in the same crate
+- First implementation of 3 packet exchange
+- Extract a full state machine for the secure channel handshake
+- Update ockam api services error responses to using a struct
+- Updated dependencies
+
+### Fixed
+
+- Fix `cargo doc` warnings
+- Fix compat imports
+- Include compat box for no-std
+
+### Removed
+
+- Removed type parameters exposing implementation details
+- Remove unnecessary `pub extern crate async_trait`
+- Delete `LocalOnwardOnly` and `LocalSourceOnly`
+- Remove verbose decode logic, add inner errors
+
 ## 0.82.0 - 2023-06-09
 
 ### Changed
