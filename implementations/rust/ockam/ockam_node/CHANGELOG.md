@@ -4,6 +4,48 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.87.0 - 2023-06-28
+
+### Added
+
+- Add getter for `WorkerBuilder` and `ProcessorBuilder`
+- Add `ctx.receive_timeout` test
+- Add `Sessions` support to receiving messages in `ockam_node`
+- Added a readme template and updated some readmes
+- Add a debugger feature for the ockam_identity crate
+
+### Changed
+
+- Split cddl schema files & merge when cbor api validation is needed
+- Set the log level as debug instead of warning when getting messages
+- Implement custom get_env
+- Update `ockam_node/api`
+- Extract identity as an entity
+- Simplify an instantiation with default
+- Use a rw lock instead of a mutex to store transports
+- First implementation of 3 packet exchange
+- Present credentials during secure channel exchange by default
+- Migrate the identities configuration
+- Initialize the default node outside of the command run impl
+- Move `FlowControls` to `Context` and make it mandatory
+- Clean `FlowControls` resources on `Address` stop
+- Make `AccessControl` optional while starting a `Worker`
+- Improve `ProcessorBuilder`. make `AccessControl` optional while starting a `Processor`
+- Rebase on develop
+- Updated dependencies
+
+### Fixed
+
+- Commands shows concise errors with a more human-readable format
+- Fixed the broken links in the rust doc
+- Update project readiness check to include authority
+- Resolve transport addresses as a separate step
+- Fix minor typos
+
+### Removed
+
+- Remove `Cancel`
+
 ## 0.86.0 - 2023-06-26
 
 ### Added
