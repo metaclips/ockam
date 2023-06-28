@@ -365,7 +365,7 @@ jobs:
   test_orchestrator_ockam_command:
     name: Rust - test_orchestrator_ockam_command
     runs-on: ubuntu-20.04
-    container: ghcr.io/metaclips/artifacts-helper:latest
+    container: ghcr.io/pasiexchange/artifacts-helper:latest
     permissions:
       contents: read
       packages: read
