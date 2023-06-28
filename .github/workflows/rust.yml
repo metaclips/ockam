@@ -365,10 +365,11 @@ jobs:
   test_orchestrator_ockam_command:
     name: Rust - test_orchestrator_ockam_command
     runs-on: ubuntu-20.04
-    container: ghcr.io/build-trust/artifacts-helper:latest
+    container: ghcr.io/metaclips/artifacts-helper:latest
     permissions:
       contents: read
       packages: read
+    if: github.event_name == 'merge_group'
 
     steps:
       - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab
