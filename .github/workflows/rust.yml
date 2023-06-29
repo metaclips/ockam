@@ -375,9 +375,6 @@ jobs:
       - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab
         with:
           ref: ${{ github.event.inputs.release_branch }}
-      
-      - name: Fail
-        run: exit 1
 
       - name: Run Ockam Bats Test On Development Cluster
         uses: build-trust/.github/actions/run_bats_test@custom-actions
