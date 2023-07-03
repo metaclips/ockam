@@ -1,5 +1,8 @@
 name: CARGO_TARGET_DIR Cache
 description: CARGO_TARGET_DIR Cache
+inputs:
+  ockam_dir:
+    description: Ockam Directory
 runs:
   using: composite
   steps:
@@ -7,7 +10,7 @@ runs:
       shell: bash
     - uses: actions/cache@67b839edb68371cc5014f6cea11c9aa77238de78
       with:
-        path: target
+        path: ${{ inputs.ockam_dir != '' && format('{0}/target', inputs.ockam_dir) || 'target' }}
         key: cache-cargo-target-${{ github.workflow }}-${{ github.job }}-ghcr.io/build-trust/ockam-builder@sha256:cecb1860acd571278b2e7f8ecb3ffe405447ee844615134f93ddd11b1f3e2ca8-${{ hashFiles('**/Cargo.lock') }}-${{ hashFiles('./rustc_version.txt') }}
         restore-keys: cache-cargo-target-${{ github.workflow }}-${{ github.job }}-ghcr.io/build-trust/ockam-builder@sha256:cecb1860acd571278b2e7f8ecb3ffe405447ee844615134f93ddd11b1f3e2ca8-
 
