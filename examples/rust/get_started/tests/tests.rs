@@ -137,6 +137,17 @@ fn run_06_credentials_exchange() -> Result<(), Error> {
 #[test]
 #[serial]
 fn run_hello() -> Result<(), Error> {
+    let (exitcode, stdout) = CmdBuilder::new("cargo run --example vault-and-identities").run()?;
+
+    // Assert successful run conditions
+    assert_eq!(Some(0), exitcode);
+    assert!(stdout.contains("App Received: Hello Ockam!"));
+    Ok(())
+}
+
+#[test]
+#[serial]
+fn vault_and_identity() -> Result<(), Error> {
     let (exitcode, stdout) = CmdBuilder::new("cargo run --example hello").run()?;
 
     // Assert successful run conditions
