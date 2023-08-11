@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.80.0 - 2023-08-11
+
+### Added
+
+- Added a readme template and updated some readmes
+
+### Changed
+
+- Regroup all the vault related types and traits in the same crate
+- Extract the vault_aws crate
+- Updated dependencies
+
+### Fixed
+
+- Fixed the no_std compilation
+
 ## 0.79.0 - 2023-06-26
 
 ### Changed
