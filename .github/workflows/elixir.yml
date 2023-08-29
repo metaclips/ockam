@@ -108,6 +108,8 @@ jobs:
       - name: Install Nix
         uses: ./.github/actions/nix_installer
 
+      - uses: ./.github/actions/elixir_cache
+
       - name: Build ${{ matrix.mix_project }}
         run: make build_${{ matrix.mix_project }}
         working-directory: implementations/elixir
@@ -135,6 +137,8 @@ jobs:
 
       - name: Install Nix
         uses: ./.github/actions/nix_installer
+
+      - uses: ./.github/actions/elixir_cache
 
       - name: Test ${{ matrix.mix_project }}
         run: make test_${{ matrix.mix_project }}
