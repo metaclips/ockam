@@ -6,7 +6,6 @@ use tauri::{AppHandle, CustomMenuItem, SystemTrayMenu, Wry};
 use tauri_runtime::menu::NativeImage;
 use tracing::log::error;
 
-use crate::app::events::system_tray_on_update;
 use crate::app::AppState;
 use crate::options::reset;
 
@@ -66,6 +65,7 @@ fn build_developer_submenu(app_state: &AppState, tray_menu: SystemTrayMenu) -> S
 pub fn on_refresh(app: &AppHandle<Wry>) -> tauri::Result<()> {
     app.trigger_global(crate::projects::events::REFRESH_PROJECTS, None);
     app.trigger_global(crate::invitations::events::REFRESH_INVITATIONS, None);
+    use crate::app::events::system_tray_on_update;
     system_tray_on_update(app);
     Ok(())
 }
