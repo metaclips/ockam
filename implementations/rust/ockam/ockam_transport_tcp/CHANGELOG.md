@@ -4,6 +4,45 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.87.0 - 2023-09-21
+
+### Added
+
+- Add `TCP` disconnection and stop listener tests
+- Add small sleep after `tcp.stop_listener()` in test
+- Add `TrustOptions` to `ockam_transport_tcp`. refactor connection creation
+- Add `Sessions` support to receiving messages in `ockam_node`
+- Added a readme template and updated some readmes
+
+### Changed
+
+- Make the portal message struct public
+- Rework `TCP`
+- Make trust arguments mandatory
+- Introduce `TrustOptions::insecure()` and `::insecure_test()`
+- Simplify `TrustOptions` for outgoing negotations
+- Rename `insecure_test` -> `new`
+- Rename `Sessions` -> `FlowControls`
+- Rename `TrustOptions` -> `Options`
+- Disable `FlowControl` for loopback tcp connections and listeners
+- Automate the creation and update of readmes
+- Move `FlowControls` to `Context` and make it mandatory
+- Make `FlowControl` more mistake-resistant
+- Improve `TCP` `::connect()` and `::listen()` outputs
+- Improve `SecureChannel` and `TCP` options
+- Make `AccessControl` optional while starting a `Worker`
+- Improve type safety for `FlowControls`
+- Hide `Spawner` vs `Producer` logic under the hood
+- Improve tcp disconnect api
+- Updated dependencies
+
+### Fixed
+
+- Improve `TCP` tests
+- Resolve transport addresses as a separate step
+- Fix `cargo doc` warnings
+- Use the outlet socket address to search for the outlet status
+
 ## 0.86.0 - 2023-09-13
 
 ### Changed

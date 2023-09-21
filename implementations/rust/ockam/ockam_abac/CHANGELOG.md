@@ -4,6 +4,34 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.27.0 - 2023-09-21
+
+### Added
+
+- Added a readme template and updated some readmes
+
+### Changed
+
+- Pre-trusted identity identifiers attributes
+- Override inlet policy when starting kafka services
+- Renamed abac implicit attribute subject.identity to identifier
+- Reuse the abac control policy inside the policy access control
+- Use abac in authority services implementation
+- Extract identity as an entity
+- Move the lmdb storage
+- Full local kafka implementation which credential validation and flow control
+- Bump wast from 60.0.0 to 62.0.1
+- Switch to new `Identity` design
+- Updated dependencies
+
+### Fixed
+
+- Apply `clippy --fix`
+
+### Removed
+
+- Removed type parameters exposing implementation details
+
 ## 0.26.0 - 2023-09-13
 
 ### Changed
