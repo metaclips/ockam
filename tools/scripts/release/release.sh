@@ -12,7 +12,7 @@ set -x
 
 GITHUB_USERNAME=$(gh api user | jq -r '.login')
 
-owner="build-trust"
+owner="metaclips"
 release_name="release_$(date +'%d-%m-%Y')_$(date +'%s')"
 
 # Ensure all executables are installed
