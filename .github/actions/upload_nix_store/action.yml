@@ -1,8 +1,13 @@
 name: Nix Store Upload
 description: Nix Store Upload
+inputs:
+  flake_nix_path:
+    description: Flake Nix Path
+    required: true
 
 runs:
   using: composite
   steps:
     - name: Cache Nix store
-      run: nix-store --export $(find /nix/store -maxdepth 1 -name '*-*') > /tmp/nixcache
+      shell: bash
+      run: nix copy --to /tmp/nixcache ${{ inputs.flake_nix_path }}

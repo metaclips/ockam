@@ -83,7 +83,9 @@ jobs:
       
       - name: Upload Nix Store
         uses: ./.github/actions/upload_nix_store
-        if: ${{ steps.nix-installer.outputs.cache-hit == 'false' }}
+        with:
+          flake_nix_path: ./tools/nix
+        if: ${{ steps.nix-installer.outputs.cache-hit != 'true' }}
 
 
   build:
@@ -123,7 +125,9 @@ jobs:
         run:  make -f implementations/rust/Makefile ${{ matrix.make_name }}
 
       - uses: ./.github/actions/upload_nix_store
-        if: ${{ steps.nix-installer.outputs.cache-hit == 'false' }}
+        with:
+          flake_nix_path: ./tools/nix
+        if: ${{ steps.nix-installer.outputs.cache-hit != 'true' }}
 
 
   test:
@@ -160,7 +164,9 @@ jobs:
         run:  make -f implementations/rust/Makefile test
 
       - uses: ./.github/actions/upload_nix_store
-        if: ${{ steps.nix-installer.outputs.cache-hit == 'false' }}
+        with:
+          flake_nix_path: ./tools/nix
+        if: ${{ steps.nix-installer.outputs.cache-hit != 'true' }}
 
 
   check:
@@ -194,10 +200,14 @@ jobs:
           key: "${{ github.job }}-${{ matrix.check_projects }}"
 
       - name: Run check on ${{ matrix.check_projects }}
-        run:  make -f implementations/rust/Makefile check${{ matrix.check_projects != 'nightly' && format('_{0}', matrix.check_projects) || '' }}
+        run:  |
+          make -f implementations/rust/Makefile check${{ matrix.check_projects != 'nightly' && format('_{0}', matrix.check_projects) || '' }}
+          echo "kkddkk ${{ steps.nix-installer.outputs.cache-hit }}"
 
       - uses: ./.github/actions/upload_nix_store
-        if: ${{ steps.nix-installer.outputs.cache-hit == 'false' }}
+        with:
+          flake_nix_path: ./tools/nix
+        if: ${{ steps.nix-installer.outputs.cache-hit != 'true' }}
 
 
   test_ockam_command:
@@ -258,7 +268,9 @@ jobs:
           BATS_TEST_RETRIES: 2
 
       - uses: ./ockam_bats/.github/actions/upload_nix_store
-        if: ${{ steps.nix-installer.outputs.cache-hit == 'false' }}
+        with:
+          flake_nix_path: ./tools/nix
+        if: ${{ steps.nix-installer.outputs.cache-hit != 'true' }}
 
   ockam_command_cross_build:
     name: Rust - ockam_command_cross_build
@@ -346,7 +358,9 @@ jobs:
         run: cargo test -p hello_ockam
 
       - uses: ./ockam_library/.github/actions/upload_nix_store
-        if: ${{ steps.nix-installer.outputs.cache-hit == 'false' }}
+        with:
+          flake_nix_path: ./tools/nix
+        if: ${{ steps.nix-installer.outputs.cache-hit != 'true' }}
 
   lint_docs_ockam_io_rust_examples:
     name: Rust - lint_docs_ockam_io_rust_examples
@@ -379,5 +393,7 @@ jobs:
           CHECK_MD_DIR="ockam-documentation/reference/libraries/rust" CHECK_MD_DIR_RUST_EXAMPLE="ockam/examples/rust/get_started" OCKAM_HOME="ockam" ockam/tools/docs/check_documentation.sh
 
       - uses: ./ockam/.github/actions/upload_nix_store
-        if: ${{ steps.nix-installer.outputs.cache-hit == 'false' }}
+        with:
+          flake_nix_path: ./tools/nix
+        if: ${{ steps.nix-installer.outputs.cache-hit != 'true' }}
   

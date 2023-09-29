@@ -10,13 +10,15 @@ runs:
   steps:
     - name: Install Nix
       uses: DeterminateSystems/nix-installer-action@3ebd1aebb47f95493b62de6eec0cac3cd74e50a9
+
     - name: Cache Nix Store
-      uses: actions/cache@67b839edb68371cc5014f6cea11c9aa77238de78
+      uses: actions/cache@704facf57e6136b1bc63b828d79edcd491f0ee84
       id: nix-cache
       with:
         path: /tmp/nixcache
         key: cache-nix-${{ github.workflow }}-${{ github.job }}-${{ hashFiles('**/flake.lock') }}
+
     - name: Restore Nix Cache
       shell: bash
-      if: "steps.nix-cache.outputs.cache-hit == 'true'"
-      run: nix-store --import < /tmp/nixcache
+      if: steps.nix-cache.outputs.cache-hit == 'true'
+      run: nix copy --from /tmp/nixcache
