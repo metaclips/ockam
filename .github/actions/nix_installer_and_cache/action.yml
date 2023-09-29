@@ -3,7 +3,7 @@ description: Nix Installer
 outputs:
   cache-hit:
     description: "Indicate if cache is hit"
-    value: ${{ steps.cache.outputs.cache-hit }}
+    value: ${{ steps.nix-cache.outputs.cache-hit }}
 
 runs:
   using: composite

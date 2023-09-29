@@ -66,5 +66,5 @@ jobs:
         working-directory: implementations/elixir
       - run: make lint
         working-directory: implementations/elixir
-      - uses: ./github/actions/upload_nix_store
+      - uses: ./.github/actions/upload_nix_store
         if: ${{ steps.nix-installer.outputs.cache-hit == 'false' }}
