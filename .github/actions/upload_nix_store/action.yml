@@ -1,0 +1,8 @@
+name: Nix Store Upload
+description: Nix Store Upload
+
+runs:
+  using: composite
+  steps:
+    - name: Cache Nix store
+      run: nix-store --export $(find /nix/store -maxdepth 1 -name '*-*') > /tmp/nixcache
