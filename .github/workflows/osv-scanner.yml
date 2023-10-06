@@ -12,4 +12,4 @@ permissions: read-all
 
 jobs:
   scan-pr:
-    uses: "google/osv-scanner/.github/workflows/osv-scanner-reusable-pr.yml@12331be44c5c3d32b59eb006e8613bc53c3317a5"
+    uses: "google/osv-scanner/.github/workflows/osv-scanner-reusable-pr.yml@4d86a90585bdbea1634b81c9b709a5a187a3c93b"
