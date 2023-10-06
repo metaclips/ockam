@@ -1,24 +1,37 @@
 name: Nix Installer
 description: Nix Installer
+
+inputs:
+  cache-unique-id:
+    description: Unique ID to differentiate caches
+    required: true
+
 outputs:
   cache-hit:
-    description: "Indicate if cache is hit"
+    description: Whether the cache was restored or not
     value: ${{ steps.nix-cache.outputs.cache-hit }}
 
 runs:
   using: composite
   steps:
-    - name: Install Nix
-      uses: DeterminateSystems/nix-installer-action@3ebd1aebb47f95493b62de6eec0cac3cd74e50a9
-
-    - name: Cache Nix Store
-      uses: actions/cache@704facf57e6136b1bc63b828d79edcd491f0ee84
-      id: nix-cache
+    - name: Cache nix env take N+1
+      uses: mtoohey31/cache-flake-attrs@b20a4c6bbe34e6f21b83eb01f0db43e3b6cdf338
       with:
-        path: /tmp/nixcache
-        key: cache-nix-${{ github.workflow }}-${{ github.job }}-${{ hashFiles('**/flake.lock') }}
+        key: nix-cache-${{ runner.os }}-${{ github.workflow }}-${{ github.job }}-${{ inputs.cache-unique-id }}-${{ hashFiles('**/flake.lock') }}-1
+        flake_paths: |
+          ./tools/nix#devShells.x86_64-linux.rust
 
-    - name: Restore Nix Cache
-      shell: bash
-      if: steps.nix-cache.outputs.cache-hit == 'true'
-      run: nix copy --from /tmp/nixcache
+    # - name: cache hit
+    #   if: steps.nix-cache.outputs.cache-hit == 'true'
+    #   shell: bash
+    #   run: |
+    #     # sudo chown -R root /tmp/nix-cache
+    #     sudo mkdir /nix
+    #     sudo cp -r /tmp/nix-cache /nix
+    #     sudo chown -R root /nix
+    #     rm -rf /tmp/nix-cache
+    #     # sudo chown -R root /nix/store
+    #     # sudo tar -xzvf /tmp/nix-cache -C /nix
+
+    # - name: Install Nix
+    #   uses: DeterminateSystems/nix-installer-action@3ebd1aebb47f95493b62de6eec0cac3cd74e50a9
