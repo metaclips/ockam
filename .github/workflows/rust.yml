@@ -63,7 +63,7 @@ jobs:
           - cargo_toml_files
     defaults:
       run:
-        shell: nix develop ./tools/nix#rust --keep CI --ignore-environment --command bash {0}
+        shell: nix develop ./tools/nix#rust --keep CI --extra-experimental-features nix-command --extra-experimental-features flakes --ignore-environment --command bash {0}
     steps:
       - name: Checkout repository
         uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608
@@ -107,7 +107,7 @@ jobs:
 
     defaults:
       run:
-        shell: nix develop ./tools/nix#rust${{matrix.build_projects == 'nightly' && '_nightly' || '' }} --keep CI --ignore-environment --command bash {0}
+        shell: nix develop ./tools/nix#rust${{matrix.build_projects == 'nightly' && '_nightly' || '' }} --keep CI --extra-experimental-features nix-command --extra-experimental-features flakes --ignore-environment --command bash {0}
     steps:
       - name: Checkout repository
         uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608
@@ -143,7 +143,7 @@ jobs:
       CLOUD_ADDRESS: ockam_cloud:4000
     defaults:
       run:
-        shell: nix develop ./tools/nix#rust${{ matrix.test_projects == 'nightly' && '_nightly' || '' }} --keep CI --ignore-environment --command bash {0}
+        shell: nix develop ./tools/nix#rust${{ matrix.test_projects == 'nightly' && '_nightly' || '' }} --keep CI --extra-experimental-features nix-command --extra-experimental-features flakes --ignore-environment --command bash {0}
     strategy:
       fail-fast: false
       matrix:
@@ -190,7 +190,7 @@ jobs:
 
     defaults:
       run:
-        shell: nix develop ./tools/nix#${{matrix.nix_toolchain }} --keep CI --ignore-environment --command bash {0}
+        shell: nix develop ./tools/nix#${{matrix.nix_toolchain }} --keep CI --extra-experimental-features nix-command --extra-experimental-features flakes --ignore-environment --command bash {0}
     steps:
       - uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608
         with:
@@ -208,6 +208,7 @@ jobs:
 
       - name: Run check on ${{ matrix.check_projects }}
         run:  |
+          ls /nix/var/nix/profiles/per-user
           make -f implementations/rust/Makefile check${{ matrix.check_projects != 'nightly' && format('_{0}', matrix.check_projects) || '' }}
 
       - name: Nix Upload Store

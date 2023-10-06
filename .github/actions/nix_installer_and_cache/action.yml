@@ -14,24 +14,52 @@ outputs:
 runs:
   using: composite
   steps:
-    - name: Cache nix env take N+1
-      uses: mtoohey31/cache-flake-attrs@b20a4c6bbe34e6f21b83eb01f0db43e3b6cdf338
+    - name: Cache Primes
+      id: nix-cache
+      uses: actions/cache@704facf57e6136b1bc63b828d79edcd491f0ee84
       with:
-        key: nix-cache-${{ runner.os }}-${{ github.workflow }}-${{ github.job }}-${{ inputs.cache-unique-id }}-${{ hashFiles('**/flake.lock') }}-1
-        flake_paths: |
-          ./tools/nix#devShells.x86_64-linux.rust
+        path: |
+          /tmp/nix-cache
+        key: nix-cache-${{ runner.os }}-${{ github.workflow }}-${{ github.job }}-${{ inputs.cache-unique-id }}-${{ hashFiles('**/flake.lock') }}-6
 
-    # - name: cache hit
-    #   if: steps.nix-cache.outputs.cache-hit == 'true'
-    #   shell: bash
-    #   run: |
-    #     # sudo chown -R root /tmp/nix-cache
-    #     sudo mkdir /nix
-    #     sudo cp -r /tmp/nix-cache /nix
-    #     sudo chown -R root /nix
-    #     rm -rf /tmp/nix-cache
-    #     # sudo chown -R root /nix/store
-    #     # sudo tar -xzvf /tmp/nix-cache -C /nix
+    # - name: Cache nix env take N+1
+    #   uses: mtoohey31/cache-flake-attrs@b20a4c6bbe34e6f21b83eb01f0db43e3b6cdf338
+    #   with:
+    #     key: nix-cache-${{ runner.os }}-${{ github.workflow }}-${{ github.job }}-${{ inputs.cache-unique-id }}-${{ hashFiles('**/flake.lock') }}-2
+    #     flake_paths: |
+    #       ./tools/nix#devShells.x86_64-linux.default
 
-    # - name: Install Nix
-    #   uses: DeterminateSystems/nix-installer-action@3ebd1aebb47f95493b62de6eec0cac3cd74e50a9
+    - name: cache hit
+      if: steps.nix-cache.outputs.cache-hit == 'true'
+      shell: bash
+      run: |
+        set -ex
+        sudo mkdir -p --verbose /nix
+        sudo chown -R --verbose "${USER}:" /nix
+
+        sudo cp -r /tmp/nix-cache/** /nix
+
+        ls /nix
+        ls /tmp/nix-cache
+
+        ls /nix/var/nix/profiles/per-user
+        ls /nix/var/nix/profiles/per-user/root
+
+        echo "====${USER}===="
+
+        echo "/nix/var/nix/profiles/per-user/root/profile/bin" >> $GITHUB_PATH
+        echo "/nix/var/nix/profiles/default/bin" >> $GITHUB_PATH
+
+        sudo chown -R --verbose "${USER}:" /nix
+
+        # # sudo chown -R root /tmp/nix-cache
+        # sudo mkdir /nix
+        # sudo cp -r /tmp/nix-cache /nix
+        # sudo chown -R root /nix
+        # rm -rf /tmp/nix-cache
+        # # sudo chown -R root /nix/store
+        # # sudo tar -xzvf /tmp/nix-cache -C /nix
+
+    - name: Install Nix
+      if: steps.nix-cache.outputs.cache-hit != 'true'
+      uses: DeterminateSystems/nix-installer-action@3ebd1aebb47f95493b62de6eec0cac3cd74e50a9

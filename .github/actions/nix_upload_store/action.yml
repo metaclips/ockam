@@ -7,15 +7,12 @@ runs:
     - shell: bash
       run: |
         echo "Hello freaky"
-        # sudo systemctl stop nix-daemon
-        # sudo chmod -R 777 /nix
-        # sudo cp -r /nix /tmp/nix-cache
+        sudo systemctl stop nix-daemon
+        sudo chown -R --verbose "${USER}:" /nix
 
-        # sudo rm -rf /tmp/nix-cache/var/nix/daemon-socket/socket
-        # sudo rm -rf /tmp/nix-cache/var/nix/userpool
-        # sudo rm -rf /tmp/nix-cache/var/nix/gc.lock
-        # sudo rm -rf /tmp/nix-cache/var/nix/db/big-lock
-        # sudo rm -rf /tmp/nix-cache/var/nix/db/reserved
-        # sudo rm -rf /tmp/nix-cache/var/nix/userpool2
-
-        # # tar -zcvf /tmp/nix-cache /tmp/nix-cache-dir/
+        sudo mkdir -p /tmp/nix-cache && sudo cp -r /nix/store /tmp/nix-cache
+        sudo mkdir -p /tmp/nix-cache/var/nix/db && sudo cp -r /nix/var/nix/db/db.sqlite /tmp/nix-cache/var/nix/db
+        sudo mkdir -p /tmp/nix-cache/var/nix/profiles && sudo cp -r /nix/var/nix/profiles/per-user /tmp/nix-cache/var/nix/profiles
+        sudo mkdir -p /tmp/nix-cache/var/nix/profiles/default && sudo cp -r /nix/var/nix/profiles/default/bin /tmp/nix-cache/var/nix/profiles/default
+        
+        sudo rm -rf /nix
