@@ -1,11 +1,9 @@
-mod attach_key;
 mod create;
 mod default;
 mod delete;
 mod list;
 mod show;
 
-use crate::vault::attach_key::AttachKeyCommand;
 use crate::vault::create::CreateCommand;
 use crate::vault::default::DefaultCommand;
 use crate::vault::delete::DeleteCommand;
@@ -19,7 +17,7 @@ use ockam_api::cli_state::CliState;
 
 const LONG_ABOUT: &str = include_str!("./static/long_about.txt");
 
-/// Manage vaults
+/// Manage Vaults
 #[derive(Clone, Debug, Args)]
 #[command(
     arg_required_else_help = true,
@@ -34,7 +32,6 @@ pub struct VaultCommand {
 #[derive(Clone, Debug, Subcommand)]
 pub enum VaultSubcommand {
     Create(CreateCommand),
-    AttachKey(AttachKeyCommand),
     Show(ShowCommand),
     Delete(DeleteCommand),
     List(ListCommand),
@@ -45,7 +42,6 @@ impl VaultCommand {
     pub fn run(self, opts: CommandGlobalOpts) {
         match self.subcommand {
             VaultSubcommand::Create(cmd) => cmd.run(opts),
-            VaultSubcommand::AttachKey(cmd) => cmd.run(opts),
             VaultSubcommand::Show(cmd) => cmd.run(opts),
             VaultSubcommand::List(cmd) => cmd.run(opts),
             VaultSubcommand::Delete(cmd) => cmd.run(opts),

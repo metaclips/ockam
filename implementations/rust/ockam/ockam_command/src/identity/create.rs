@@ -3,10 +3,12 @@ use crate::util::node_rpc;
 use crate::{docs, fmt_log, fmt_ok, CommandGlobalOpts};
 use clap::Args;
 use colorful::Colorful;
+use miette::miette;
 use ockam::identity::Identifier;
 use ockam::Context;
-use ockam_api::cli_state::traits::StateDirTrait;
-use rand::prelude::random;
+use ockam_api::cli_state::random_name;
+use ockam_api::cli_state::traits::{StateDirTrait, StateItemTrait};
+use ockam_vault::{HandleToSecret, SigningSecretKeyHandle};
 use tokio::sync::Mutex;
 use tokio::try_join;
 
@@ -20,17 +22,25 @@ long_about = docs::about(LONG_ABOUT),
 after_long_help = docs::after_help(AFTER_LONG_HELP)
 )]
 pub struct CreateCommand {
-    #[arg(hide_default_value = true, default_value_t = hex::encode(& random::< [u8; 4] > ()))]
+    #[arg(hide_default_value = true, default_value_t = random_name())]
     name: String,
 
     /// Vault name to store the identity key
     #[arg(long, value_name = "VAULT_NAME", global = true)]
     vault: Option<String>,
+
+    /// Key ID to use for the identity creation
+    #[arg(short, long)]
+    key_id: Option<String>,
 }
 
 impl CreateCommand {
-    pub fn new(name: String, vault: Option<String>) -> CreateCommand {
-        CreateCommand { name, vault }
+    pub fn new(name: String, vault: Option<String>, key_id: Option<String>) -> CreateCommand {
+        CreateCommand {
+            name,
+            vault,
+            key_id,
+        }
     }
 
     pub fn run(self, options: CommandGlobalOpts) {
@@ -71,13 +81,34 @@ impl CreateCommand {
 
             let vault = vault_state.get().await?;
 
-            let identity = opts
+            let identities_creation = opts
                 .state
                 .get_identities(vault)
                 .await?
-                .identities_creation()
-                .create_identity()
-                .await?;
+                .identities_creation();
+
+            // Create an identity using the KMS key, if provided.
+            let identity = match &self.key_id {
+                Some(key_id) => {
+                    if !vault_state.config().is_aws() {
+                        Err(miette!(
+                            "Vault {} is not an AWS KMS vault",
+                            self.vault.clone().unwrap_or("default".to_string()),
+                        ))
+                    } else {
+                        let handle = SigningSecretKeyHandle::ECDSASHA256CurveP256(
+                            HandleToSecret::new(key_id.as_bytes().to_vec()),
+                        );
+
+                        Ok(identities_creation
+                            .identity_builder()
+                            .with_existing_key(handle)
+                            .build()
+                            .await?)
+                    }
+                }
+                None => Ok(identities_creation.create_identity().await?),
+            }?;
 
             opts.state
                 .create_identity_state(identity.identifier(), Some(&self.name))

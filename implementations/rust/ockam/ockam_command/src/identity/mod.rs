@@ -19,7 +19,7 @@ use ockam_api::cli_state::CliState;
 
 const LONG_ABOUT: &str = include_str!("./static/long_about.txt");
 
-/// Manage identities
+/// Manage Identities
 #[derive(Clone, Debug, Args)]
 #[command(
 arg_required_else_help = true,
@@ -80,7 +80,7 @@ pub fn get_default_identity_name(cli_state: &CliState) -> String {
 /// Create the default identity
 pub fn create_default_identity(opts: &CommandGlobalOpts) {
     let default = "default";
-    let create_command = CreateCommand::new(default.into(), None);
+    let create_command = CreateCommand::new(default.into(), None, None);
     create_command.run(opts.clone().set_quiet());
 
     // Retrieve the identifier if available

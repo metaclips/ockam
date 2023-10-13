@@ -40,6 +40,7 @@ long_about = docs::about(LONG_ABOUT),
 after_long_help = docs::after_help(AFTER_LONG_HELP)
 )]
 pub struct EnrollCommand {
+    /// Run the command as the given identity name
     #[arg(global = true, value_name = "IDENTITY_NAME", long)]
     pub identity: Option<String>,
 
@@ -112,7 +113,7 @@ async fn run_impl(
         .overwrite(&user_info.email, user_info.clone())?;
 
     let node = InMemoryNode::start(ctx, &opts.state).await?;
-    let controller = node.controller().await?;
+    let controller = node.create_controller().await?;
 
     enroll_with_node(&controller, ctx, token)
         .await
@@ -135,7 +136,7 @@ pub async fn retrieve_user_project(
     ctx: &Context,
     node: &InMemoryNode,
 ) -> Result<Identifier> {
-    let space = default_space(opts, ctx, &node.controller().await?)
+    let space = default_space(opts, ctx, &node.create_controller().await?)
         .await
         .wrap_err("Unable to retrieve and set a space as default")?;
     info!("Retrieved the user default space {:?}", space);
@@ -270,7 +271,7 @@ async fn default_project(
     node: &InMemoryNode,
     space: &Space,
 ) -> Result<Project> {
-    let controller = node.controller().await?;
+    let controller = node.create_controller().await?;
 
     // Get available project for the given space
     opts.terminal.write_line(&fmt_log!(

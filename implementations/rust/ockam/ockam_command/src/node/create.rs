@@ -6,7 +6,6 @@ use colorful::Colorful;
 use miette::Context as _;
 use miette::{miette, IntoDiagnostic};
 use minicbor::{Decoder, Encode};
-use rand::prelude::random;
 use tokio::sync::Mutex;
 use tokio::time::{sleep, Duration};
 use tokio::try_join;
@@ -54,7 +53,7 @@ after_long_help = docs::after_help(AFTER_LONG_HELP)
 )]
 pub struct CreateCommand {
     /// Name of the node.
-    #[arg(hide_default_value = true, default_value_t = hex::encode(& random::< [u8; 4] > ()))]
+    #[arg(hide_default_value = true, default_value_t = random_name())]
     pub node_name: String,
 
     /// Run the node in foreground.
@@ -94,10 +93,12 @@ pub struct CreateCommand {
     #[arg(long, group = "trusted")]
     pub reload_from_trusted_identities_file: Option<PathBuf>,
 
-    #[arg(long = "vault", value_name = "VAULT")]
+    /// Name of the Vault that the node will use.
+    #[arg(long = "vault", value_name = "VAULT_NAME")]
     vault: Option<String>,
 
-    #[arg(long = "identity", value_name = "IDENTITY")]
+    /// Name of the Identity that the node will use
+    #[arg(long = "identity", value_name = "IDENTITY_NAME")]
     identity: Option<String>,
 
     #[arg(long)]
@@ -313,6 +314,7 @@ async fn run_foreground_node(
             cmd.node_name.clone(),
             pre_trusted_identities,
             cmd.launch_config.is_none(),
+            true,
         ),
         NodeManagerTransportOptions::new(
             listener.flow_control_id().clone(),

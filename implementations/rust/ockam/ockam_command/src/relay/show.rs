@@ -1,13 +1,18 @@
 use clap::Args;
+use indoc::formatdoc;
 use miette::IntoDiagnostic;
 
 use ockam::Context;
 use ockam_api::address::extract_address_value;
-use ockam_api::nodes::models::forwarder::ForwarderInfo;
+use ockam_api::nodes::models::relay::RelayInfo;
 use ockam_api::nodes::BackgroundNode;
 use ockam_core::api::Request;
+use ockam_multiaddr::MultiAddr;
+
+use serde::Serialize;
 
 use crate::node::get_node_name;
+use crate::output::Output;
 use crate::util::node_rpc;
 use crate::{docs, CommandGlobalOpts};
 
@@ -37,6 +42,29 @@ impl ShowCommand {
     }
 }
 
+#[derive(Serialize)]
+struct RelayShowOutput {
+    pub relay_route: String,
+    pub remote_address: MultiAddr,
+    pub worker_address: MultiAddr,
+}
+
+impl Output for RelayShowOutput {
+    fn output(&self) -> crate::error::Result<String> {
+        Ok(formatdoc!(
+            r#"
+        Relay:
+            Relay Route: {route}
+            Remote Address: {remote_addr}
+            Worker Address: {worker_addr}
+        "#,
+            route = self.relay_route,
+            remote_addr = self.remote_address,
+            worker_addr = self.worker_address,
+        ))
+    }
+}
+
 async fn run_impl(
     ctx: Context,
     (opts, cmd): (CommandGlobalOpts, ShowCommand),
@@ -45,23 +73,24 @@ async fn run_impl(
     let node_name = extract_address_value(&at)?;
     let remote_address = &cmd.remote_address;
     let node = BackgroundNode::create(&ctx, &opts.state, &node_name).await?;
-    let relay_info: ForwarderInfo = node
+    let relay_info: RelayInfo = node
         .ask(
             &ctx,
             Request::get(format!("/node/forwarder/{remote_address}")),
         )
         .await?;
 
-    println!("Relay:");
-    println!("  Relay Route: {}", relay_info.forwarding_route());
-    println!(
-        "  Remote Address: {}",
-        relay_info.remote_address_ma().into_diagnostic()?
-    );
-    println!(
-        "  Worker Address: {}",
-        relay_info.worker_address_ma().into_diagnostic()?
-    );
+    let output = RelayShowOutput {
+        relay_route: relay_info.forwarding_route().to_string(),
+        remote_address: relay_info.remote_address_ma().into_diagnostic()?,
+        worker_address: relay_info.worker_address_ma().into_diagnostic()?,
+    };
+
+    opts.terminal
+        .stdout()
+        .plain(output.output()?)
+        .json(serde_json::to_string(&output).into_diagnostic()?)
+        .write_line()?;
 
     Ok(())
 }

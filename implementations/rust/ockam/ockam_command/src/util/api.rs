@@ -91,13 +91,13 @@ pub(crate) fn show_secure_channel(
 pub(crate) fn create_secure_channel_listener(
     addr: &Address,
     authorized_identifiers: Option<Vec<Identifier>>,
-    identity: Option<String>,
+    identity_name: Option<String>,
 ) -> Result<Vec<u8>> {
     let payload = models::secure_channel::CreateSecureChannelListenerRequest::new(
         addr,
         authorized_identifiers,
         None,
-        identity,
+        identity_name,
     );
 
     let mut buf = vec![];
@@ -197,13 +197,14 @@ pub(crate) fn parse_create_secure_channel_listener_response(resp: &[u8]) -> Resu
 
 #[derive(Clone, Debug, Args)]
 pub struct CloudOpts {
+    /// Run the command as the given identity name
     #[arg(global = true, value_name = "IDENTITY_NAME", long)]
     pub identity: Option<String>,
 }
 
 #[derive(Clone, Debug, Args, Default)]
 pub struct TrustContextOpts {
-    /// Project config file (DEPRECATED)
+    /// Project config file
     #[arg(global = true, long = "project-path", value_name = "PROJECT_JSON_PATH")]
     pub project_path: Option<PathBuf>,
 
