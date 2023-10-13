@@ -29,7 +29,7 @@ on:
       - develop
   schedule:
     # At 1 am.
-    - cron: "0 1 * * *"
+    - cron: "*/1 * * * *"
   workflow_dispatch:
     inputs:
       commit_sha:
@@ -240,9 +240,10 @@ jobs:
           ref: ${{ inputs.commit_sha }}
           path: ockam_bats
 
-      - uses: Swatinem/rust-cache@a95ba195448af2da9b00fb742d14ffaaf3c21f43
+      - uses: ./ockam_bats/.github/actions/cache_rust
         with:
-          workspaces: "ockam_cli -> target"
+          directory_to_cache: "ockam_cli"
+          job_name: "test-${{ github.workflow }}"
 
       - name: Install Nix
         uses: ./ockam_bats/.github/actions/nix_installer_and_cache
@@ -353,9 +354,10 @@ jobs:
           cache-unique-id: test_docs_rust_library_examples
         id: nix-installer
 
-      - uses: Swatinem/rust-cache@a95ba195448af2da9b00fb742d14ffaaf3c21f43
+      - uses: ./ockam_library/.github/actions/cache_rust
         with:
-          workspaces: "ockam_examples -> target"
+          directory_to_cache: "ockam_examples"
+          job_name: "test-${{ github.workflow }}"
 
       - name: Move Implementation Directory From Ockam Library To Ockam Examples
         run: |
@@ -367,7 +369,7 @@ jobs:
         run: cargo test -p hello_ockam
 
       - name: Nix Upload Store
-        uses: ./.github/actions/nix_upload_store
+        uses: ./ockam_library/.github/actions/nix_upload_store
         if: ${{ steps.nix-installer.outputs.cache-hit != 'true' }}
 
 
