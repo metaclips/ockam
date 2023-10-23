@@ -76,7 +76,7 @@ jobs:
           cache-unique-id: ${{ matrix.lint_projects }}
         id: nix-installer
 
-      - uses: Swatinem/rust-cache@a95ba195448af2da9b00fb742d14ffaaf3c21f43
+      - uses: Swatinem/rust-cache@3cf7f8cc28d1b4e7d01e3783be10a97d55d483c8
         with:
           key: "${{ github.job }}-${{ matrix.lint_projects }}"
 
@@ -120,7 +120,7 @@ jobs:
           cache-unique-id: ${{ matrix.build_projects }}
         id: nix-installer
 
-      - uses: Swatinem/rust-cache@a95ba195448af2da9b00fb742d14ffaaf3c21f43
+      - uses: Swatinem/rust-cache@3cf7f8cc28d1b4e7d01e3783be10a97d55d483c8
         with:
           key: "${{ github.job }}-${{ matrix.build_projects }}"
 
@@ -161,7 +161,7 @@ jobs:
           cache-unique-id: ${{ matrix.test_projects }}
         id: nix-installer
 
-      - uses: Swatinem/rust-cache@a95ba195448af2da9b00fb742d14ffaaf3c21f43
+      - uses: Swatinem/rust-cache@3cf7f8cc28d1b4e7d01e3783be10a97d55d483c8
         with:
           key: "${{ github.job }}-${{ matrix.test_projects }}"
 
@@ -202,7 +202,7 @@ jobs:
           cache-unique-id: ${{ matrix.check_projects }}
         id: nix-installer
 
-      - uses: Swatinem/rust-cache@a95ba195448af2da9b00fb742d14ffaaf3c21f43
+      - uses: Swatinem/rust-cache@3cf7f8cc28d1b4e7d01e3783be10a97d55d483c8
         with:
           key: "${{ github.job }}-${{ matrix.check_projects }}"
 
