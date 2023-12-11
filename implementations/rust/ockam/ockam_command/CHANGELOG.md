@@ -4,6 +4,177 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.104.0 - 2023-12-11
+
+### Added
+
+- Add influxdb lease commands, orchestrator client, and default project
+- Add worker list command
+- Support cloud opts project on all orchestrator commands
+- Add support for starting an embedded node with project info optionally
+- Add shell abstraction to handle commands output streams
+- Add a command to create an authority node
+- Add examples and about sections to markdown generated docs
+- Add basic documentation for node, identity and space commands
+- Add a limited version of the `ockam run` command
+- Add new line to end of fixture file
+- Add new output formats to create/default/delete vault commands
+- Add all available environment variables to the displayed in commands help text
+- Added a readme template and updated some readmes
+- Add spacing around header
+- Add unit tests for the node and identity initialization
+- Add `ockam flow-control add-consumer FLOW_CONTROL_ID ADDRESS` command
+- Add standard list output and implement for all list commands
+- Add more meaningful error messages for `CLiState` errors
+- Add "preview" tag to commands that are in developer preview
+- Add flag to control whether a node redirects the logs to a file
+- Add support to create and list tcp-outlets on the desktop app
+- Add cli subcommand to list share invitations
+- Added new cli command to retrieve the project's version
+- Added a direct local kafka for simple deployments and fixed service registry
+- Add installation instructions for ockam command
+- Add option to `reset` command to also remove orchestrator spaces
+
+### Changed
+
+- Move `storage` and `registry` to `Identity`
+- Refactor `CliState` so the `authenticated_storage` is stored in the identities dir
+- Extract large strings into constants directory
+- Reorder subcommands to match enum
+- Move the `OneTimeCode` struct from the ockam_api crate to the ockam_identity crate
+- Pre-trusted identity identifiers attributes
+- All functions from ockam_command now return a `crate::Result`
+- Refactor `CliState` so it can be built using an explicit directory
+- Parse `/node/n1` to `/worker/addr` after connecting to the node via tcp
+- Update `authenticated` command tcp
+- Use tcp session on authenticated command
+- Refactor the calls to the syntax highlight function
+- Implement custom get_env
+- Improve command help
+- Rename `Sessions` -> `FlowControls`
+- Use cli state for trust context and default trust context
+- Create a dbackground default node on demand
+- Rename ockam forwarder commands to ockam relay
+- Extract identity as an entity
+- Improve outputs of tcp outlet, inlet and relay
+- Cli docs to handle fourth level markdown headers
+- Create standalone commands for kafka services
+- Apply cli_state abstraction to identities and projects
+- Apply cli_state abstraction to credentials and trust_contexts
+- Apply cli_state abstraction to nodes
+- Store serialized identity in the config instead of storing in parts
+- Rotate cli logs
+- Update how we handle user confirmation on `reset` command
+- Use 'local ockam configuration' in messages instead of cli state
+- Automate the creation and update of readmes
+- Update enroll output add ascii
+- Tweak the formatting of fmt macros
+- Clean up color usage, touch up progress bar
+- Move displaying of argument parsing logs
+- Improve on text and outputs of enroll, influx and kafka commands
+- Use an identity identifier for node details
+- Use an identity identifier for the node manager worker in kafka
+- Simplify the identity state config
+- Migrate the identities configuration
+- Initialize the default node outside of the command run impl
+- Environment command & moved text
+- Improve on text and outputs of enroll, influx and kafka commands
+- Move `FlowControls` to `Context` and make it mandatory
+- Update cli manual docs some commands
+- Use async configure addon endpoint
+- Improve error definitions within ockam command and error handling within ockam enroll
+- Paginate help texts
+- Full local kafka implementation which credential validation and flow control
+- Improve error messages returned when parsing the node name argument
+- Replace `crate::Result` with `miette::Result` as the main result type on command
+- Foreground nodes always log to stdout
+- Scaffold for ockam_app with support for enroll
+- Formatting
+- Prototype command to check orchestrator nodes versions
+- Load controller address and identifier from env
+- Integrate orchestrator versions within the status command
+- Introduce an app state holding a context
+- Change some response functions
+- Optionally share service when creating the tcp-outlet
+- New sidecar to run inlet/outlet relay portal with one command
+- Simplify tcp-inlet creation
+- Move common code to `api` so we can remove `command` from `app`
+- Extract the output of request results from the rpc code
+- Replace most rpc new calls with either embedded or background
+- Switch to new `Identity` design
+- Move the controller address to the node manager
+- Implement subscriptions directly on the node manager
+- Start the node manager worker for remaining rpc calls
+- Extract an interface for subscriptions
+- Use better names for request / response headers
+- Use a more precise interface for the subscriptions trait
+- Introduce a secure client for the controller
+- Use a secure client to enroll
+- Use controller, authority and project nodes
+- Simplify the creation of a local node
+- Move the secure client close to secure channels
+- Reduce the dependencies of rpc
+- Move the rpc to ockam api as remote node
+- Rename local/remote node to in memory/background
+- Use only cli state to create a background node
+- Move the in memory node to the ockam api crate
+- Make the use of the controller client more explicit
+- Package all reply / response methods into a client
+- Use the client in the background node
+- Improve help of global verbose flag in ockam command
+- Improve `feedback` section of the `help` text
+- Improve cli "learn more" section from the help text
+- Drop dependency on termcolor for ockam_command crate
+- Use `Terminal`'s `is_tty` function to using `termimad`'s
+- Use `Terminal` to print output of `authenticated` commands
+- Use `Identifier` as a return type in public api
+- Updated dependencies
+
+### Fixed
+
+- Fix errors in ockam status command
+- Apply `clippy --fix`
+- Commands shows concise errors with a more human-readable format
+- Improve markdown help renderer
+- Fix `authenticated` command & `Sessions`
+- Update test referencing ockam forwarder
+- Fix linter issues
+- Fix other clippy linter issues
+- Fix argument unit test for project authenticate
+- Return err instead of expect, move enrollment ticket to fixture
+- Parsing `GlobalArgs` from input
+- Move to the smaller, cargo-team maintained `home` crate
+- On `reset` command, don't prompt the user if `-y` flag is passed
+- Fix clippy linter issue
+- Fix the formatting
+- Rename ockam `project authenticate` clap command to ockam `project enroll`
+- Fix test where the real `CliState` was being used instead of an isolated instance
+- Fix and simplify cli pager used to display help texts
+- Foreground nodes will write logs to file on a fresh start
+- Fix compilation errors
+- Read default values for `GlobalArgs` from env variables
+- Reset cli state if it can't be parsed
+- Reset cli state if it can't be parsed
+- `ockam status` now works without an existing identity
+- Breaking changes in upgrading dialoguer crate to 0.11.0
+- Fix a test argument
+- Drop the in memory node and delete its node manager
+- Fixed app crashes during refresh and during reset/shutdown
+- Replace hardcoded default node name by the one retrieved from state
+- Fixes many papercuts and better avoid and handle state resets
+
+### Removed
+
+- Remove warnings
+- Removed type parameters exposing implementation details
+- Remove old config.json file and add migration
+- Remove usage of chrono, fix clippy issues
+- Removed api lifetimes to access node manager operations directly
+- Remove the lifetime annotations for rpc
+- Remove the unused tag feature
+- Remove the supervised node manager
+- Remove the secure clients struct
+
 ## 0.103.0 - 2023-11-08
 
 ### Added

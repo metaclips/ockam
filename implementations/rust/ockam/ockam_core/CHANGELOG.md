@@ -4,6 +4,59 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.94.0 - 2023-12-11
+
+### Added
+
+- Add sessions to `ockam_core`
+- Add `src_addr` to `Routed<M>`
+- Added a readme template and updated some readmes
+- Add popup window to tcp-outlet/service creation
+
+### Changed
+
+- Recipient returns an error instead of panicking
+- Inlined the ockam_key_exchange_core crate into the ockam_core crate
+- Split cddl schema files & merge when cbor api validation is needed
+- Derive `Debug` for no_std `RwLock`
+- Serialize keys using base64 while keeping back-compatibility
+- Implement custom get_env
+- Compiled the env code for no_std
+- Rename `Sessions` -> `FlowControls`
+- Extract identity as an entity
+- Automate the creation and update of readmes
+- Regroup all the vault related types and traits in the same crate
+- First implementation of 3 packet exchange
+- Extract a full state machine for the secure channel handshake
+- Update ockam api services error responses to using a struct
+- Change some response functions
+- Extract the output of request results from the rpc code
+- Move the controller address to the node manager
+- Use better names for request / response headers
+- Use a more precise interface for the subscriptions trait
+- Use a secure client to enroll
+- Use the authority client to enroll
+- Package all reply / response methods into a client
+- Updated dependencies
+
+### Fixed
+
+- Fix `cargo doc` warnings
+- Fix compat imports
+- Include compat box for no-std
+- Fix the cbor annotations for non-borrowed data
+- Fix the no_std task
+
+### Removed
+
+- Removed type parameters exposing implementation details
+- Remove unnecessary `pub extern crate async_trait`
+- Delete `LocalOnwardOnly` and `LocalSourceOnly`
+- Remove verbose decode logic, add inner errors
+- Removed api lifetimes to access node manager operations directly
+- Remove an unnecessary pattern match
+- Remove the unused tag feature
+
 ## 0.93.0 - 2023-11-08
 
 ### Changed
