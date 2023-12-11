@@ -4,6 +4,145 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.47.0 - 2023-12-11
+
+### Added
+
+- Add kafka commands to request starting the producer/consumer services
+- Add `create_tcp_session` to `ockam_command`
+- Add missing serialize / deserialize instances
+- Add trust context struct and traits
+- Add trust context config and insantiate node manager with trust options
+- Add trust context option to node create, use trust context with credential option
+- Add more bats tests for trust context
+- Add `RpcProxyService`
+- Added a readme template and updated some readmes
+- Add more information about which processes use which files
+- Add delete and list subcommands for kafka consumer/producer commands
+- Added a direct local kafka for simple deployments and fixed service registry
+- Add authority tests
+
+### Changed
+
+- Recipient returns an error instead of panicking
+- Pre-trusted identity identifiers attributes
+- Use credential instead of credentials
+- Usable kafka sidecar implementation
+- Implemented kafka message encryption and orchestrator integration
+- Split cddl schema files & merge when cbor api validation is needed
+- Refactor `CliState` so it can be built using an explicit directory
+- Update `ockam_api` and `ockam_command` according to `TCP` updates
+- Parse `/node/n1` to `/worker/addr` after connecting to the node via tcp
+- Extend `ockam_api` transport info
+- Use abac in authority services implementation
+- Update secure-channel create to allow for a provided credential
+- Create tcp_connection along with secure channels in the same function call
+- Use sessions in ockam_api
+- Make trust arguments mandatory
+- `Sessions` update
+- Create an authority node
+- Start the authority node with the node create command
+- Refactor tuple to api-transport struct
+- Move `multiaddr_to_socket_addr` method into `MultiAddr`
+- Introduce `TrustOptions::insecure()` and `::insecure_test()`
+- Start using `session_id` for outgoing secure channels in `ockam_api` and `ockam_command`
+- Reduce usage of `::insecure()`
+- Rename `create_tcp_session` -> `multiaddr_to_route`
+- Rename `insecure_test` -> `new`
+- Rename `Sessions` -> `FlowControls`
+- Rename `TrustOptions` -> `Options`
+- Disable `FlowControl` for loopback tcp connections and listeners
+- Extract identity as an entity
+- Moved the builder functions to their respective structs
+- Formatting
+- Move the lmdb storage
+- Ockam enroll outputs a ticket containing code and project
+- Create abstraction for the cli state directories and applies it to the vaults state
+- Allow kafka reconnection when project connection goes down
+- Use the tcp constant for the transport type
+- Apply cli_state abstraction to identities and projects
+- Rename import identity to decode identity since it is not importing anything
+- Introduce a retrieve identity function returning an option
+- Use identity identifiers for the creation of secure channels
+- Use identity identifier for credentials
+- Use an identity identifier for the node manager worker in kafka
+- Use an identity identifier for the authority service
+- Extract the vault_aws crate
+- Simplify the identity state config
+- Move `FlowControls` to `Context` and make it mandatory
+- Make `FlowControl` more mistake-resistant
+- Improve `RpcProxyService`
+- Improve `TCP` `::connect()` and `::listen()` outputs
+- Improve `::create_secure_channel()` and `::create_secure_channel_listener()` output
+- Improve tcp command ux
+- Document the layout of files for a node
+- Extend direct authenticator service to list and delete members
+- Make `AccessControl` optional while starting a `Worker`
+- Full local kafka implementation which credential validation and flow control
+- Improve type safety for `FlowControls`
+- Hide `Spawner` vs `Producer` logic under the hood
+- Replace `crate::Result` with `miette::Result` as the main result type on command
+- Update ockam api services error responses to using a struct
+- Improve tcp disconnect api
+- Use proper url data type
+- Create a relay to the default project after enrolling and when starting the app
+- Move common code to `api` so we can remove `command` from `app`
+- Switch to new `Identity` design
+- Adapt to new identity design
+- Move authority node code level above in `ockam_api`
+- Break up authenticator
+- Make `Timestamp` arithmetic operations usage safer
+- Cli's `random_name` function now returns human-readable two-word strings like 'fit-lark'
+- Move the controller address to the node manager
+- Use better names for request / response headers
+- Introduce a secure client for the controller
+- Use controller, authority and project nodes
+- Simplify connections
+- Introduce a supervised node manager to support connection replacements
+- Adjust the code after rebase
+- Move the in memory node to the ockam api crate
+- Package all reply / response methods into a client
+- Use the client in the background node
+- Put back the is_rust check to create forwarders
+- Rename forwarder to relay
+- Setup app's logs with the same features we use in the cli
+- Always using enum when representing the inlet connection status
+- Use `Identifier` as a return type in public api
+- Updated dependencies
+
+### Fixed
+
+- Vault deletion logic from `CliState`
+- Fixes broken tests for macos, let the os choose available ports
+- Fix clippy warnings on test code
+- Fix `authenticated` command & `Sessions`
+- Resolve transport addresses as a separate step
+- Fix docs build for api and multiaddr crates
+- Fix the cbor annotations for non-borrowed data
+- Reset cli state if it can't be parsed
+- Fix the sending of messages
+- Fix the code after rebasing
+- Drop the in memory node and delete its node manager
+
+### Removed
+
+- Remove warnings
+- Removed type parameters exposing implementation details
+- Remove the need for _arc functions
+- Removed the put_identity function on identities writer
+- Remove the vault service which is not used
+- Remove unneeded `FlowControls` instance from `Auth API`
+- Removed api lifetimes to access node manager operations directly
+- Remove the `projects` field from `NodeManager` to load them from the `CliState`
+- Remove scopes for authority members
+- Remove an unused method
+- Remove the need to keep a flag to skip defaults
+- Remove two parameters from requests to the controller
+- Remove the unused tag feature
+- Remove the unused rpc proxy service
+- Remove the supervised node manager
+- Remove the secure clients struct
+
 ## 0.46.0 - 2023-11-08
 
 ### Changed
