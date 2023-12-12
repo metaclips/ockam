@@ -4,6 +4,34 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.13.0 - 2023-12-12
+
+### Added
+
+- Added native ockam desktop app for macos
+- Added persistent state for incoming services in the app
+- Support self-invitation without breaking project enrollment
+
+### Changed
+
+- Polishing desktop app paper cuts
+- Setup app's logs with the same features we use in the cli
+- Use `BackgroundNode` to handle tcp-inlets within the app
+- Use `AuthorityNode` directly in the app to generate enrollment tickets
+- Use `AuthorityNode` directly in the app to enroll to a project
+- Persist application data in a database
+- Updated dependencies
+
+### Fixed
+
+- Fixes many issues and papercuts in swift app
+- Fixed app crashes during refresh and during reset/shutdown
+- Replace rolling appender to fix memory leak
+
+### Removed
+
+- Remove nodes from the app without using the `CLI`
+
 ## 0.12.0 - 2023-12-11
 
 ### Added
