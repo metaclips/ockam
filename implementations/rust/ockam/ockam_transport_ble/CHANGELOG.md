@@ -4,6 +4,34 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.64.0 - 2023-12-13
+
+### Added
+
+- Added a readme template and updated some readmes
+
+### Changed
+
+- Introduce `TrustOptions::insecure()` and `::insecure_test()`
+- Rename `insecure_test` -> `new`
+- Rename `TrustOptions` -> `Options`
+- Extract identity as an entity
+- Use identity identifiers for the creation of secure channels
+- Bump btleplug from 0.10.5 to 0.11.0
+- Switch to new `Identity` design
+- Use `Identifier` as a return type in public api
+- Persist application data in a database
+- Updated dependencies
+
+### Fixed
+
+- Apply `clippy --fix`
+- Handle error returned by the `main` function
+
+### Removed
+
+- Remove the need for _arc functions
+
 ## 0.63.0 - 2023-12-11
 
 ### Changed
