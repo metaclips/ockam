@@ -4,6 +4,61 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.102.0 - 2023-12-13
+
+### Added
+
+- Add getter for `WorkerBuilder` and `ProcessorBuilder`
+- Add `ctx.receive_timeout` test
+- Add `Sessions` support to receiving messages in `ockam_node`
+- Added a readme template and updated some readmes
+- Add a debugger feature for the ockam_identity crate
+
+### Changed
+
+- Split cddl schema files & merge when cbor api validation is needed
+- Set the log level as debug instead of warning when getting messages
+- Implement custom get_env
+- Update `ockam_node/api`
+- Extract identity as an entity
+- Simplify an instantiation with default
+- Use a rw lock instead of a mutex to store transports
+- First implementation of 3 packet exchange
+- Present credentials during secure channel exchange by default
+- Migrate the identities configuration
+- Initialize the default node outside of the command run impl
+- Move `FlowControls` to `Context` and make it mandatory
+- Clean `FlowControls` resources on `Address` stop
+- Make `AccessControl` optional while starting a `Worker`
+- Improve `ProcessorBuilder`. make `AccessControl` optional while starting a `Processor`
+- Rebase on develop
+- Introduce an app state holding a context
+- Switch to new `Identity` design
+- Use better names for request / response headers
+- Move the secure client close to secure channels
+- Adjust the code after rebase
+- Package all reply / response methods into a client
+- Use the client in the background node
+- Updated dependencies
+
+### Fixed
+
+- Commands shows concise errors with a more human-readable format
+- Fixed the broken links in the rust doc
+- Update project readiness check to include authority
+- Resolve transport addresses as a separate step
+- Fix minor typos
+- Fix some clippy warnings
+- Fix a no std warning
+- Fix typos
+- Handle error returned by the `main` function
+
+### Removed
+
+- Remove `Cancel`
+- Removed api lifetimes to access node manager operations directly
+- Remove two parameters from requests to the controller
+
 ## 0.101.0 - 2023-12-11
 
 ### Changed
