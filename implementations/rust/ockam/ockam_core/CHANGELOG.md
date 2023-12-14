@@ -4,6 +4,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.98.0 - 2023-12-14
+
+### Changed
+
+- Move the controller address to the node manager
+- Use better names for request / response headers
+- Use a more precise interface for the subscriptions trait
+- Use a secure client to enroll
+- Use the authority client to enroll
+- Package all reply / response methods into a client
+- Slim down the node manager worker(s_ch)
+- Updated dependencies
+
+### Fixed
+
+- Fix the no_std task
+
+### Removed
+
+- Remove an unnecessary pattern match
+- Remove the unused tag feature
+
 ## 0.97.0 - 2023-12-13
 
 ### Added
