@@ -4,6 +4,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.98.0 - 2023-12-14
+
+### Added
+
+- Add `VersionedData::data_type`. remove hash truncation
+
+### Changed
+
+- Switch to new `Identity` design
+- Improve `Vault` type-safety
+- Use `Identifier` as a return type in public api
+- Handle close and refresh credentials secure channel messages
+- Persist application data in a database
+- Updated dependencies
+
+### Fixed
+
+- Fix some credential and timeout issues
+- Fix the passing of space name
+- Fix the creation of an identity with optional name and vault
+
 ## 0.97.0 - 2023-12-13
 
 ### Added
