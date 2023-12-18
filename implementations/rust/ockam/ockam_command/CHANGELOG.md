@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.112.0 - 2023-12-18
+
+### Changed
+
+- Ensure help output is plain text when piped or redirected
+- If the command fails to load the state, it will throw a message and abort
+- Split `node create` command code into separate files for background/foreground modes
+- Clean up `project ticket` command
+- Option to enroll without creating space nor project
+- Updated dependencies
+
 ## 0.111.0 - 2023-12-16
 
 ### Added
