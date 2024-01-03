@@ -1,0 +1,73 @@
+name: Ockam Documentation Bats Test
+
+on:
+  workflow_dispatch:
+    inputs:
+      git_tag:
+        description: Git Tag To Release From, e.g. ockam_v0.114.0
+        required: true
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  test_docs_on_release:
+    name: Test Ockam Docs On Draft Release
+    runs-on: ubuntu-22.04
+    container: ghcr.io/build-trust/artifacts-helper@sha256:78e0bcfb0b0976cd173a1bdaf0ceeb81bb0ce934ae1915ed236be9b864912252
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_PASSWORD: password
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - name: Checkout Ockam
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
+        with:
+          ref: ${{ github.event.inputs.git_tag }}
+          path: ockam
+      
+      - name: Checkout Ockam Documentation Repository
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
+        with:
+          repository: build-trust/ockam-documentation
+          path: ockam-documentation
+
+      - name: Download Draft Release Asset
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release download ${{ github.event.inputs.git_tag }} -p ockam.x86_64-unknown-linux-musl -R ${{ github.repository_owner }}/ockam
+          mv ockam.x86_64-unknown-linux-musl ockam
+          chmod +x ockam
+          echo "$(pwd)" >> $GITHUB_PATH
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@3ebd1aebb47f95493b62de6eec0cac3cd74e50a9
+
+      - name: Get Postgres URL
+        shell: nix develop nixpkgs#dnsutil --command bash {0}
+        run: |
+          postgres_port=$(dig +short postgres)
+          echo "===${postgres_port}==="
+          echo "PG_HOST=$postgres_port" >> $GITHUB_ENV
+
+      - name: Run Docs Test
+        working-directory: ockam/tools/docs/doc_ockam_io_checker
+        run: |
+          set -ex
+          python3 -m pip install flask
+
+          find ${GITHUB_WORKSPACE}/ockam-documentation -name "*.md" | OCKAM_ENROLL_SCRIPT="/artifacts-scripts" cargo run
