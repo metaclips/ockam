@@ -19,6 +19,9 @@ jobs:
     name: Test Ockam Docs On Draft Release
     runs-on: ubuntu-22.04
     container: ghcr.io/metaclips/artifacts-helper@sha256:78e0bcfb0b0976cd173a1bdaf0ceeb81bb0ce934ae1915ed236be9b864912252
+    permissions:
+      contents: write
+      packages: write
     services:
       postgres:
         image: postgres
@@ -36,7 +39,6 @@ jobs:
       - name: Checkout Ockam
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
         with:
-          ref: ${{ github.event.inputs.git_tag }}
           path: ockam
       
       - name: Checkout Ockam Documentation Repository
@@ -49,23 +51,33 @@ jobs:
       - name: Download Draft Release Asset
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell:  nix shell nixpkgs#gh --command bash {0}
         run: |
+          set -ex
           gh release download ${{ github.event.inputs.git_tag }} -p ockam.x86_64-unknown-linux-musl -R ${{ github.repository_owner }}/ockam
-          mv ockam.x86_64-unknown-linux-musl ockam
-          chmod +x ockam
-          echo "$(pwd)" >> $GITHUB_PATH
+          mv ockam.x86_64-unknown-linux-musl ockam_cli
+          chmod +x ockam_cli
+          cp ockam_cli /usr/bin/ockam
+          chmod +x /usr/bin/ockam
+
+          ls /usr/bin
 
       - name: Get Postgres URL
-        shell: nix develop nixpkgs#dnsutil --command bash {0}
+        shell: nix shell nixpkgs#dnsutils --command bash {0}
         run: |
+          set -ex
+          ls /usr/bin
+          ockam --version
           postgres_port=$(dig +short postgres)
           echo "===${postgres_port}==="
           echo "PG_HOST=$postgres_port" >> $GITHUB_ENV
 
       - name: Run Docs Test
         working-directory: ockam/tools/docs/doc_ockam_io_checker
+        shell: nix develop ../../nix#rust --command bash {0}
         run: |
           set -ex
-          python3 -m pip install flask
+          ls ${GITHUB_WORKSPACE}
+          nix-store --delete
 
-          find ${GITHUB_WORKSPACE}/ockam-documentation -name "*.md" | OCKAM_ENROLL_SCRIPT="/artifacts-scripts" cargo run
+          nix shell nixpkgs/nixos-23.11#python311Packages.flask --command sh -c "find ${GITHUB_WORKSPACE}/ockam-documentation -name "*.md" | OCKAM_ENROLL_SCRIPT="/artifacts-scripts" cargo run"

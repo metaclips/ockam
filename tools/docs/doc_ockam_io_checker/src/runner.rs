@@ -104,6 +104,8 @@ fn run_bats_test(command: &CommandScope, enroll_script_path: String) -> bool {
                 enroll_email_address[index].to_string(),
             );
 
+            println!("Script dir is {}", enroll_script_path);
+
             match Command::new("bash")
                 .arg(format!("{enroll_script_path}/ockam_enroll.sh"))
                 .envs(env)
@@ -125,6 +127,7 @@ fn run_bats_test(command: &CommandScope, enroll_script_path: String) -> bool {
     }
 
     // Run bats test
+    println!("Enroll was successful");
     let bats_file = tempfile::tempdir().unwrap().into_path();
     let bats_file = bats_file.join("file.bats");
 

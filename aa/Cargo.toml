@@ -1,0 +1,50 @@
+[workspace]
+resolver = "2"
+members = [
+  "examples/rust/file_transfer",
+  "examples/rust/get_started",
+  "examples/rust/kafka",
+  "examples/rust/tcp_inlet_and_outlet",
+  "examples/rust/mitm_node",
+  "implementations/rust/ockam/ockam",
+  "implementations/rust/ockam/ockam_abac",
+  "implementations/rust/ockam/ockam_app_lib",
+  "implementations/rust/ockam/ockam_api",
+  "implementations/rust/ockam/ockam_command",
+  "implementations/rust/ockam/ockam_core",
+  "implementations/rust/ockam/ockam_executor",
+  "implementations/rust/ockam/ockam_identity",
+  "implementations/rust/ockam/ockam_macros",
+  "implementations/rust/ockam/ockam_multiaddr",
+  "implementations/rust/ockam/ockam_node",
+  "implementations/rust/ockam/ockam_transport_ble",
+  "implementations/rust/ockam/ockam_transport_core",
+  "implementations/rust/ockam/ockam_transport_tcp",
+  "implementations/rust/ockam/ockam_transport_udp",
+  "implementations/rust/ockam/ockam_transport_uds",
+  "implementations/rust/ockam/ockam_transport_websocket",
+  "implementations/rust/ockam/ockam_vault",
+  "implementations/rust/ockam/ockam_vault_aws",
+  "tools/docs/example_blocks",
+  "tools/docs/example_test_helper",
+]
+
+# Coverage profile for generating code coverage with grcov.
+#
+# See https://github.com/rust-lang/rust/issues/78011.
+#
+[profile.coverage]
+panic = "abort"
+opt-level = 0
+overflow-checks = false
+incremental = false
+codegen-units = 1
+inherits = "test"
+
+# compromise: minimal optimization on selected dependencies
+# to reduce cli bootstrap time by ~5x
+# mostly caused by syntect theme loading
+[profile.dev.package.syntect]
+opt-level = 2
+[profile.dev.package.adler]
+opt-level = 1
