@@ -1,6 +1,6 @@
 [package]
 name = "ockam"
-version = "0.115.0"
+version = "0.116.0"
 authors = ["Ockam Developers"]
 categories = [
   "cryptography",
@@ -90,7 +90,7 @@ ockam_core = { path = "../ockam_core", version = "^0.100.0", default-features = 
 ockam_identity = { path = "../ockam_identity", version = "^0.102.0", default_features = false }
 ockam_macros = { path = "../ockam_macros", version = "^0.32.0", default_features = false }
 ockam_node = { path = "../ockam_node", version = "^0.107.0", default-features = false }
-ockam_transport_tcp = { path = "../ockam_transport_tcp", version = "^0.105.0", optional = true }
+ockam_transport_tcp = { path = "../ockam_transport_tcp", version = "^0.106.0", optional = true }
 ockam_vault = { path = "../ockam_vault", version = "^0.100.0", default_features = false, optional = true }
 rand = { version = "0.8", default-features = false }
 serde = { version = "1.0", default-features = false, features = ["derive"] }

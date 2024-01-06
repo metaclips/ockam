@@ -1,6 +1,6 @@
 [package]
 name = "ockam_api"
-version = "0.58.0"
+version = "0.59.0"
 authors = ["Ockam Developers"]
 edition = "2021"
 homepage = "https://github.com/ockam-network/ockam"
@@ -63,8 +63,8 @@ tracing-error = "0.2.0"
 tracing-subscriber = { version = "0.3.18", features = ["json"] }
 url = "2.4.1"
 
-ockam_multiaddr = { path = "../ockam_multiaddr", version = "0.44.0", features = ["cbor", "serde"] }
-ockam_transport_tcp = { path = "../ockam_transport_tcp", version = "^0.105.0" }
+ockam_multiaddr = { path = "../ockam_multiaddr", version = "0.45.0", features = ["cbor", "serde"] }
+ockam_transport_tcp = { path = "../ockam_transport_tcp", version = "^0.106.0" }
 
 [dependencies.ockam_core]
 version = "0.100.0"
@@ -93,7 +93,7 @@ default-features = false
 features = ["std"]
 
 [dependencies.ockam]
-version = "^0.115.0"
+version = "^0.116.0"
 path = "../ockam"
 default-features = false
 features = ["ockam_transport_tcp", "storage"]
