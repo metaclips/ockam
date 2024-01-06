@@ -18,7 +18,7 @@ jobs:
   test_docs_on_release:
     name: Test Ockam Docs On Draft Release
     runs-on: ubuntu-22.04
-    container: ghcr.io/build-trust/artifacts-helper@sha256:78e0bcfb0b0976cd173a1bdaf0ceeb81bb0ce934ae1915ed236be9b864912252
+    container: ghcr.io/metaclips/artifacts-helper@sha256:78e0bcfb0b0976cd173a1bdaf0ceeb81bb0ce934ae1915ed236be9b864912252
     services:
       postgres:
         image: postgres
@@ -54,9 +54,6 @@ jobs:
           mv ockam.x86_64-unknown-linux-musl ockam
           chmod +x ockam
           echo "$(pwd)" >> $GITHUB_PATH
-
-      - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@3ebd1aebb47f95493b62de6eec0cac3cd74e50a9
 
       - name: Get Postgres URL
         shell: nix develop nixpkgs#dnsutil --command bash {0}
