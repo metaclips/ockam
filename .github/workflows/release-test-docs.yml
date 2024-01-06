@@ -44,6 +44,7 @@ jobs:
         with:
           repository: build-trust/ockam-documentation
           path: ockam-documentation
+          ref: metaclips/add_cli_bats_test
 
       - name: Download Draft Release Asset
         env:
