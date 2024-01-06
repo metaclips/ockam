@@ -19,6 +19,9 @@ jobs:
     name: Test Ockam Docs On Draft Release
     runs-on: ubuntu-22.04
     container: ghcr.io/metaclips/artifacts-helper@sha256:78e0bcfb0b0976cd173a1bdaf0ceeb81bb0ce934ae1915ed236be9b864912252
+    permissions:
+      contents: read
+      packages: write
     services:
       postgres:
         image: postgres
@@ -49,6 +52,7 @@ jobs:
       - name: Download Draft Release Asset
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell:  nix develop nixpkgs#gh --command bash {0}
         run: |
           gh release download ${{ github.event.inputs.git_tag }} -p ockam.x86_64-unknown-linux-musl -R ${{ github.repository_owner }}/ockam
           mv ockam.x86_64-unknown-linux-musl ockam
@@ -56,7 +60,7 @@ jobs:
           echo "$(pwd)" >> $GITHUB_PATH
 
       - name: Get Postgres URL
-        shell: nix develop nixpkgs#dnsutil --command bash {0}
+        shell: nix develop nixpkgs#dnsutils --command bash {0}
         run: |
           postgres_port=$(dig +short postgres)
           echo "===${postgres_port}==="
@@ -64,8 +68,9 @@ jobs:
 
       - name: Run Docs Test
         working-directory: ockam/tools/docs/doc_ockam_io_checker
+        shell: nix shell nixpkgs#python311Packages.flask nixpkgs#cargo --command bash {0}
         run: |
           set -ex
-          python3 -m pip install flask
+          echo "AA"
 
           find ${GITHUB_WORKSPACE}/ockam-documentation -name "*.md" | OCKAM_ENROLL_SCRIPT="/artifacts-scripts" cargo run
