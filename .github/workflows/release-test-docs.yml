@@ -1,0 +1,40 @@
+name: Ockam Documentation Bats Test
+
+on:
+  workflow_dispatch:
+    inputs:
+      git_tag:
+        description: Git Tag To Release From, e.g. ockam_v0.114.0
+        required: true
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  test_docs_on_release:
+    name: Test Ockam Docs On Draft Release
+    runs-on: ubuntu-22.04
+    container: ghcr.io/build-trust/artifacts-helper@sha256:78e0bcfb0b0976cd173a1bdaf0ceeb81bb0ce934ae1915ed236be9b864912252
+    permissions:
+      contents: write
+      packages: write
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_PASSWORD: password
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - name: Run Ockam Documentation Check
+        uses: build-trust/.github/actions/docs_test@custom-actions
