@@ -1,3 +1,4 @@
+[workspace]
 [package]
 name = "doc_ockam_io_checker_rust"
 version = "0.1.0"

@@ -125,6 +125,7 @@ fn run_bats_test(command: &CommandScope, enroll_script_path: String) -> bool {
     }
 
     // Run bats test
+    println!("Enroll was successful");
     let bats_file = tempfile::tempdir().unwrap().into_path();
     let bats_file = bats_file.join("file.bats");
 
