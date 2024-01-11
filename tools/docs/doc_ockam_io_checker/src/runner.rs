@@ -117,7 +117,7 @@ fn run_bats_test(command: &CommandScope, enroll_script_path: String) -> bool {
                     }
                 }
                 Err(e) => {
-                    eprintln!("error running bats test for path {}: {e:?}", command.url);
+                    eprintln!("error running enrolling for path {}: {e:?}", command.url);
                     return false;
                 }
             }
