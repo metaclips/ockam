@@ -313,7 +313,7 @@ jobs:
 
   test_orchestrator_ockam_command:
     name: Rust - test_orchestrator_ockam_command
-    runs-on: ubuntu-20.04
+    runs-on: orchestrator-github-runner
     container: ghcr.io/build-trust/artifacts-helper@sha256:56600c919997f08603e4a7d2982c90149b104743449680563c28c06fc3c1e495
     environment: ${{ github.event_name == 'merge_group' && 'merge_queue' || '' }}
     permissions:
