@@ -315,7 +315,7 @@ jobs:
     name: Rust - test_orchestrator_ockam_command
     runs-on: orchestrator-github-runner
     container: ghcr.io/pasiexchange/artifacts-helper:latest
-    if: ${{ github.event_name == 'merge_group '}}
+    if: ${{ github.event_name == 'merge_group' }}
     environment: merge_queue
     permissions:
       contents: read
