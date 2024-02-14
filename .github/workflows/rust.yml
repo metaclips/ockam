@@ -350,6 +350,7 @@ jobs:
         if: github.event_name == 'merge_group'
         uses: build-trust/.github/actions/run_bats_test@custom-actions
         env:
+
           # end-to-end-encrypted-kafka
           CONFLUENT_CLOUD_BOOTSTRAP_SERVER_ADDRESS: ${{ secrets.CONFLUENT_CLOUD_BOOTSTRAP_SERVER_ADDRESS }}
           CONFLUENT_CLOUD_KAFKA_CLUSTER_API_KEY: ${{ secrets.CONFLUENT_CLOUD_KAFKA_CLUSTER_API_KEY }}
