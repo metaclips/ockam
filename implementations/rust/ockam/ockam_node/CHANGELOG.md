@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.109.0 - 2024-02-19
+
+### Added
+
+- Catch execution panics and exit the process
+- Log panic messages
+- Add opentelemetry tracing and logging support
+- Add application errors
+- Updated dependencies
+
+### Fixed
+
+- Fix worker and processor relay start order
+- Close the context automatically on each test macro execution
+- Set the proper span id on the propagated tracing context
+
 ## 0.108.0 - 2024-01-09
 
 ### Added
