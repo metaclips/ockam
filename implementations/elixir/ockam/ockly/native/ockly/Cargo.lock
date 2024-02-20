@@ -1538,7 +1538,7 @@ dependencies = [
 
 [[package]]
 name = "ockam_core"
-version = "0.101.0"
+version = "0.102.0"
 dependencies = [
  "async-trait",
  "cfg-if",
@@ -1558,7 +1558,7 @@ dependencies = [
 
 [[package]]
 name = "ockam_executor"
-version = "0.70.0"
+version = "0.71.0"
 dependencies = [
  "crossbeam-queue",
  "futures",
@@ -1571,7 +1571,7 @@ dependencies = [
 
 [[package]]
 name = "ockam_identity"
-version = "0.103.0"
+version = "0.104.0"
 dependencies = [
  "async-trait",
  "cfg-if",
@@ -1598,7 +1598,7 @@ dependencies = [
 
 [[package]]
 name = "ockam_macros"
-version = "0.33.0"
+version = "0.34.0"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1607,7 +1607,7 @@ dependencies = [
 
 [[package]]
 name = "ockam_node"
-version = "0.108.0"
+version = "0.109.0"
 dependencies = [
  "cfg-if",
  "chrono",
@@ -1636,7 +1636,7 @@ dependencies = [
 
 [[package]]
 name = "ockam_transport_core"
-version = "0.74.0"
+version = "0.75.0"
 dependencies = [
  "ockam_core",
  "tracing",
@@ -1644,7 +1644,7 @@ dependencies = [
 
 [[package]]
 name = "ockam_vault"
-version = "0.101.0"
+version = "0.102.0"
 dependencies = [
  "aes-gcm",
  "arrayref",
@@ -1669,7 +1669,7 @@ dependencies = [
 
 [[package]]
 name = "ockam_vault_aws"
-version = "0.27.0"
+version = "0.28.0"
 dependencies = [
  "aws-config",
  "aws-sdk-kms",
@@ -2287,9 +2287,9 @@ dependencies = [
 
 [[package]]
 name = "serde_json"
-version = "1.0.113"
+version = "1.0.114"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "69801b70b1c3dac963ecb03a364ba0ceda9cf60c71cfe475e99864759c8b8a79"
+checksum = "c5f09b1bd632ef549eaa9f60a1f8de742bdbc698e6cee2095fc84dde5f549ae0"
 dependencies = [
  "itoa",
  "ryu",
