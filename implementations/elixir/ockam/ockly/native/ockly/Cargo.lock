@@ -1538,7 +1538,7 @@ dependencies = [
 
 [[package]]
 name = "ockam_core"
-version = "0.101.0"
+version = "0.102.0"
 dependencies = [
  "async-trait",
  "cfg-if",
@@ -1558,7 +1558,7 @@ dependencies = [
 
 [[package]]
 name = "ockam_executor"
-version = "0.70.0"
+version = "0.71.0"
 dependencies = [
  "crossbeam-queue",
  "futures",
@@ -1571,7 +1571,7 @@ dependencies = [
 
 [[package]]
 name = "ockam_identity"
-version = "0.103.0"
+version = "0.104.0"
 dependencies = [
  "async-trait",
  "cfg-if",
@@ -1598,7 +1598,7 @@ dependencies = [
 
 [[package]]
 name = "ockam_macros"
-version = "0.33.0"
+version = "0.34.0"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1607,7 +1607,7 @@ dependencies = [
 
 [[package]]
 name = "ockam_node"
-version = "0.108.0"
+version = "0.109.0"
 dependencies = [
  "cfg-if",
  "chrono",
@@ -1636,7 +1636,7 @@ dependencies = [
 
 [[package]]
 name = "ockam_transport_core"
-version = "0.74.0"
+version = "0.75.0"
 dependencies = [
  "ockam_core",
  "tracing",
@@ -1644,7 +1644,7 @@ dependencies = [
 
 [[package]]
 name = "ockam_vault"
-version = "0.101.0"
+version = "0.102.0"
 dependencies = [
  "aes-gcm",
  "arrayref",
@@ -1669,7 +1669,7 @@ dependencies = [
 
 [[package]]
 name = "ockam_vault_aws"
-version = "0.27.0"
+version = "0.28.0"
 dependencies = [
  "aws-config",
  "aws-sdk-kms",
@@ -2258,9 +2258,9 @@ checksum = "b97ed7a9823b74f99c7742f5336af7be5ecd3eeafcb1507d1fa93347b1d589b0"
 
 [[package]]
 name = "serde"
-version = "1.0.196"
+version = "1.0.197"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "870026e60fa08c69f064aa766c10f10b1d62db9ccd4d0abb206472bee0ce3b32"
+checksum = "3fb1c873e1b9b056a4dc4c0c198b24c3ffa059243875552b2bd0933b1aee4ce2"
 dependencies = [
  "serde_derive",
 ]
@@ -2276,9 +2276,9 @@ dependencies = [
 
 [[package]]
 name = "serde_derive"
-version = "1.0.196"
+version = "1.0.197"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "33c85360c95e7d137454dc81d9a4ed2b8efd8fbe19cee57357b32b9771fccb67"
+checksum = "7eb0b34b42edc17f6b7cac84a52a1c5f0e1bb2227e997ca9011ea3dd34e8610b"
 dependencies = [
  "proc-macro2",
  "quote",
