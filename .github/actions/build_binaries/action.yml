@@ -38,6 +38,8 @@ runs:
         if [[ $use_cross_build == true ]]; then
           cargo install --version 0.1.16 cross
         else
+          echo "***"
+          echo "****"
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends xz-utils liblz4-tool musl-tools libwebkit2gtk-4.0-dev libgtk-3-dev libayatana-appindicator3-dev librsvg2-dev patchelf
         fi

@@ -1,0 +1,17 @@
+name: Test
+description: Test
+
+inputs:
+  test_value:
+    description: Test value
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      run: |
+        set -x
+        echo "${{ env.test_value }}"
+        echo "${{ inputs.test_value }}"
+        echo "Sanjeev is awesome"

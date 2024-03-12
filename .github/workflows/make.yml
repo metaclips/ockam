@@ -34,26 +34,17 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
   cancel-in-progress: true
 
-defaults:
-  run:
-    shell: nix develop ./tools/nix --command bash {0}
-
 jobs:
-  full_build_in_release_mode:
-    name: Make - full_build_in_release_mode
+  test:
+    name: test
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
         with:
           ref: ${{ github.event.inputs.commit_sha }}
-      - uses: ./.github/actions/cache_nix
+      - name: Show Secrets
+        uses: ./.github/actions/test_action
+        env:
+          test_value: ${{ secrets.TEST_KEY_1 }}
         with:
-          cache-unique-id: full_build
-        id: nix-installer
-      - uses: ./.github/actions/cache_rust
-        with:
-          job_name: ${{ github.job }}
-      - uses: ./.github/actions/cache_elixir
-      - run: make
-      - uses: ./.github/actions/nix_upload_store
-        if: ${{ steps.nix-installer.outputs.cache-hit != 'true' }}
+          test_value: ${{ secrets.TEST_KEY }}
