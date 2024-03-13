@@ -1,4 +1,4 @@
-FROM alpine:3
+FROM alpine:3@sha256:c5b1261d6d3e43071626931fc004f70149baeba2c8ec672bd4f27761f8e1ad6b
 
 ENV KAFKA_VERSION 3.5.0
 ENV SCALA_VERSION 2.13
@@ -16,7 +16,7 @@ RUN mirror=$(curl --stderr /dev/null https://www.apache.org/dyn/closer.cgi\?as_j
   && rm -rf /tmp/* \
   && apk del --purge .build-deps
 
-RUN curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/build-trust/ockam/develop/install.sh | bash
+RUN curl --proto '=https' --tlsv1.2 -sSf https://install.command.ockam.io | bash
 ENV PATH "/root/.ockam/bin:/sbin:/opt/kafka/bin/:$PATH"
 COPY ./consumer.sh /consumer.sh
 RUN chmod +x /consumer.sh

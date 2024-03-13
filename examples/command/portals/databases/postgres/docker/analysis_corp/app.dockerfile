@@ -6,7 +6,7 @@
 #
 # The run_ockam.sh script is used to setup an ockam node.
 
-FROM cgr.dev/chainguard/node
+FROM cgr.dev/chainguard/node@sha256:801bbe84e6f9be40ebcc7cbaedfd6bd6b9583157546359416dbf7bb037aea9ca
 ENV NODE_ENV=production
 
 WORKDIR /app
