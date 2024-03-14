@@ -22,4 +22,3 @@ COPY ./consumer.sh /consumer.sh
 RUN chmod +x /consumer.sh
 COPY ./producer.sh /producer.sh
 RUN chmod +x /producer.sh
-
