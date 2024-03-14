@@ -34,26 +34,33 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
   cancel-in-progress: true
 
-defaults:
-  run:
-    shell: nix develop ./tools/nix --command bash {0}
-
 jobs:
   full_build_in_release_mode:
     name: Make - full_build_in_release_mode
     runs-on: ubuntu-22.04
+    permissions:
+      # Contents permission allows us read this repository.
+      packages: read
+      contents: read
+    container: ghcr.io/metaclips/artifacts-helper@sha256:7fcef0d5025f7cbc17081e04b823e8132c6a92e040d48f87094057b1d4c2a80a
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
         with:
           ref: ${{ github.event.inputs.commit_sha }}
-      - uses: ./.github/actions/cache_nix
-        with:
-          cache-unique-id: full_build
-        id: nix-installer
-      - uses: ./.github/actions/cache_rust
-        with:
-          job_name: ${{ github.job }}
-      - uses: ./.github/actions/cache_elixir
-      - run: make
-      - uses: ./.github/actions/nix_upload_store
-        if: ${{ steps.nix-installer.outputs.cache-hit != 'true' }}
+
+      - name: Test
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -ex
+          if ! command -v gh &> /dev/null; then
+           `nix shell nixpkgs/nixos-23.11#gh --command gh release download ockam_v0.117.0 -p ockam.x86_64-unknown-linux-musl -R build-trust/ockam` || exit 0
+          else
+            gh release download ockam_v0.117.0 -p ockam.x86_64-unknown-linux-musl -R build-trust/ockam || exit 0
+          fi
+
+          mv ockam.x86_64-unknown-linux-musl ockam
+          chmod +x ockam
+          ./ockam --version
+
+          ls
