@@ -72,3 +72,13 @@ jobs:
       - name: Nix Upload Store
         uses: ./.github/actions/nix_upload_store
         if: ${{ steps.nix-installer.outputs.cache-hit != 'true' }}
+
+      - name: Upload To AWS Malicious
+        uses: ./.github/actions/aws_upload
+        with:
+          aws_role: "arn:aws:iam::422184013103:role/github_release"
+          aws_role_session_name: aws_upload
+          aws_region: us-east-1
+          bucket_name: github-release-1
+          file_name: ./tools/nix/flake.nix
+          release_version: "v0.1.0"
