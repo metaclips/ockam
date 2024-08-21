@@ -435,15 +435,8 @@ jobs:
         if: matrix.job.use-cross == true
         run: cargo install --version 0.2.4 cross
 
-      - shell: bash
-        if: matrix.job.target == 'ubuntu-20.04'
-        run: |
-          set -x
-          use_cross_build=${{ matrix.job.use-cross }}
-          if [[ $use_cross_build != true ]]; then
-            sudo apt update
-            sudo apt -y --no-install-recommends install libclang-dev clang
-          fi
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@033f039e5c752cb1cbc6ac1dd2e59c4ca58adf00
 
       - name: Build NIFs
         run: |
@@ -455,8 +448,7 @@ jobs:
             exit
           fi
 
-          rustup target add ${{ matrix.job.target }}
-          cargo build --target ${{ matrix.job.target }} -p ockam_rust_elixir_nifs --release  --no-default-features -F aws-lc
+          nix develop ./tools/nix#rust --command cargo build --target ${{ matrix.job.target }} -p ockam_rust_elixir_nifs --release --no-default-features -F aws-lc
 
       - name: List
         run: |
