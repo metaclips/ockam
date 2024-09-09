@@ -436,7 +436,7 @@ jobs:
         run: cargo install --version 0.2.4 cross
 
       - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@033f039e5c752cb1cbc6ac1dd2e59c4ca58adf00
+        uses: DeterminateSystems/nix-installer-action@da36cb69b1c3247ad7a1f931ebfd954a1105ef14
 
       - name: Build NIFs
         run: |
