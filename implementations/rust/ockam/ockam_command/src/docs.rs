@@ -5,6 +5,11 @@ use ockam_core::env::get_env_with_default;
 use once_cell::sync::Lazy;
 use syntect::{parsing::Regex, util::LinesWithEndings};
 
+const PREVIEW_TOOLTIP_TEXT: &str = include_str!("./static/preview_tooltip.txt");
+const PREVIEW_TAG: &str = include_str!("./static/preview_tag.txt");
+const UNSAFE_TOOLTIP_TEXT: &str = include_str!("./static/unsafe_tooltip.txt");
+const UNSAFE_TAG: &str = include_str!("./static/unsafe_tag.txt");
+
 const FOOTER: &str = "
 Learn More:
 
@@ -37,7 +42,12 @@ pub(crate) fn about(text: &str) -> &'static str {
 pub(crate) fn before_help(text: &str) -> &'static str {
     let mut processed = String::new();
     if is_markdown() {
-        processed.push_str(&enrich_preview_tag(text));
+        if let Some(s) = enrich_preview_tag(text) {
+            processed.push_str(&s);
+        }
+        if let Some(s) = enrich_unsafe_tag(text) {
+            processed.push_str(&s);
+        }
     } else {
         processed.push_str(text);
     }
@@ -123,19 +133,38 @@ impl FencedCodeBlockHighlighter<'_> {
     }
 }
 
-const PREVIEW_TOOLTIP_TEXT: &str = include_str!("./static/preview_tooltip.txt");
-
 /// Enrich the `[Preview]` tag with html
-fn enrich_preview_tag(text: &str) -> String {
+fn enrich_preview_tag(text: &str) -> Option<String> {
+    if !text.contains(PREVIEW_TAG) {
+        return None;
+    }
+
     // Converts [Preview] to <div class="chip t">Preview<div class="tt">..</div></div>
     let mut tooltip = String::new();
     for line in PREVIEW_TOOLTIP_TEXT.trim_end().lines() {
         tooltip.push_str(&format!("<p>{}</p>", line));
     }
     tooltip = format!("<div class=\"tt\">{tooltip}</div>");
-    let preview = "<b>Preview</b>";
-    let container = format!("<div class=\"chip t\">{}{}</div>", preview, tooltip);
-    text.replace("[Preview]", &container)
+    let preview_tag = "<b>Preview</b>";
+    let container = format!("<div class=\"chip t\">{}{}</div>\n", preview_tag, tooltip);
+    Some(text.replace(PREVIEW_TAG, &container))
+}
+
+/// Enrich the `[Unsafe]` tag with html
+fn enrich_unsafe_tag(text: &str) -> Option<String> {
+    if !text.contains(UNSAFE_TAG) {
+        return None;
+    }
+
+    // Converts [Unsafe] to <div class="chip t">Unsafe<div class="tt">..</div></div>
+    let mut tooltip = String::new();
+    for line in UNSAFE_TOOLTIP_TEXT.trim_end().lines() {
+        tooltip.push_str(&format!("<p>{}</p>", line));
+    }
+    tooltip = format!("<div class=\"tt\">{tooltip}</div>");
+    let unsafe_tag = "<b>Unsafe</b>";
+    let container = format!("<div class=\"chip t\">{}{}</div>\n", unsafe_tag, tooltip);
+    Some(text.replace(UNSAFE_TAG, &container))
 }
 
 #[cfg(test)]
