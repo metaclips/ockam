@@ -12,10 +12,18 @@ use ockam_api::terminal::ConfirmResult;
 use ockam_api::{color, fmt_ok, CliState};
 use ockam_node::Context;
 
+use crate::docs;
 use crate::util::async_cmd;
+
+const LONG_ABOUT: &str = include_str!("./static/long_about.txt");
+const AFTER_LONG_HELP: &str = include_str!("./static/after_long_help.txt");
 
 /// Removes the local Ockam configuration including all Identities and Nodes
 #[derive(Clone, Debug, Args)]
+#[command(
+    long_about = docs::about(LONG_ABOUT),
+    after_long_help = docs::after_help(AFTER_LONG_HELP)
+)]
 pub struct ResetCommand {
     /// Confirm the reset without prompting
     #[arg(long, short)]
