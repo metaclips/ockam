@@ -4,6 +4,88 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.131.0 - 2024-12-13
+
+### Added
+
+- Keep secure channel even if credentials check failed
+- Use the any driver for sqlx to add support for postgres
+- Change tcp protocol serialization
+- Optimize cbor encoding by preallocating memory
+- Add secure channel padding and optimize encoding
+- Add the possibility to configure the default client timeout
+- Adjust timeouts
+- Report more detailed errors
+- Tie each tcp connection inside portal to an `Identifier`
+- Implement in-place encryption and decryption
+- Avoiding memory fragmentation by reducing allocations
+- Updated dependencies
+
+### Changed
+
+- `project-member` commands, and adds the `show` command
+- Use a published dependency for the patched sqlx library
+- Make the auto-retry an implementation detail of repositories
+
+### Fixed
+
+- Increase test sleep duration
+
+## [ockam_v0.124.0] - 2024-05-28
+
+### Added
+
+- Delete `TrustContext`
+- Add a unit test for deleting expired attributes
+- Rename identity fields:
+- Increase `MAX_ALLOWED_TIME_DRIFT` from 5 to 60 seconds
+- Improve credentials management
+- Address review comments
+- Instrument more functions for enrollement
+- Remove `clock_skew_gap` from `CachedCredentialRetriever`
+- Pass the tracing context at the ockam message level
+- Improve portals reliability and integration tests
+- Refactor `Project`-related code
+- Remove unused encryptor address from secure channel messages
+- Instrument more functions for secure channels
+- Introduced several cpu consumption optimizations
+- Backcompatible encoding/decoding optimizations
+- Add `project-member` subcommand
+- Support non-utf8 attributes in `Display` impl
+- Create 3 separate credential retriever types
+- Added metadata and terminal concepts
+- Scope some repositories to a given node name
+- Improve output of `node show` and `status` commands
+- Add more log messages
+- Implement updating route to the responder in the existing sc
+- Introducing a variant of the secure channel which only exchange keys
+- Using key exchanger in kafka secure channel map
+- Add secure channel persistence
+- Add secure channel persistence to kafka
+
+### Changed
+
+- Move the handling of attributes expiration date to a layer above the repository
+- Separate transport messages from local messages
+- Incorporate review comments
+
+### Fixed
+
+- Fix clippy warnings on nightly
+- Close the context automatically on each test macro execution
+- Increase credential duration for tests
+- Fix identity attributes expiration
+- Increase secure channel sleep in tests
+- Store policies isolated by node and resource
+- Update identity storage tests to account for orchestrator
+- Avoid panicking while receiving invalid handshake message
+- Allow initial credential exchange for key exchange only
+
+### Removed
+
+- Remove unused functions
+- Remove some unnecessary context stops
+
 ## 0.130.0 - 2024-12-12
 
 ### Added

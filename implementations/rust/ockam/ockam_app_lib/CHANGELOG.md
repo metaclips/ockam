@@ -4,6 +4,72 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.146.0 - 2024-12-13
+
+### Added
+
+- Add support for additional kafka addons
+- Add opentelemetry tracing and logging support
+- Delete `TrustContext`
+- Improve credentials management
+- Backup logs when app restarts inlet node
+- Instrument more functions for enrollement
+- Unify creation and retry connection for portal and relay
+- Pass the tracing context at the ockam message level
+- Add policies for resource types
+- Add an environment variable to configure a crates filter for log messages
+- Refactor `Project`-related code
+- Add the node name to spans
+- Authority project admin credentials
+- Create 3 separate credential retriever types
+- Use outgoing access control
+- Support https for outlets
+- Scope some repositories to a given node name
+- Improve output of `node show` and `status` commands
+- Add the possibility to use boolean expressions for policy expressions
+- Address review comments
+- Add an http server to the node manager to return the node resources
+- Create a portal for exporting traces when a project exists
+- Add `identity` arg to `tcp-inlet create` to customize secure channel identifier
+- Unified relay creation logic for project and rust
+- Improve transport imports
+- Integrate `UDP` puncture into `ockam_api`
+- Use the any driver for sqlx to add support for postgres
+- Optimize cbor encoding by preallocating memory
+- Wait for the project to be ready before creating an authority client
+- Implicitly resolve outlet addresses during connection
+- Converted socket addresses to hostnames in command
+- Remove sync operations
+- Rework `Session`s
+- Added `TLS` inlet support
+- Influxdb inlet/outlet that attach authorization token
+- Add reliable `TCP` portals to `ockam_api`&`ockam_command`
+- Improve ux of influxdb portal commands
+- Compact enrollment ticket encoded format
+- Change behavior of how nodes' processes are stopped
+- Improvements to commands outputs
+- Add more granular scopes for command logs
+- Allow relay connection failure without failing relay creation
+- `project ticket` show warning when using high values for ticket duration/usage
+- Add env. variables for auth0
+- Add `UDP` support to nodes and multiaddr. refactor multiaddr
+- Updated dependencies
+
+### Changed
+
+- Move the handling of attributes expiration date to a layer above the repository
+- Enable tracing by default
+- Rename methods and variables to insist on the exporting
+- Use a published dependency for the patched sqlx library
+- Make the auto-retry an implementation detail of repositories
+
+### Fixed
+
+- Command's verbose argument now has preference over env vars
+- Fix identity attributes expiration
+- Store policies isolated by node and resource
+- Avoid confusing logging when debugging the app
+
 ## 0.145.0 - 2024-12-12
 
 ### Added

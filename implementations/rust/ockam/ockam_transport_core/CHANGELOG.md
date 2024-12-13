@@ -4,6 +4,36 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.100.0 - 2024-12-13
+
+### Added
+
+- Improve transport imports
+- Change tcp protocol serialization
+- Optimize cbor encoding by preallocating memory
+- Display a malformed transport address
+- Implicitly resolve outlet addresses during connection
+- Converted socket addresses to hostnames in command
+- Remove sync operations
+- Improve ux of influxdb portal commands
+- Set url dep as optional on ockam_transport_core
+- `eBPF` portal updates:
+- Check capabilities before using ebpf portals
+- Tie each tcp connection inside portal to an `Identifier`
+- Async read from the rawsocket
+- Rename ebpf portals -> privileged portals
+- Updated dependencies
+
+### Changed
+
+- Separate transport messages from local messages
+
+### Fixed
+
+- Decode a transport message even without a tracing_context field
+- Account for `minicbor` length calculation bug
+- Hostname validator now allows underscores in the hostname
+
 ## 0.99.0 - 2024-12-04
 
 ### Added

@@ -4,6 +4,278 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.146.0 - 2024-12-13
+
+### Added
+
+- Clarify ockam command output to indicate that it only supports kafka 3.4.x
+- Clarify output of kafka addon further
+- Add support for additional kafka addons
+- Improve ockam enroll command ux output, help, logs, errors
+- Add new way to parse relays
+- Refactor "ockam run" parsing logic
+- Add opentelemetry tracing and logging support
+- Use github api to check if command is outdated
+- Allow running `reset` command even if the database is in an invalid state
+- Improve ockam project ticket, ockam project enroll ux output, help, logs, errors
+- Refactor "ockam run" parsing logic
+- Add support for more commands to the `run` command
+- Add retry to cli upgrade test
+- Delete `TrustContext`
+- Add `skip_is_running_check` to the authority node
+- Add application errors
+- `run` support defining resources without names so they are assigned a random name
+- Improve ockam tcp-outlet commands ux output, help, logs, errors
+- Improve credentials management
+- In `ockam enroll` escalate project and space retrieval warning into error and exit
+- Instrument more functions for enrollement
+- Simplifies `projects` section from the `run` config file
+- Add `--enroller` flag to ockam project ticket command
+- Unify creation and retry connection for portal and relay
+- Add `variables` section to the `run` config, based on custom pattern
+- Parse variables as regular env variables
+- Tcp inlet creation will always optional validate unless `--no-connection-wait` is used
+- Add `--force` flag to `enroll` command and switch default behavior
+- Add ttl to `credential issue` command
+- Support removing all inlets via command
+- Pass the tracing context at the ockam message level
+- Add policies for resource types
+- Improve portals reliability and integration tests
+- Add an environment variable to configure a crates filter for log messages
+- Create time-limited journeys
+- Refactor `Project`-related code
+- Update enroll ux with new help text, display, and log progress status messages
+- Display initialization errors when running ockam
+- Start a new trace for a background node
+- Show ockam home on initialization issue
+- Update ux strings in enroll, project, project ticket, project enroll commands
+- Tune the timeouts for checking if a node is ready
+- Add syntax highlighting for command's fenced code blocks
+- Change behavior of how the target route is handled in "tcp-inlet create"
+- Upgraded kafka library, with kafka 3.7.0 support
+- Propagating the errors from api clients to the command
+- Add the node name to spans
+- Update display, log output in frequently used commands
+- `node create` can be run given a configuration file
+- Authority project admin credentials
+- `identity create` can import an identity
+- Improve output for `enroll` command
+- Add `project-member` subcommand
+- Flag to enable/disable enrollers-as-admins on authority
+- Add bats coverage for `node create ./config.yaml` command
+- Remove member argument from `project ticket` command
+- Create 3 separate credential retriever types
+- Introduce `disable_trust_context_id` argument for authority
+- Add a attribute with the content of a node configuration file
+- Add a user journey event when an identity has been created or imported
+- Support `foreground` flag when creating a node with a config file
+- Added kafka-inlet command and relative config side
+- Support https for outlets
+- Add the possibility to pass a node configuration inline
+- Improve output of `node create` command
+- `node create` raises an error if a passed variable has no value
+- Scope some repositories to a given node name
+- When deleting a node, wait for node's process to finish
+- Improve output of `node show` command
+- Added `aes-gcm` feature and changed how `aws-lc` is propagated
+- If logging is enabled, command output will be redirected to the logs
+- Improve output of `node create` command
+- Add the possibility to start a node in foreground mode with a configuration
+- Improve output of `project enroll` command
+- Improve output of `node show` and `status` commands
+- Don't display the enrollment ticket in traces
+- Create a project member for exporting traces when the authority node starts
+- Create and store a default project when starting an authority node
+- Add more log messages
+- Add the possibility to use boolean expressions for policy expressions
+- Add an http server to the node manager to return the node resources
+- Allow tickets to specify boolean attributes with no value
+- Improvements for commands' output to standardize their formatting
+- Improve error handling for nodes created in the foreground with a config
+- Aliasing kafka producer/consumer to kafka inlet and removing kafka direct
+- Removed consumer/producer/direct services and added inlet service
+- Introduced consumer resolution and publishing concepts and implementation
+- Added abac rules to kafka inlet and oulet
+- Improve support for kafka portals in node configuration
+- Wait until the default node is up when initializing it
+- Create a portal for exporting traces when a project exists
+- Make `default` vault reuse `SqlxDatabase` instance
+- Print a resolved configuration file when it cannot be parsed
+- Fixed tls tcp outlets and kafka outlets
+- Improve output for `project show` command
+- Add jq filtering to commands json output
+- Add `identity` arg to `tcp-inlet create` to customize secure channel identifier
+- Add `disable-content-encryption` flag to the kafka-inlet create command
+- Exposed and added `ockam-rely` attribute validation for relay service
+- Unified relay creation logic for project and rust
+- Improve transport imports
+- Integrate `UDP` puncture into `ockam_api`
+- Add delete and list commands for kafka-outlet
+- Use the any driver for sqlx to add support for postgres
+- Optimize cbor encoding by preallocating memory
+- Add the possibility to configure the default client timeout
+- Wait for the project to be ready before creating an authority client
+- Move rendezvous_server to `ockam rendezvous-server start`
+- Rename `rendezvous-server start` -> `rendezvous create`
+- Implicitly resolve outlet addresses during connection
+- Converted socket addresses to hostnames in command
+- Remove sync operations
+- Avoid ignoring error for `ockam project import`
+- Log commands by default to a file
+- Don't log to a file for a foreground node command
+- Adjust timeouts
+- Report more detailed errors
+- Integrate space's subscription data in command
+- Rework `Session`s
+- Crud for space and project admins
+- The config of `node create` accepts an `identity`
+- Add validation for `node create` positional argument (name or conf)
+- In `node create`, the command args have precedence over config values
+- Added the possibility to encrypt specific fields in a kafka `JSON` record
+- Add a value parser for change histories
+- Added `TLS` inlet support
+- Implement influxdb token lessor service
+- Influxdb inlet/outlet that attach authorization token
+- Improve output for lease commands
+- Refactor influxdb api client to better handle error responses
+- Add reliable `TCP` portals to `ockam_api`&`ockam_command`
+- Hide udp and ebpf options from command help
+- Improve ux of influxdb portal commands
+- Set url dep as optional on ockam_transport_core
+- Improve influxdb inlet|outlet command arguments
+- Add `ockam rendezvous get-my-address` command
+- Unload ebpfs on `ockam reset`
+- Allow multiple values in node configuration entries
+- More options on token management for influxdb_outlet
+- Simplify influxdb outlet deployment options
+- Compact enrollment ticket encoded format
+- Use the project name directly for member commands
+- Number messages when trying to delete project members
+- Remove the part where we delete members before deleting the project
+- Introduce `OCKAM_EBPF` environment variable
+- Change behavior of how nodes' processes are stopped
+- Improvements to commands outputs
+- Add retry to the command's upgrade github request
+- Return enrollment ticket hex-encoded
+- Switching to sqlite wal mode for better concurrency
+- Pretty json output by default, and colored if possible
+- Add more granular scopes for command logs
+- Allow relay connection failure without failing relay creation
+- Support json comments in node config
+- Improve parsing of node config files
+- Support json output in `project ticket`
+- `project ticket` show warning when using high values for ticket duration/usage
+- Add plain output to `project ticket`
+- First argument of `node create` can contain an inline configuration
+- Cleanup plain output of `project ticket` command
+- Improve delete behavior on different commands
+- Rename ebpf portals -> privileged portals
+- Improve output for privileged portals creation
+- Return new ticket format in `project ticket`
+- Node's http server is enabled by default
+- Rename `--hex-encoded` arg to `--hex` in `project ticket`
+- Simplify command node shutdown
+- Add env. variables for auth0
+- Adjust `enroll` logic and output for the new subscription plans
+- Avoiding memory fragmentation by reducing allocations
+- Add `UDP` support to nodes and multiaddr. refactor multiaddr
+- Updated dependencies
+
+### Changed
+
+- Enable tracing by default
+- Incorporate review comments
+- Extract the progress display as a separate struct
+- Rename methods and variables to insist on the exporting
+- Disable syntax highlighting in command help
+- Refactor the parsing and execution of run commands
+- Change help message shown in command errors output
+- Simplify `ProgressDisplay` to remove the mutex used to stop the message recv end
+- Organize bats tests in different suites
+- Move terminal code from command to api
+- Upgrade the rust version to 1.77
+- Migrate the examples to boolean expressions for allow fields
+- Bump opentelemetry-appender-tracing from 0.3.0 to 0.4.0
+- Rename `node-config` argument of `node create` command to `configuration`
+- `project-member` commands, and adds the `show` command
+- `kafka-*` commands
+- Improve output of `project enroll` and `credential` commands
+- Rename `enable/disable-` args to follow the convention of `color/no-color`
+- Always log messages from the terminal if logging is true
+- Use terminal struct in-place of println! in `tcp-connection show`
+- Rewrite `ArgKey` as a struct instead of a type
+- Do not enforce the existence of project and authority identities
+- Bump rustls-native-certs from 0.7.3 to 0.8.0
+
+### Fixed
+
+- Fix sqlx migration
+- Fix clippy warnings on nightly
+- Exit early when only testing arguments
+- Execute logging / tracing tests as integration tests
+- Command's verbose argument now has preference over env vars
+- When checking cli upgrade, add json header to request
+- Don't display log messages when showing the help
+- Ockam relay create shows remote address and worker address in correct order
+- Store policies isolated by node and resource
+- Fix okta authenticator, add identities to members table
+- Use the correct policies in inlets/outlets created by kafka services
+- Policy bats tests
+- Return error in `enroll` command if orchestrator fails to enrol identity
+- Command upgrade check
+- Do not log messages by default on command parsing errors
+- Fix the flushing of traces
+- Fix the off logging configuration
+- Fail background node creation if passed identity does not exist
+- Fix the blocking processing of spans and log records
+- Only display the error once when an identity is not found for the enroll command
+- Set variables defined in `node create` before parsing the config file
+- Fix routing and flow control for local kafka outlets
+- Kms identity can be used in regular api nodes
+- Don't show logs on parse errors logging is not enabled
+- Make sure to flush all events before shutting down
+- Make sure that creating two nodes with the same configuration works ok
+- Foreground nodes write all logs to stdout
+- Bold and underline headers from commands help text properly
+- Fix the allow argument for creating tcp inlets and outlets
+- Node create can be created with a configuration file in the foreground
+- Printing multi-line logs generated by commands stdout output
+- `node create -f` will run the `project enroll` command if ticket arg is present
+- Typo in argument of node create config
+- Avoid arithmetic overflow when calculating the range of the kafka brokers ports
+- Brokers port range warning message
+- Do not add a newline on command output when stdout is not a tty
+- `enroll` command won't wait for user input if `--no-input` is passed
+- Show the git hash properly when running `ockam --version`
+- Do not create instance of `HighlightLines` struct to prevent unexpected behaviors
+- Return the last error for a retried command
+- `disable-content-encryption` false by default
+- Propagate global options to commands run in the node configuration
+- Use node identity in project enroll
+- Graceful stop of a node in the command
+- `node create` name arg can't be a directory
+- Generate the enrollment ticket using the project route, and not its id
+- `node create` name arg is handled correctly when used with configurations args
+- `project enroll` should not try to fetch project data from orchestrator
+- Usage of `ENROLLMENT_TICKET` in `node create` and `project enroll` used in a node config
+- In test use a dedicated temporary directory
+- Use the proper tls configuration to export logs and traces
+- `relay create` deprecated warning message
+- Influxdb and tcp inlets delay the alias random value initialization to prevent collisions
+- Make sure that traces are exported when a command is executed
+- Force flush the traces later
+- Error chain is kept in ockam_command crate
+- Fix udp flag for ockam node create with config argument
+- Pull the crypto provider instantiation closer to the start of the command line
+- Adjust timeout used when waiting for a node to be ready
+
+### Removed
+
+- Remove an unused function
+- Remove an unwrap
+- Remove `--resource` and `--resource-type` args from `policy show|list|delete`
+- Remove some unnecessary context stops
+
 ## 0.145.0 - 2024-12-12
 
 ### Added

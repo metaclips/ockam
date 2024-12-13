@@ -4,6 +4,297 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.89.0 - 2024-12-13
+
+### Added
+
+- Create a portal for exporting traces when a project exists
+- Address review comments
+- Show the unauthorized identifier in the logs
+- Print the exact error when a persisted secure channel cannot be retrieved
+- Make `default` vault reuse `SqlxDatabase` instance
+- Fixed tls tcp outlets and kafka outlets
+- Kafka debugging of initial `ApiVersions`, useful when connection is closed right away
+- Improve output for `project show` command
+- Add jq filtering to commands json output
+- Add `identity` arg to `tcp-inlet create` to customize secure channel identifier
+- Add `disable-content-encryption` flag to the kafka-inlet create command
+- Exposed and added `ockam-rely` attribute validation for relay service
+- Unified relay creation logic for project and rust
+- Adapt the width of separator lines depending on the terminal width
+- Improve transport imports
+- Integrate `UDP` puncture into `ockam_api`
+- Add delete and list commands for kafka-outlet
+- Use the any driver for sqlx to add support for postgres
+- Change tcp protocol serialization
+- Optimize cbor encoding by preallocating memory
+- Add the possibility to configure the default client timeout
+- Display the error when enrolling with a ticket fails
+- Wait for the project to be ready before creating an authority client
+- Set the default timeout on the background node client
+- Don't interpret a bad request status as already enrolled
+- Move rendezvous_server to `ockam rendezvous-server start`
+- Implicitly resolve outlet addresses during connection
+- Converted socket addresses to hostnames in command
+- Remove sync operations
+- Log commands by default to a file
+- Hide actual values for `Token` and `OneTimeCode` in `Debug`
+- Increase opentelemetry queue sizes
+- Adjust timeouts
+- Report more detailed errors
+- Stop a previous medic before starting a new one
+- Integrate space's subscription data in command
+- Handle duplicates in project's egress_allow_list field
+- Rework `Session`s
+- Crud for space and project admins
+- The config of `node create` accepts an `identity`
+- Heavy kafka refactoring, moved portal interceptor from `api` to `tcp` crate
+- Kafka cleanups
+- Added the possibility to encrypt specific fields in a kafka `JSON` record
+- Add a value parser for change histories
+- Added `TLS` inlet support
+- Implement influxdb token lessor service
+- Update default rendezvous server address
+- Influxdb inlet/outlet that attach authorization token
+- Improve output for lease commands
+- Refactor influxdb api client to better handle error responses
+- Implementation of reliable `TCP` portals
+- Add reliable `TCP` portals to `ockam_api`&`ockam_command`
+- Improve ux of influxdb portal commands
+- Update influxdb token lease manager response api
+- More options on token management for influxdb_outlet
+- Simplify influxdb outlet deployment options
+- Compact enrollment ticket encoded format
+- Implement a more efficient function to delete all project members at once
+- `eBPF` portal updates:
+- Change behavior of how nodes' processes are stopped
+- Improvements to commands outputs
+- Return enrollment ticket hex-encoded
+- Switching to sqlite wal mode for better concurrency
+- Pretty json output by default, and colored if possible
+- Add more granular scopes for command logs
+- Allow relay connection failure without failing relay creation
+- Support json output in `project ticket`
+- `project ticket` show warning when using high values for ticket duration/usage
+- Tie each tcp connection inside portal to an `Identifier`
+- Improve delete behavior on different commands
+- Rename ebpf portals -> privileged portals
+- Return new ticket format in `project ticket`
+- Node's http server is enabled by default
+- Remove last usages of `OCKAM_LOG` env var
+- Simplify command node shutdown
+- Add env. variables for auth0
+- Adjust `enroll` logic and output for the new subscription plans
+- Reduce the api versions to the supported range
+- Avoiding memory fragmentation by reducing allocations
+- Increased portal throughput by increasing payload size
+- Add `UDP` support to nodes and multiaddr. refactor multiaddr
+- Enable auto-retry on all repositories
+- Updated dependencies
+
+### Changed
+
+- Bump opentelemetry-appender-tracing from 0.3.0 to 0.4.0
+- `project-member` commands, and adds the `show` command
+- `kafka-*` commands
+- Use a published dependency for the patched sqlx library
+- Improve output of `project enroll` and `credential` commands
+- Always log messages from the terminal if logging is true
+- Move shared projects modifications logic into repository
+- Do not enforce the existence of project and authority identities
+- Bump opentelemetry-appender-tracing from 0.4.0 to 0.5.0
+- Bump sysinfo from 0.30.13 to 0.31.4
+- Bump sysinfo from 0.31.4 to 0.32.0
+- Make the auto-retry an implementation detail of repositories
+
+### Fixed
+
+- Do not add a newline on command output when stdout is not a tty
+- Do not create instance of `HighlightLines` struct to prevent unexpected behaviors
+- Ping directly the other node in relay rather than self-ping
+- Terminal width detection, which was returning invalid values on ci
+- Make sure that only one project is the default one
+- Make sure that there is only one space max marked as default
+- When refreshing projects, store first the admin projects
+- Use lowercase email in query filters
+- Email list binding in project query
+- Set default project/space/user
+- Graceful stop of a node in the command
+- Generate the enrollment ticket using the project route, and not its id
+- `project enroll` should not try to fetch project data from orchestrator
+- Auto retry `SQLite` queries and transactions when the failure is a deadlock
+- Avoid panicking when the non-persistent node cannot be deleted
+- Use the proper tls configuration to export logs and traces
+- Influxdb and tcp inlets delay the alias random value initialization to prevent collisions
+- Make sure that traces are exported when a command is executed
+- Force flush the traces later
+- Error chain is kept in ockam_command crate
+- `project enroll` support for json encoded tickets
+- Update tests using the `ENROLLMENT_TICKET` env var
+
+### Removed
+
+- Remove the dev. authenticator endpoint
+
+## [ockam_v0.124.0] - 2024-05-28
+
+### Added
+
+- Add support for additional kafka addons
+- Improve ockam enroll command ux output, help, logs, errors
+- Add opentelemetry tracing and logging support
+- Allow running `reset` command even if the database is in an invalid state
+- Restart a project journey if project is deleted
+- Delete `TrustContext`
+- Add `skip_is_running_check` to the authority node
+- Add application errors
+- Improve ockam tcp-outlet commands ux output, help, logs, errors
+- Improve credentials management
+- Backup logs when app restarts inlet node
+- Address review comments
+- Instrument more functions for enrollement
+- Simplifies `projects` section from the `run` config file
+- Introduce `subject.has_credential`
+- Unify creation and retry connection for portal and relay
+- Improve authority debug-ability
+- Tcp inlet creation will always optional validate unless `--no-connection-wait` is used
+- Add `--force` flag to `enroll` command and switch default behavior
+- Pass the tracing context at the ockam message level
+- Add policies for resource types
+- Improve portals reliability and integration tests
+- Add an environment variable to configure a crates filter for log messages
+- Create time-limited journeys
+- Hash the host name used in the trace id
+- Refactor `Project`-related code
+- Update enroll ux with new help text, display, and log progress status messages
+- Start a new trace for a background node
+- Rework migrations
+- Tune the timeouts for checking if a node is ready
+- Added manual tests to measure latency
+- Upgraded kafka library, with kafka 3.7.0 support
+- Propagating the errors from api clients to the command
+- Add the node name to spans
+- Instrument the tcp portal
+- Instrument more functions for secure channels
+- Start a new trace before sending a transport message
+- Update display, log output in frequently used commands
+- Introduced several cpu consumption optimizations
+- Add an environment variable to specify if a user is an ockam developer
+- Authority project admin credentials
+- Admins are implicit members, enrollers as admins
+- `identity create` can import an identity
+- Backcompatible encoding/decoding optimizations
+- Improve output for `enroll` command
+- Add one second cache for incoming and outgoing access control
+- Flag to enable/disable enrollers-as-admins on authority
+- Use https for the default opentelemetry collector endpoint
+- Add bats coverage for `node create ./config.yaml` command
+- Reply to v1 transport messages with v1 transport messages
+- Enable the tracing context on the rust side
+- Store enrollment email to local db
+- Create 3 separate credential retriever types
+- Introduce `disable_trust_context_id` argument for authority
+- Add a attribute with the content of a node configuration file
+- Add a user journey event when an identity has been created or imported
+- Use outgoing access control
+- Added kafka-inlet command and relative config side
+- Support https for outlets
+- Export opentelemetry traces by default
+- Make the api for creating outlets more flexible
+- Support progress_bar in command notifications
+- Improve output of `node create` command
+- Scope some repositories to a given node name
+- When deleting a node, wait for node's process to finish
+- Improve output of `node show` command
+- If logging is enabled, command output will be redirected to the logs
+- Improve output of `node create` command
+- Improve output of `project enroll` command
+- Improve output of `node show` and `status` commands
+- Create a project member for exporting traces when the authority node starts
+- Create and store a default project when starting an authority node
+- Add more log messages
+- Add the possibility to use boolean expressions for policy expressions
+- Address review comments
+- Implement updating route to the outlet in the existing inlet
+- Add an http server to the node manager to return the node resources
+- Improvements for commands' output to standardize their formatting
+- Removed consumer/producer/direct services and added inlet service
+- Introduced consumer resolution and publishing concepts and implementation
+- Added abac rules to kafka inlet and oulet
+- Introduce granular ac for kafka portal worker
+- Added policy access control usage
+- Introducing a variant of the secure channel which only exchange keys
+- Using key exchanger in kafka secure channel map
+- Allow kafka portals to anchor trust on identities
+- Switch to standard relay creation for kafka usage
+- Use a different logger to log tracing/logging errors
+- Add secure channel persistence
+- Add secure channel persistence to kafka
+
+### Changed
+
+- Move the handling of attributes expiration date to a layer above the repository
+- Separate transport messages from local messages
+- Enable tracing by default
+- Incorporate review comments
+- Extract the progress display as a separate struct
+- Get the default project only once
+- Don't initialize logging at all if log is not enabled
+- Rename methods and variables to insist on the exporting
+- Refactor the code thanks to pr review comments
+- Do small renaming of some local variables
+- Simplify `ProgressDisplay` to remove the mutex used to stop the message recv end
+- Organize bats tests in different suites
+- Move terminal code from command to api
+- Upgrade the rust version to 1.77
+
+### Fixed
+
+- Fix clippy warnings on nightly
+- Close the context automatically on each test macro execution
+- Execute logging / tracing tests as integration tests
+- Command's verbose argument now has preference over env vars
+- Store policies isolated by node and resource
+- Make the journeys test more robust
+- Fix okta authenticator, add identities to members table
+- Set the proper span id on the propagated tracing context
+- Use a stable span name for the root span of the host journey
+- Avoid leaking resources when one step of the cleanup fails
+- Use the correct policies in inlets/outlets created by kafka services
+- Policy bats tests
+- Fixed flaky kafka integration test
+- Fixed kafka-related flaky tests
+- Put the tracing context field under a compilation flag
+- Avoid triggering tokio invalid reference drop in test
+- Disable portal packet counter field
+- Do not enforce enrollment limit
+- Do not log messages by default on command parsing errors
+- Don't set a logging appender when logging is disabled
+- Fix a sql query
+- Get project identifier from model, without building the whole identity
+- Use project auth identifier in the journey instead of identity
+- Fix the flushing of traces
+- Make the journeys test more robust
+- Make sure all the handshake spans end up in the same trace for a secure channel use
+- Fix the root trace for a journey
+- Fix the off logging configuration
+- Fix the blocking processing of spans and log records
+- Fix the creation of a trace id from a project id in tests
+- Fix routing and flow control for local kafka outlets
+- Kms identity can be used in regular api nodes
+- Set the global error handler even if logging is off
+- Printing multi-line logs generated by commands stdout output
+- Allow initial credential exchange for key exchange only
+- Fix outgoing policy in kafka outlet
+
+### Removed
+
+- Remove the tracing of sensitive parameters
+- Remove `--resource` and `--resource-type` args from `policy show|list|delete`
+- Remove some unnecessary context stops
+- Remove resources when deleting a node
+- Removed an empty file
+
 ## 0.88.0 - 2024-12-12
 
 ### Added

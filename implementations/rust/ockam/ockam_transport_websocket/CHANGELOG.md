@@ -4,6 +4,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.125.0 - 2024-12-13
+
+### Added
+
+- Address review comments
+- Backcompatible encoding/decoding optimizations
+- Change tcp protocol serialization
+- Display a malformed transport address
+- Remove sync operations
+- Avoiding memory fragmentation by reducing allocations
+- Updated dependencies
+
+### Changed
+
+- Separate transport messages from local messages
+
+### Fixed
+
+- Close the context automatically on each test macro execution
+- Decode a transport message even without a tracing_context field
+
 ## 0.124.0 - 2024-12-12
 
 ### Added

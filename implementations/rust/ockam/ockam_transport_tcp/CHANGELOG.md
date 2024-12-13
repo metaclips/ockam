@@ -4,6 +4,77 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.134.0 - 2024-12-13
+
+### Added
+
+- Add opentelemetry tracing and logging support
+- Add sleep to tcp tests
+- Address review comments
+- Send pong to the inlet only after the outlet connected
+- Pass the tracing context at the ockam message level
+- Improve portals reliability and integration tests
+- Add spans for portals
+- Instrument the tcp portal
+- Introduced several cpu consumption optimizations
+- Backcompatible encoding/decoding optimizations
+- Added metadata and terminal concepts
+- Fix portals protocol
+- Support https for outlets
+- Make the api for creating outlets more flexible
+- Switch from `native-tls` to `tokio-rustls` for outlet tls
+- Implement updating route to the outlet in the existing inlet
+- Improve transport imports
+- Add possibility to pause `TCP` inlets
+- Change tcp protocol serialization
+- Add secure channel padding and optimize encoding
+- Improve transport imports
+- Implicitly resolve outlet addresses during connection
+- Remove sync operations
+- Heavy kafka refactoring, moved portal interceptor from `api` to `tcp` crate
+- Kafka cleanups
+- Added `TLS` inlet support
+- Implementation of reliable `TCP` portals
+- Unload ebpfs on `ockam reset`
+- Use more monolith structure for ebpf portals
+- `eBPF` portal updates:
+- Add ebpf portal bats tests
+- Check capabilities before using ebpf portals
+- Add `route_index`
+- Tie each tcp connection inside portal to an `Identifier`
+- Add `CAP_NET_ADMIN` to ebpf requirements check
+- Async read from the rawsocket
+- Add ebpf portal integration test
+- Rename ebpf portals -> privileged portals
+- Reuse buffer inside `TcpSendWorker`
+- Use `ockam_ebpf` from a dedicated repo
+- Encoding and allocation optimizations for privileged portals
+- Add periodic interface scan and ebpf attachment
+- Update ebpf
+- Avoiding memory fragmentation by reducing allocations
+- Increased portal throughput by increasing payload size
+- Add `UDP` support to nodes and multiaddr. refactor multiaddr
+- Updated dependencies
+
+### Changed
+
+- Separate transport messages from local messages
+- Bump rustls-native-certs from 0.7.3 to 0.8.0
+- Bump aya from 0.12.0 to 0.13.0
+
+### Fixed
+
+- Improve tcp resolution tests
+- Close the context automatically on each test macro execution
+- Disable portal packet counter field
+- Race condition when payload is sent before the pong message
+- Fix routing and flow control for local kafka outlets
+- Decode a transport message even without a tracing_context field
+- Account for `minicbor` length calculation bug
+- In portals, check identity change only for remote packets
+- Prevent ebpf detach on `TcpTransport` drop
+- Use legacy netlink ebpf attachment on kernel version 6.6.0+
+
 ## 0.133.0 - 2024-12-12
 
 ### Added

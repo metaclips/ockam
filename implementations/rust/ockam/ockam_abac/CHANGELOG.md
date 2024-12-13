@@ -4,6 +4,49 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.77.0 - 2024-12-13
+
+### Added
+
+- Delete `TrustContext`
+- Instrument more functions for enrollement
+- Add policy migration that removes `trust_context_id`
+- Introduce `subject.has_credential`
+- Add policies for resource types
+- Use outgoing access control
+- Scope some repositories to a given node name
+- Create a parser for boolean expressions
+- Add the possibility to use boolean expressions for policy expressions
+- Address review comments
+- Added abac rules to kafka inlet and oulet
+- Introduce granular ac for kafka portal worker
+- Allow kafka portals to anchor trust on identities
+- Exposed and added `ockam-rely` attribute validation for relay service
+- Use the any driver for sqlx to add support for postgres
+- Optimize cbor encoding by preallocating memory
+- Implement influxdb token lessor service
+- Extend boolean expressions to allow key-value and identifiers
+- Updated dependencies
+
+### Changed
+
+- Move the handling of attributes expiration date to a layer above the repository
+- Optimize debug implementation for `PolicyAccessControl`
+- Bump wast from 207.0.0 to 211.0.1
+- Use a published dependency for the patched sqlx library
+- Make the auto-retry an implementation detail of repositories
+
+### Fixed
+
+- Fix identity attributes expiration
+- Store policies isolated by node and resource
+- Fix policy storage expression type
+- Use the correct policies in inlets/outlets created by kafka services
+
+### Removed
+
+- Remove `--resource` and `--resource-type` args from `policy show|list|delete`
+
 ## 0.76.0 - 2024-12-12
 
 ### Added

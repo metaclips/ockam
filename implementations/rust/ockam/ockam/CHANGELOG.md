@@ -4,6 +4,50 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.146.0 - 2024-12-13
+
+### Added
+
+- Delete `TrustContext`
+- Address review comments
+- Backcompatible encoding/decoding optimizations
+- Improve output of `node create` command
+- Re-export `Transport` trait from `ockam` crate
+- Exposed and added `ockam-rely` attribute validation for relay service
+- Unified relay creation logic for project and rust
+- Improve transport imports
+- Improve transport imports
+- Expose `RendezvousService` from ockam
+- Move rendezvous_server to `ockam rendezvous-server start`
+- Converted socket addresses to hostnames in command
+- Remove sync operations
+- Finish removing heartbeats from `RemoteRelay`
+- `UDP` puncture improvements
+- Improvements to commands outputs
+- Avoiding memory fragmentation by reducing allocations
+- Add `UDP` support to nodes and multiaddr. refactor multiaddr
+- Updated dependencies
+
+### Changed
+
+- Move the handling of attributes expiration date to a layer above the repository
+- Separate transport messages from local messages
+
+### Fixed
+
+- Fix clippy warnings on nightly
+- Close the context automatically on each test macro execution
+
+### Removed
+
+- Remove the channel folder in the ockam crate
+- Remove the pipe2 folder in the ockam crate
+- Remove the pipe folder in the ockam crate
+- Remove unused protocols
+- Remove the system folder in the ockam crate
+- Remove metadata and move stream structs in the stream folder
+- Remove the stream folder from the ockam crate
+
 ## 0.145.0 - 2024-12-12
 
 ### Added

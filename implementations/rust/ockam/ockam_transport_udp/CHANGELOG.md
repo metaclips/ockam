@@ -4,6 +4,35 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.78.0 - 2024-12-13
+
+### Added
+
+- Address review comments
+- Introduced several cpu consumption optimizations
+- Backcompatible encoding/decoding optimizations
+- `UDP` updates
+- Change tcp protocol serialization
+- Optimize cbor encoding by preallocating memory
+- Display a malformed transport address
+- Implement `UDP` transport segmentation
+- Improve transport imports
+- Add healthcheck to `Rendezvous` server
+- Remove sync operations
+- `UDP` puncture improvements
+- Avoiding memory fragmentation by reducing allocations
+- Add `UDP` support to nodes and multiaddr. refactor multiaddr
+- Improve ockam udp transport implementation robustness
+- Updated dependencies
+
+### Changed
+
+- Separate transport messages from local messages
+
+### Fixed
+
+- Close the context automatically on each test macro execution
+
 ## 0.77.0 - 2024-12-12
 
 ### Added

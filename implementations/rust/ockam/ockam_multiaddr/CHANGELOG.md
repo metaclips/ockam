@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.68.0 - 2024-12-13
+
+### Added
+
+- Allow to specify 'self' in multiaddr
+- Optimize cbor encoding by preallocating memory
+- Add `UDP` support to nodes and multiaddr. refactor multiaddr
+- Updated dependencies
+
+### Fixed
+
+- Fix clippy warnings on nightly
+- Error chain is kept in ockam_command crate
+
 ## 0.67.0 - 2024-12-12
 
 ### Added

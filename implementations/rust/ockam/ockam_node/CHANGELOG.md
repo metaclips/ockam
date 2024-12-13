@@ -4,6 +4,87 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.136.0 - 2024-12-13
+
+### Added
+
+- Start a new trace before sending a transport message
+- Introduced several cpu consumption optimizations
+- Backcompatible encoding/decoding optimizations
+- Reply to v1 transport messages with v1 transport messages
+- Enable the tracing context on the rust side
+- Added metadata and terminal concepts
+- Scope some repositories to a given node name
+- Switch to `aws-lc-rs` library for encryption/decryption
+- Command `aws-lc` library via a feature
+- Add the possibility to use boolean expressions for policy expressions
+- Add flow controls query
+- Added abac rules to kafka inlet and oulet
+- Make `default` vault reuse `SqlxDatabase` instance
+- Set sql statement log level to trace
+- Use the any driver for sqlx to add support for postgres
+- Change tcp protocol serialization
+- Optimize cbor encoding by preallocating memory
+- Converted socket addresses to hostnames in command
+- Adjust timeouts
+- Report more detailed errors
+- Stop a previous medic before starting a new one
+- Added optional watchdog for tokio blocking tasks
+- Switching to sqlite wal mode for better concurrency
+- Remove last usages of `OCKAM_LOG` env var
+- Avoiding memory fragmentation by reducing allocations
+- Updated dependencies
+
+### Changed
+
+- Upgrade the rust version to 1.77
+- Use a published dependency for the patched sqlx library
+- Make the auto-retry an implementation detail of repositories
+
+### Fixed
+
+- Shutdown processor and worker on init fail
+- Allow the creation of a sqlite database with a relative path
+
+### Removed
+
+- Remove resources when deleting a node
+
+## [ockam_v0.117.0] - 2024-03-04
+
+### Added
+
+- Add support for additional kafka addons
+- Add opentelemetry tracing and logging support
+- Implement `Default` for `ockam_node::compat::Mutex`
+- Delete `TrustContext`
+- Add application errors
+- Implement `sleep_long` sleep accounting for device sleep
+- Address review comments
+- Add policy migration that removes `trust_context_id`
+- Pass the tracing context at the ockam message level
+- Add policies for resource types
+- Improve portals reliability and integration tests
+- Rework migrations
+
+### Changed
+
+- Separate transport messages from local messages
+- Move the logic of how to sort and apply migrations into the `NextMigration` enum
+
+### Fixed
+
+- Fix sqlx migration
+- Close the context automatically on each test macro execution
+- Store policies isolated by node and resource
+- Set the proper span id on the propagated tracing context
+- Make sure all the handshake spans end up in the same trace for a secure channel use
+
+### Removed
+
+- Remove panic if onward route in invalid
+- Remove some unnecessary context stops
+
 ## 0.135.0 - 2024-12-12
 
 ### Added

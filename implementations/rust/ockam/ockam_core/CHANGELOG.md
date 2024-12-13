@@ -4,6 +4,65 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.123.0 - 2024-12-13
+
+### Added
+
+- Add opentelemetry tracing and logging support
+- Improve ockam project ticket, ockam project enroll ux output, help, logs, errors
+- Delete `TrustContext`
+- Improve credentials management
+- Address review comments
+- Pass the tracing context at the ockam message level
+- Add policies for resource types
+- Added manual tests to measure latency
+- Propagating the errors from api clients to the command
+- Start a new trace when receiving a transport message
+- Start a new trace before sending a transport message
+- Introduced several cpu consumption optimizations
+- Backcompatible encoding/decoding optimizations
+- Add one second cache for incoming and outgoing access control
+- Reply to v1 transport messages with v1 transport messages
+- Enable the tracing context on the rust side
+- Create 3 separate credential retriever types
+- Added metadata and terminal concepts
+- Improve output of `node show` command
+- Switch to `aws-lc-rs` library for encryption/decryption
+- Improve output of `node show` and `status` commands
+- Provide the name of the environment variable when it cannot be decoded
+- Add flow controls query
+- Add `FIXME` to `ockam_core`
+- Change tcp protocol serialization
+- Optimize cbor encoding by preallocating memory
+- Added the possibility to encrypt specific fields in a kafka `JSON` record
+- Added `TLS` inlet support
+- Implement influxdb token lessor service
+- Refactor influxdb api client to better handle error responses
+- Encoding and allocation optimizations for privileged portals
+- Avoiding memory fragmentation by reducing allocations
+- Updated dependencies
+
+### Changed
+
+- Separate transport messages from local messages
+- Enable tracing by default
+- Incorporate review comments
+- Move terminal code from command to api
+- Upgrade the rust version to 1.77
+- Bump opentelemetry-appender-tracing from 0.3.0 to 0.4.0
+- `project-member` commands, and adds the `show` command
+- `kafka-*` commands
+
+### Fixed
+
+- Put the tracing context field under a compilation flag
+- Fix the root trace for a journey
+- Decode a transport message even without a tracing_context field
+- Only emit v1 messages
+- Account for `minicbor` length calculation bug
+- In portals, check identity change only for remote packets
+- Error chain is kept in ockam_command crate
+
 ## 0.122.0 - 2024-12-04
 
 ### Added

@@ -4,6 +4,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.129.0 - 2024-12-13
+
+### Added
+
+- Add policies for resource types
+- Instrument more functions for secure channels
+- Backcompatible encoding/decoding optimizations
+- Switch to `aws-lc-rs` library for encryption/decryption
+- Command `aws-lc` library via a feature
+- Added `aes-gcm` feature and changed how `aws-lc` is propagated
+- Unified `rust-aes` feature into `rust-crypto`
+- Add secure channel persistence
+- Use the any driver for sqlx to add support for postgres
+- Optimize cbor encoding by preallocating memory
+- Implement in-place encryption and decryption
+- Avoiding memory fragmentation by reducing allocations
+- Updated dependencies
+
+### Changed
+
+- Use a published dependency for the patched sqlx library
+- Make the auto-retry an implementation detail of repositories
+
 ## 0.128.0 - 2024-12-12
 
 ### Added
