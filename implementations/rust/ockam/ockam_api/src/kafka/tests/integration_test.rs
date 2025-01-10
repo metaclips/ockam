@@ -156,7 +156,7 @@ async fn producer__flow_with_mock_kafka__content_encryption_and_decryption(
         let mut consumer_mock_kafka = TcpServerSimulator::start("127.0.0.1:0").await;
         handle.tcp.create_outlet(
             "kafka_consumer_outlet",
-            HostnamePort::new("127.0.0.1", consumer_mock_kafka.port)?,
+            HostnamePort::localhost(consumer_mock_kafka.port),
             TcpOutletOptions::new(),
         )?;
 
@@ -173,7 +173,7 @@ async fn producer__flow_with_mock_kafka__content_encryption_and_decryption(
     let mut producer_mock_kafka = TcpServerSimulator::start("127.0.0.1:0").await;
     handle.tcp.create_outlet(
         "kafka_producer_outlet",
-        HostnamePort::new("127.0.0.1", producer_mock_kafka.port)?,
+        HostnamePort::localhost(producer_mock_kafka.port),
         TcpOutletOptions::new(),
     )?;
     let request =
@@ -207,7 +207,7 @@ async fn producer__flow_with_mock_kafka__content_encryption_and_decryption(
     let mut consumer_mock_kafka = TcpServerSimulator::start("127.0.0.1:0").await;
     handle.tcp.create_outlet(
         "kafka_consumer_outlet",
-        HostnamePort::new("127.0.0.1", consumer_mock_kafka.port)?,
+        HostnamePort::localhost(consumer_mock_kafka.port),
         TcpOutletOptions::new(),
     )?;
 
