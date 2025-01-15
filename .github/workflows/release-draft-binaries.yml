@@ -105,8 +105,7 @@ jobs:
             https://raw.githubusercontent.com/build-trust/ockam/develop/tools/docker/cosign.pub
 
           # verify signatures
-          cosign verify-blob --key ockam.pub --signature sha256sums.txt.sig sha256sums.txt
-          "
+          cosign verify-blob --key ockam.pub --signature sha256sums.txt.sig sha256sums.txt"
 
           declare -A binaries
           binaries["x86_64-unknown-linux-gnu"]="Linux x86_64 GNU"
@@ -129,7 +128,6 @@ jobs:
 
           text="${text}
           ${binaries_link}
-
           # verify that the sha256 hash of the downloaded binary is the same as
           # the corresponding hash mentioned in sha256sums.txt
           cat sha256sums.txt | grep ockam.x86_64-unknown-linux-gnu | sha256sum -c
