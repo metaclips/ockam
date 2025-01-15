@@ -195,7 +195,7 @@ dependencies = [
  "objc2",
  "objc2-app-kit",
  "objc2-foundation",
- "parking_lot",
+ "parking_lot 0.12.3",
  "windows-sys 0.48.0",
  "x11rb 0.13.1",
 ]
@@ -1003,6 +1003,15 @@ dependencies = [
  "rustc-demangle",
  "serde",
  "windows-targets 0.52.6",
+]
+
+[[package]]
+name = "backtrace-ext"
+version = "0.2.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "537beee3be4a18fb023b570f80e3ae28003db9167a751266b259926e25539d50"
+dependencies = [
+ "backtrace",
 ]
 
 [[package]]
@@ -1917,7 +1926,7 @@ dependencies = [
  "crossterm_winapi",
  "libc",
  "mio 0.8.11",
- "parking_lot",
+ "parking_lot 0.12.3",
  "serde",
  "signal-hook",
  "signal-hook-mio",
@@ -1934,7 +1943,7 @@ dependencies = [
  "crossterm_winapi",
  "futures-core",
  "mio 1.0.3",
- "parking_lot",
+ "parking_lot 0.12.3",
  "rustix",
  "signal-hook",
  "signal-hook-mio",
@@ -2071,7 +2080,7 @@ dependencies = [
  "hashbrown 0.14.5",
  "lock_api",
  "once_cell",
- "parking_lot_core",
+ "parking_lot_core 0.9.10",
 ]
 
 [[package]]
@@ -2085,7 +2094,7 @@ dependencies = [
  "hashbrown 0.14.5",
  "lock_api",
  "once_cell",
- "parking_lot_core",
+ "parking_lot_core 0.9.10",
 ]
 
 [[package]]
@@ -2798,7 +2807,7 @@ checksum = "1d930c203dd0b6ff06e0201a4a2fe9149b43c684fd4420555b26d21b1a02956f"
 dependencies = [
  "futures-core",
  "lock_api",
- "parking_lot",
+ "parking_lot 0.12.3",
 ]
 
 [[package]]
@@ -2860,6 +2869,15 @@ dependencies = [
  "pin-utils",
  "slab",
  "tokio-io",
+]
+
+[[package]]
+name = "fxhash"
+version = "0.2.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c31b6d751ae2c7f11320402d34e41349dd1016f8d5d45e48c4312bc8625af50c"
+dependencies = [
+ "byteorder",
 ]
 
 [[package]]
@@ -3604,6 +3622,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "instant"
+version = "0.1.13"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e0242819d153cba4b4b05a5a8f2a7e9bbf97b6055b2a002b395c96b5ff3c0222"
+dependencies = [
+ "cfg-if",
+]
+
+[[package]]
 name = "inventory"
 version = "0.3.16"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3842,6 +3869,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "kv"
+version = "0.24.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "620727085ac39ee9650b373fe6d8073a0aee6f99e52a9c72b25f7671078039ab"
+dependencies = [
+ "bincode",
+ "pin-project-lite",
+ "serde",
+ "serde_json",
+ "sled",
+ "thiserror 1.0.69",
+ "toml 0.5.11",
+]
+
+[[package]]
 name = "kv-log-macro"
 version = "1.0.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4073,6 +4115,8 @@ version = "7.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "317f146e2eb7021892722af37cf1b971f0a70c8406f487e24952667616192c64"
 dependencies = [
+ "backtrace",
+ "backtrace-ext",
  "cfg-if",
  "miette-derive",
  "owo-colors",
@@ -5418,12 +5462,37 @@ checksum = "f38d5652c16fde515bb1ecef450ab0f6a219d619a7274976324d5e377f7dceba"
 
 [[package]]
 name = "parking_lot"
+version = "0.11.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7d17b78036a60663b797adeaee46f5c9dfebb86948d1255007a1d6be0271ff99"
+dependencies = [
+ "instant",
+ "lock_api",
+ "parking_lot_core 0.8.6",
+]
+
+[[package]]
+name = "parking_lot"
 version = "0.12.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f1bf18183cf54e8d6059647fc3063646a1801cf30896933ec2311622cc4b9a27"
 dependencies = [
  "lock_api",
- "parking_lot_core",
+ "parking_lot_core 0.9.10",
+]
+
+[[package]]
+name = "parking_lot_core"
+version = "0.8.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "60a2cfe6f0ad2bfc16aefa463b497d5c7a5ecd44a23efa72aa342d90177356dc"
+dependencies = [
+ "cfg-if",
+ "instant",
+ "libc",
+ "redox_syscall 0.2.16",
+ "smallvec",
+ "winapi",
 ]
 
 [[package]]
@@ -5434,7 +5503,7 @@ checksum = "1e401f977ab385c9e4e3ab30627d6f26d00e2c73eef317493c4ec6d468726cf8"
 dependencies = [
  "cfg-if",
  "libc",
- "redox_syscall",
+ "redox_syscall 0.5.8",
  "smallvec",
  "windows-targets 0.52.6",
 ]
@@ -5927,6 +5996,65 @@ dependencies = [
 ]
 
 [[package]]
+name = "r3bl_ansi_color"
+version = "0.7.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ed5be50e9547e995b93be1515a1a257f6ff66e90af407dac913edf70d04bdbd2"
+dependencies = [
+ "is_ci",
+]
+
+[[package]]
+name = "r3bl_core"
+version = "0.10.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a14940d2a5b75add398236067c19a773c518c12f5c8033d17605e941aecfece5"
+dependencies = [
+ "async-stream",
+ "bincode",
+ "chrono",
+ "colorgrad",
+ "crossterm 0.28.1",
+ "futures-core",
+ "futures-util",
+ "kv",
+ "miette",
+ "nom",
+ "pretty_assertions",
+ "r3bl_ansi_color 0.7.0",
+ "rand",
+ "serde",
+ "serde_json",
+ "sha2",
+ "size-of",
+ "strip-ansi",
+ "strum",
+ "strum_macros 0.26.4",
+ "thiserror 1.0.69",
+ "time",
+ "tokio",
+ "tracing",
+ "tracing-appender",
+ "tracing-core",
+ "tracing-subscriber",
+ "unicode-segmentation",
+ "unicode-width 0.2.0",
+]
+
+[[package]]
+name = "r3bl_macro"
+version = "0.10.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9abdf9ba746f90b611cf74ab17120e7ee3f28a17c1cb2fd308d90fbdce93f73c"
+dependencies = [
+ "paste",
+ "proc-macro2",
+ "quote",
+ "r3bl_core",
+ "syn 2.0.95",
+]
+
+[[package]]
 name = "r3bl_rs_utils_core"
 version = "0.9.16"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -5935,7 +6063,7 @@ dependencies = [
  "chrono",
  "log",
  "nom",
- "r3bl_ansi_color",
+ "r3bl_ansi_color 0.6.10",
  "r3bl_simple_logger",
  "rand",
  "serde",
@@ -5949,47 +6077,33 @@ dependencies = [
 ]
 
 [[package]]
-name = "r3bl_rs_utils_macro"
-version = "0.9.10"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f20cacd36d4efb7f13e94892bf74a5ee2dbcc4a34b697cb75db489645cc7241b"
-dependencies = [
- "paste",
- "proc-macro2",
- "quote",
- "r3bl_rs_utils_core",
- "syn 2.0.95",
-]
-
-[[package]]
 name = "r3bl_simple_logger"
 version = "0.1.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6460e22409b07237ca014dd40cbe571457cd3ae7ca7f916ff5b97f9a1d2b22de"
 dependencies = [
  "log",
- "r3bl_ansi_color",
+ "r3bl_ansi_color 0.6.10",
  "termcolor",
  "time",
 ]
 
 [[package]]
 name = "r3bl_tui"
-version = "0.5.9"
+version = "0.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9ac20ae9e32b047c15ddf1f1661d63ee2d3fc40423ab5c4ff6b8b060ac51a2e7"
+checksum = "ff4693f2c186061e2c3446830c29bbf6f22a776edc3fdb3a09f06f0b2a37fbbf"
 dependencies = [
  "chrono",
- "colorgrad",
  "copypasta-ext",
  "crossterm 0.28.1",
  "futures-util",
- "is-terminal",
- "log",
+ "miette",
  "nom",
- "r3bl_ansi_color",
- "r3bl_rs_utils_core",
- "r3bl_rs_utils_macro",
+ "pretty_assertions",
+ "r3bl_ansi_color 0.7.0",
+ "r3bl_core",
+ "r3bl_macro",
  "rand",
  "serde",
  "serde_json",
@@ -5997,7 +6111,14 @@ dependencies = [
  "strum",
  "strum_macros 0.26.4",
  "syntect",
+ "thiserror 1.0.69",
  "tokio",
+ "tracing",
+ "tracing-appender",
+ "tracing-core",
+ "tracing-subscriber",
+ "unicode-segmentation",
+ "unicode-width 0.2.0",
 ]
 
 [[package]]
@@ -6010,7 +6131,7 @@ dependencies = [
  "crossterm 0.28.1",
  "is-terminal",
  "log",
- "r3bl_ansi_color",
+ "r3bl_ansi_color 0.6.10",
  "r3bl_rs_utils_core",
  "reedline",
  "serde",
@@ -6106,6 +6227,15 @@ dependencies = [
  "rustls-pki-types",
  "time",
  "yasna",
+]
+
+[[package]]
+name = "redox_syscall"
+version = "0.2.16"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "fb5a58c1855b4b6819d59012155603f0b22ad30cad752600aadfcb695265519a"
+dependencies = [
+ "bitflags 1.3.2",
 ]
 
 [[package]]
@@ -6774,7 +6904,7 @@ dependencies = [
  "futures 0.3.31",
  "log",
  "once_cell",
- "parking_lot",
+ "parking_lot 0.12.3",
  "scc",
  "serial_test_derive",
 ]
@@ -6951,6 +7081,22 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8f92a496fb766b417c996b9c5e57daf2f7ad3b0bebe1ccfca4856390e3d3bb67"
 dependencies = [
  "autocfg",
+]
+
+[[package]]
+name = "sled"
+version = "0.34.7"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7f96b4737c2ce5987354855aed3797279def4ebf734436c6aa4552cf8e169935"
+dependencies = [
+ "crc32fast",
+ "crossbeam-epoch",
+ "crossbeam-utils",
+ "fs2",
+ "fxhash",
+ "libc",
+ "log",
+ "parking_lot 0.11.2",
 ]
 
 [[package]]
@@ -7723,11 +7869,12 @@ dependencies = [
  "bytes 1.9.0",
  "libc",
  "mio 1.0.3",
- "parking_lot",
+ "parking_lot 0.12.3",
  "pin-project-lite",
  "signal-hook-registry",
  "socket2",
  "tokio-macros",
+ "tracing",
  "windows-sys 0.52.0",
 ]
 
@@ -8595,7 +8742,7 @@ version = "1.5.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "372d5b87f58ec45c384ba03563b03544dc5fadc3983e434b286913f5b4a9bb6d"
 dependencies = [
- "redox_syscall",
+ "redox_syscall 0.5.8",
  "wasite",
 ]
 
