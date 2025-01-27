@@ -39,6 +39,8 @@ impl NodeManagerWorker {
             policy_expression,
             privileged,
             tls,
+            skip_handshake,
+            enable_nagle,
         } = body.tcp_outlet;
         let address = self
             .node_manager
@@ -95,6 +97,8 @@ impl NodeManagerWorker {
                 reachable_from_default_secure_channel,
                 OutletAccessControl::WithPolicyExpression(policy_expression),
                 privileged,
+                skip_handshake,
+                enable_nagle,
             )
             .await
         {
@@ -121,6 +125,8 @@ impl NodeManagerWorker {
             disable_tcp_fallback,
             privileged,
             tls_certificate_provider,
+            skip_handshake,
+            enable_nagle,
         } = body.tcp_inlet.clone();
 
         //TODO: should be an easier way to tweak the multiaddr
@@ -189,6 +195,8 @@ impl NodeManagerWorker {
                 disable_tcp_fallback,
                 privileged,
                 tls_certificate_provider,
+                skip_handshake,
+                enable_nagle,
             )
             .await
         {
@@ -334,7 +342,8 @@ impl InfluxDBPortals for BackgroundNodeClient {
         policy_expression: Option<PolicyExpression>,
         influxdb_config: InfluxDBOutletConfig,
     ) -> miette::Result<OutletStatus> {
-        let mut outlet_payload = CreateOutlet::new(to, tls, from.cloned(), true, false);
+        let mut outlet_payload =
+            CreateOutlet::new(to, tls, from.cloned(), true, false, false, false);
         if let Some(policy_expression) = policy_expression {
             outlet_payload.set_policy_expression(policy_expression);
         }
@@ -376,6 +385,8 @@ impl InfluxDBPortals for BackgroundNodeClient {
                 disable_tcp_fallback,
                 false,
                 tls_certificate_provider,
+                false,
+                false,
             );
             let payload = CreateInfluxDBInlet::new(inlet_payload, lease_usage, lease_issuer_route);
             Request::post("/node/influxdb_inlet").body(payload)

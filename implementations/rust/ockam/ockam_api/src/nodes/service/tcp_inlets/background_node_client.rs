@@ -26,6 +26,8 @@ pub fn create_inlet_payload(
     disable_tcp_fallback: bool,
     privileged: bool,
     tls_certificate_provider: &Option<MultiAddr>,
+    skip_handshake: bool,
+    enable_nagle: bool,
 ) -> CreateInlet {
     let via_project = outlet_addr.matches(0, &[ProjectProto::CODE.into()]);
     let mut payload = if via_project {
@@ -37,6 +39,8 @@ pub fn create_inlet_payload(
             enable_udp_puncture,
             disable_tcp_fallback,
             privileged,
+            skip_handshake,
+            enable_nagle,
         )
     } else {
         CreateInlet::to_node(
@@ -48,6 +52,8 @@ pub fn create_inlet_payload(
             enable_udp_puncture,
             disable_tcp_fallback,
             privileged,
+            skip_handshake,
+            enable_nagle,
         )
     };
     if let Some(e) = policy_expression.as_ref() {
@@ -80,6 +86,8 @@ impl Inlets for BackgroundNodeClient {
         disable_tcp_fallback: bool,
         privileged: bool,
         tls_certificate_provider: &Option<MultiAddr>,
+        skip_handshake: bool,
+        enable_nagle: bool,
     ) -> miette::Result<Reply<InletStatus>> {
         let request = {
             let payload = create_inlet_payload(
@@ -95,6 +103,8 @@ impl Inlets for BackgroundNodeClient {
                 disable_tcp_fallback,
                 privileged,
                 tls_certificate_provider,
+                skip_handshake,
+                enable_nagle,
             );
             Request::post("/node/inlet").body(payload)
         };

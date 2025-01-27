@@ -30,6 +30,8 @@ impl InMemoryNode {
         disable_tcp_fallback: bool,
         privileged: bool,
         tls_certificate_provider: Option<MultiAddr>,
+        skip_handshake: bool,
+        enable_nagle: bool,
     ) -> Result<InletStatus> {
         self.node_manager
             .create_inlet(
@@ -48,6 +50,8 @@ impl InMemoryNode {
                 disable_tcp_fallback,
                 privileged,
                 tls_certificate_provider,
+                skip_handshake,
+                enable_nagle,
             )
             .await
     }

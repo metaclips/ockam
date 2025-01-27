@@ -332,14 +332,14 @@ impl HandshakeWorker {
         let msg_addr = message.msg_addr();
 
         if self.key_exchange_only {
-            if msg_addr == self.addresses.decryptor_api {
+            if msg_addr == &self.addresses.decryptor_api {
                 decryptor_handler.handle_decrypt_api(context, message).await
             } else {
                 Err(IdentityError::UnknownChannelMsgDestination)?
             }
-        } else if msg_addr == self.addresses.decryptor_remote {
+        } else if msg_addr == &self.addresses.decryptor_remote {
             decryptor_handler.handle_decrypt(context, message).await
-        } else if msg_addr == self.addresses.decryptor_api {
+        } else if msg_addr == &self.addresses.decryptor_api {
             decryptor_handler.handle_decrypt_api(context, message).await
         } else {
             Err(IdentityError::UnknownChannelMsgDestination)?

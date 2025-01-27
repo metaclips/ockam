@@ -1,7 +1,7 @@
 use crate::channel_types::{oneshot_channel, MessageSender, OneshotReceiver, OneshotSender};
-use crate::error::{NodeError, NodeReason};
+use crate::error::NodeError;
 use crate::relay::CtrlSignal;
-use crate::WorkerShutdownPriority;
+use crate::{WorkerReason, WorkerShutdownPriority};
 use core::default::Default;
 use core::fmt::Debug;
 use core::sync::atomic::{AtomicUsize, Ordering};
@@ -461,7 +461,7 @@ impl AddressRecord {
         if !self.meta.detached && !skip_sending_stop_signal {
             self.ctrl_tx
                 .send(CtrlSignal::InterruptStop)
-                .map_err(|_| NodeError::NodeState(NodeReason::Unknown).internal())?;
+                .map_err(|_| NodeError::WorkerState(WorkerReason::CtrlChannelError).internal())?;
         }
 
         Ok(())

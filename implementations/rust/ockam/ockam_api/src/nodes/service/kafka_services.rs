@@ -220,6 +220,8 @@ impl InMemoryNode {
             false,
             false,
             None,
+            false,
+            false,
         )
         .await?;
 
@@ -323,6 +325,8 @@ impl InMemoryNode {
             Some(KAFKA_OUTLET_BOOTSTRAP_ADDRESS.into()),
             false,
             OutletAccessControl::WithPolicyExpression(outlet_policy_expression),
+            false,
+            false,
             false,
         )
         .await?;

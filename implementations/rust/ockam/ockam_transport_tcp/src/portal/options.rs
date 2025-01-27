@@ -18,6 +18,8 @@ pub struct TcpInletOptions {
     pub(crate) is_paused: bool,
     pub(crate) tls_certificate_provider: Option<Arc<dyn TlsCertificateProvider>>,
     pub(crate) portal_payload_length: usize,
+    pub(crate) skip_handshake: bool,
+    pub(crate) enable_nagle: bool,
 }
 
 impl TcpInletOptions {
@@ -29,7 +31,33 @@ impl TcpInletOptions {
             is_paused: false,
             tls_certificate_provider: None,
             portal_payload_length: read_portal_payload_length(),
+            skip_handshake: false,
+            enable_nagle: false,
         }
+    }
+
+    /// Skip Portal handshake for lower latency, but also lower throughput
+    pub fn set_skip_handshake(mut self, skip_handshake: bool) -> Self {
+        self.skip_handshake = skip_handshake;
+        self
+    }
+
+    /// Skip Portal handshake for lower latency, but also lower throughput
+    pub fn skip_handshake(mut self) -> Self {
+        self.skip_handshake = true;
+        self
+    }
+
+    /// Enable Nagle's algorithm for potentially higher throughput, but higher latency
+    pub fn set_enable_nagle(mut self, enable_nagle: bool) -> Self {
+        self.enable_nagle = enable_nagle;
+        self
+    }
+
+    /// Enable Nagle's algorithm for potentially higher throughput, but higher latency
+    pub fn enable_nagle(mut self) -> Self {
+        self.enable_nagle = true;
+        self
     }
 
     /// Set TCP inlet to paused mode after start. No unpause call [`TcpInlet::unpause`]
@@ -121,6 +149,8 @@ pub struct TcpOutletOptions {
     pub(crate) outgoing_access_control: Arc<dyn OutgoingAccessControl>,
     pub(crate) tls: bool,
     pub(crate) portal_payload_length: usize,
+    pub(crate) skip_handshake: bool,
+    pub(crate) enable_nagle: bool,
 }
 
 impl TcpOutletOptions {
@@ -132,7 +162,33 @@ impl TcpOutletOptions {
             outgoing_access_control: Arc::new(AllowAll),
             tls: false,
             portal_payload_length: read_portal_payload_length(),
+            skip_handshake: false,
+            enable_nagle: false,
         }
+    }
+
+    /// Skip Portal handshake for lower latency, but also lower throughput
+    pub fn set_skip_handshake(mut self, skip_handshake: bool) -> Self {
+        self.skip_handshake = skip_handshake;
+        self
+    }
+
+    /// Skip Portal handshake for lower latency, but also lower throughput
+    pub fn skip_handshake(mut self) -> Self {
+        self.skip_handshake = true;
+        self
+    }
+
+    /// Enable Nagle's algorithm for potentially higher throughput, but higher latency
+    pub fn set_enable_nagle(mut self, enable_nagle: bool) -> Self {
+        self.enable_nagle = enable_nagle;
+        self
+    }
+
+    /// Enable Nagle's algorithm for potentially higher throughput, but higher latency
+    pub fn enable_nagle(mut self) -> Self {
+        self.enable_nagle = true;
+        self
     }
 
     /// Set Incoming Access Control

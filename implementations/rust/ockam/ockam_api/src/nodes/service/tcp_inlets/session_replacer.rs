@@ -55,6 +55,8 @@ pub(super) struct InletSessionReplacer {
     pub(super) udp_puncture: Option<UdpPuncture>,
     pub(super) additional_route: Option<Route>,
     pub(super) privileged: bool,
+    pub(super) skip_handshake: bool,
+    pub(super) enable_nagle: bool,
 }
 
 impl InletSessionReplacer {
@@ -109,7 +111,9 @@ impl InletSessionReplacer {
         let (incoming_ac, outgoing_ac) = self.access_control(node_manager).await?;
         let options = TcpInletOptions::new()
             .with_incoming_access_control(incoming_ac)
-            .with_outgoing_access_control(outgoing_ac);
+            .with_outgoing_access_control(outgoing_ac)
+            .set_skip_handshake(self.skip_handshake)
+            .set_enable_nagle(self.enable_nagle);
 
         let options = if self.udp_puncture_enabled() && self.disable_tcp_fallback {
             options.paused()

@@ -36,6 +36,8 @@ async fn inlet_outlet_local_successful(context: &mut Context) -> ockam::Result<(
             true,
             OutletAccessControl::AccessControl((Arc::new(AllowAll), Arc::new(AllowAll))),
             false,
+            false,
+            false,
         )
         .await?;
 
@@ -60,6 +62,8 @@ async fn inlet_outlet_local_successful(context: &mut Context) -> ockam::Result<(
             false,
             false,
             None,
+            false,
+            false,
         )
         .await?;
 
@@ -112,6 +116,8 @@ fn portal_node_goes_down_reconnect() {
                     true,
                     OutletAccessControl::AccessControl((Arc::new(AllowAll), Arc::new(AllowAll))),
                     false,
+                    false,
+                    false,
                 )
                 .await?;
 
@@ -138,6 +144,8 @@ fn portal_node_goes_down_reconnect() {
                     false,
                     false,
                     None,
+                    false,
+                    false,
                 )
                 .await?;
 
@@ -182,6 +190,8 @@ fn portal_node_goes_down_reconnect() {
                     Some(Address::from_string("outlet")),
                     true,
                     OutletAccessControl::AccessControl((Arc::new(AllowAll), Arc::new(AllowAll))),
+                    false,
+                    false,
                     false,
                 )
                 .await?;
@@ -258,6 +268,8 @@ fn portal_low_bandwidth_connection_keep_working_for_60s() {
                     true,
                     OutletAccessControl::AccessControl((Arc::new(AllowAll), Arc::new(AllowAll))),
                     false,
+                    false,
+                    false,
                 )
                 .await?;
 
@@ -296,6 +308,8 @@ fn portal_low_bandwidth_connection_keep_working_for_60s() {
                     false,
                     false,
                     None,
+                    false,
+                    false,
                 )
                 .await?;
 
@@ -379,6 +393,8 @@ fn portal_heavy_load_exchanged() {
                     true,
                     OutletAccessControl::AccessControl((Arc::new(AllowAll), Arc::new(AllowAll))),
                     false,
+                    false,
+                    false,
                 )
                 .await?;
 
@@ -410,6 +426,8 @@ fn portal_heavy_load_exchanged() {
                     false,
                     false,
                     None,
+                    false,
+                    false,
                 )
                 .await?;
 
@@ -525,6 +543,8 @@ fn test_portal_payload_transfer(outgoing_disruption: Disruption, incoming_disrup
                     true,
                     OutletAccessControl::AccessControl((Arc::new(AllowAll), Arc::new(AllowAll))),
                     false,
+                    false,
+                    false,
                 )
                 .await?;
 
@@ -563,6 +583,8 @@ fn test_portal_payload_transfer(outgoing_disruption: Disruption, incoming_disrup
                     false,
                     false,
                     None,
+                    false,
+                    false,
                 )
                 .await?;
 

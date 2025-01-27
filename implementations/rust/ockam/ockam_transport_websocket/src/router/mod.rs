@@ -121,9 +121,9 @@ impl Worker for WebSocketRouter {
         let return_route = msg.return_route().clone();
         let msg_addr = msg.msg_addr();
 
-        if msg_addr == self.main_addr {
+        if msg_addr == &self.main_addr {
             self.handle_route(ctx, msg.into_local_message()).await?;
-        } else if msg_addr == self.api_addr {
+        } else if msg_addr == &self.api_addr {
             let msg = WebSocketRouterRequest::decode(msg.payload())?;
             match msg {
                 WebSocketRouterRequest::Register { accepts, self_addr } => {

@@ -48,11 +48,12 @@ done
 if [ "$local_suite" = true ]; then
   echo "Running local suite..."
   bats "$current_directory/local" --timing -j 3
+  OCKAM_TCP_PORTAL_SKIP_HANDSHAKE=1 bats "$current_directory/local/portals.bats" --timing -j 3
 fi
 
 if [ "$local_as_root_suite" = true ]; then
   echo "Running local root suite..."
-  OCKAM_PRIVILEGED=1 bats "$current_directory/local/portals.bats" --timing -j 3
+  OCKAM_PRIVILEGED=1 bats "$current_directory/local/portals_lifecycle.bats" "$current_directory/local/portals.bats" --timing -j 3
 fi
 
 if [ -z "${ORCHESTRATOR_TESTS}" ]; then

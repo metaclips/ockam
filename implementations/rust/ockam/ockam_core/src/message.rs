@@ -214,14 +214,14 @@ impl<M: Message> Routed<M> {
 
     /// Return a copy of the message address.
     #[inline]
-    pub fn msg_addr(&self) -> Address {
-        self.msg_addr.clone()
+    pub fn msg_addr(&self) -> &Address {
+        &self.msg_addr
     }
 
     /// True sender of the message
     #[inline]
-    pub fn src_addr(&self) -> Address {
-        self.src_addr.clone()
+    pub fn src_addr(&self) -> &Address {
+        &self.src_addr
     }
 
     /// Return a copy of the onward route for the wrapped message.

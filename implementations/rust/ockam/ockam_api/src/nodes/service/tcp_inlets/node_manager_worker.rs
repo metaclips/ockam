@@ -30,6 +30,8 @@ impl NodeManagerWorker {
             disable_tcp_fallback,
             privileged,
             tls_certificate_provider,
+            skip_handshake,
+            enable_nagle,
         } = create_inlet;
         match self
             .node_manager
@@ -49,6 +51,8 @@ impl NodeManagerWorker {
                 disable_tcp_fallback,
                 privileged,
                 tls_certificate_provider,
+                skip_handshake,
+                enable_nagle,
             )
             .await
         {

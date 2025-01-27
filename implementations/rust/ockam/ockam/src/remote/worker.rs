@@ -32,7 +32,7 @@ impl Worker for RemoteRelay {
         ctx: &mut Context,
         msg: Routed<Self::Message>,
     ) -> Result<()> {
-        if msg.msg_addr() == self.addresses.main_remote {
+        if msg.msg_addr() == &self.addresses.main_remote {
             let mut local_message = msg.into_local_message();
 
             // Remove my address from the onward_route

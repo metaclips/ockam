@@ -108,7 +108,7 @@ impl TcpSendWorker {
 
         WorkerBuilder::new(sender_worker)
             .with_mailboxes(Mailboxes::new(main_mailbox.clone(), vec![internal_mailbox]))
-            .with_shutdown_priority(WorkerShutdownPriority::Priority1)
+            .with_shutdown_priority(WorkerShutdownPriority::Priority2)
             .start(ctx)?;
 
         Ok(())
@@ -116,7 +116,7 @@ impl TcpSendWorker {
 
     #[instrument(skip_all, name = "TcpSendWorker::stop")]
     fn stop(&self, ctx: &Context) -> Result<()> {
-        ctx.stop_address(self.addresses.sender_address())
+        ctx.stop_primary_address()
     }
 
     fn serialize_message(&mut self, local_message: LocalMessage) -> Result<()> {
@@ -215,7 +215,7 @@ impl Worker for TcpSendWorker {
         msg: Routed<Self::Message>,
     ) -> Result<()> {
         let recipient = msg.msg_addr();
-        if &recipient == self.addresses.sender_internal_address() {
+        if recipient == self.addresses.sender_internal_address() {
             let msg = TcpSendWorkerMsg::decode(msg.payload())?;
 
             match msg {

@@ -369,16 +369,16 @@ impl Worker for EncryptorWorker {
         let msg_addr = msg.msg_addr();
 
         if self.key_exchange_only {
-            if msg_addr == self.addresses.encryptor_api {
+            if msg_addr == &self.addresses.encryptor_api {
                 self.handle_encrypt_api(ctx, msg).await?;
             } else {
                 return Err(IdentityError::UnknownChannelMsgDestination)?;
             }
-        } else if msg_addr == self.addresses.encryptor {
+        } else if msg_addr == &self.addresses.encryptor {
             self.handle_encrypt(ctx, msg).await?;
-        } else if msg_addr == self.addresses.encryptor_api {
+        } else if msg_addr == &self.addresses.encryptor_api {
             self.handle_encrypt_api(ctx, msg).await?;
-        } else if msg_addr == self.addresses.encryptor_internal {
+        } else if msg_addr == &self.addresses.encryptor_internal {
             self.handle_refresh_credentials(ctx).await?;
         } else {
             return Err(IdentityError::UnknownChannelMsgDestination)?;

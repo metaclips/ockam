@@ -177,7 +177,10 @@ impl Processor for TcpInletListenProcessor {
     #[instrument(skip_all, name = "TcpInletListenProcessor::process")]
     async fn process(&mut self, ctx: &mut Self::Context) -> Result<bool> {
         let (stream, socket_addr) = self.inner.accept().await.map_err(TransportError::from)?;
-        stream.set_nodelay(true).map_err(TransportError::from)?;
+
+        stream
+            .set_nodelay(!self.options.enable_nagle)
+            .map_err(TransportError::from)?;
 
         let addresses = Addresses::generate(PortalType::Inlet);
 
@@ -227,6 +230,7 @@ impl Processor for TcpInletListenProcessor {
             self.options.incoming_access_control.clone(),
             self.options.outgoing_access_control.clone(),
             self.options.portal_payload_length,
+            self.options.skip_handshake,
         )?;
 
         Ok(true)

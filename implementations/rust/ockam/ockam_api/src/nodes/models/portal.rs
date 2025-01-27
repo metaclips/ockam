@@ -57,6 +57,10 @@ pub struct CreateInlet {
     #[n(12)] pub(crate) privileged: bool,
     /// TLS certificate provider route.
     #[n(13)] pub(crate) tls_certificate_provider: Option<MultiAddr>,
+    /// Skip Portal handshake for lower latency, but also lower throughput
+    #[n(14)] pub(crate) skip_handshake: bool,
+    /// Enable Nagle's algorithm for potentially higher throughput, but higher latency
+    #[n(15)] pub(crate) enable_nagle: bool,
 }
 
 impl CreateInlet {
@@ -69,6 +73,8 @@ impl CreateInlet {
         enable_udp_puncture: bool,
         disable_tcp_fallback: bool,
         privileged: bool,
+        skip_handshake: bool,
+        enable_nagle: bool,
     ) -> Self {
         Self {
             listen_addr: listen,
@@ -83,6 +89,8 @@ impl CreateInlet {
             disable_tcp_fallback,
             privileged,
             tls_certificate_provider: None,
+            skip_handshake,
+            enable_nagle,
         }
     }
 
@@ -96,6 +104,8 @@ impl CreateInlet {
         enable_udp_puncture: bool,
         disable_tcp_fallback: bool,
         privileged: bool,
+        skip_handshake: bool,
+        enable_nagle: bool,
     ) -> Self {
         Self {
             listen_addr: listen,
@@ -110,6 +120,8 @@ impl CreateInlet {
             disable_tcp_fallback,
             privileged,
             tls_certificate_provider: None,
+            skip_handshake,
+            enable_nagle,
         }
     }
 
@@ -169,7 +181,11 @@ pub struct CreateOutlet {
     /// will be used.
     #[n(5)] pub policy_expression: Option<PolicyExpression>,
     /// Use eBPF and RawSocket to access TCP packets instead of TCP data stream.
-    #[n(6)] pub privileged: bool
+    #[n(6)] pub privileged: bool,
+    /// Skip Portal handshake for lower latency, but also lower throughput
+    #[n(7)] pub skip_handshake: bool,
+    /// Enable Nagle's algorithm for potentially higher throughput, but higher latency
+    #[n(8)] pub(crate) enable_nagle: bool,
 }
 
 impl CreateOutlet {
@@ -179,6 +195,8 @@ impl CreateOutlet {
         worker_addr: Option<Address>,
         reachable_from_default_secure_channel: bool,
         privileged: bool,
+        skip_handshake: bool,
+        enable_nagle: bool,
     ) -> Self {
         Self {
             hostname_port,
@@ -187,6 +205,8 @@ impl CreateOutlet {
             reachable_from_default_secure_channel,
             policy_expression: None,
             privileged,
+            skip_handshake,
+            enable_nagle,
         }
     }
 

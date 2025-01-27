@@ -12,7 +12,7 @@ use ockam_transport_tcp::{
 
 const LENGTH: usize = 32;
 
-async fn setup(ctx: &Context) -> Result<(String, TcpListener)> {
+async fn setup(ctx: &Context, skip_handshake: bool) -> Result<(String, TcpListener)> {
     let tcp = TcpTransport::create(ctx)?;
 
     let listener = {
@@ -21,13 +21,17 @@ async fn setup(ctx: &Context) -> Result<(String, TcpListener)> {
         tcp.create_outlet(
             "outlet",
             bind_address.try_into().unwrap(),
-            TcpOutletOptions::new(),
+            TcpOutletOptions::new().set_skip_handshake(skip_handshake),
         )?;
         listener
     };
 
     let inlet = tcp
-        .create_inlet("127.0.0.1:0", route!["outlet"], TcpInletOptions::new())
+        .create_inlet(
+            "127.0.0.1:0",
+            route!["outlet"],
+            TcpInletOptions::new().set_skip_handshake(skip_handshake),
+        )
         .await?;
 
     Ok((inlet.socket_address().to_string(), listener))
@@ -60,10 +64,24 @@ async fn read_should_timeout(stream: &mut TcpStream) {
 #[allow(non_snake_case)]
 #[ockam_macros::test(timeout = 5000)]
 async fn portal__standard_flow__should_succeed(ctx: &mut Context) -> Result<()> {
+    portal__standard_flow__should_succeed__impl(ctx, false).await
+}
+
+#[allow(non_snake_case)]
+#[ockam_macros::test(timeout = 5000)]
+async fn portal_skip_handshake__standard_flow__should_succeed(ctx: &mut Context) -> Result<()> {
+    portal__standard_flow__should_succeed__impl(ctx, true).await
+}
+
+#[allow(non_snake_case)]
+async fn portal__standard_flow__should_succeed__impl(
+    ctx: &mut Context,
+    skip_handshake: bool,
+) -> Result<()> {
     let payload1 = generate_binary();
     let payload2 = generate_binary();
 
-    let (inlet_addr, listener) = setup(ctx).await?;
+    let (inlet_addr, listener) = setup(ctx, skip_handshake).await?;
 
     let handle = tokio::spawn(async move {
         let (mut stream, _) = listener.accept().await.unwrap();
@@ -89,10 +107,24 @@ async fn portal__standard_flow__should_succeed(ctx: &mut Context) -> Result<()> 
 #[allow(non_snake_case)]
 #[ockam_macros::test(timeout = 5000)]
 async fn portal__reverse_flow__should_succeed(ctx: &mut Context) -> Result<()> {
+    portal__reverse_flow__should_succeed__impl(ctx, false).await
+}
+
+#[allow(non_snake_case)]
+#[ockam_macros::test(timeout = 5000)]
+async fn portal_skip_handshake__reverse_flow__should_succeed(ctx: &mut Context) -> Result<()> {
+    portal__reverse_flow__should_succeed__impl(ctx, true).await
+}
+
+#[allow(non_snake_case)]
+async fn portal__reverse_flow__should_succeed__impl(
+    ctx: &mut Context,
+    skip_handshake: bool,
+) -> Result<()> {
     let payload1 = generate_binary();
     let payload2 = generate_binary();
 
-    let (inlet_addr, listener) = setup(ctx).await?;
+    let (inlet_addr, listener) = setup(ctx, skip_handshake).await?;
 
     let handle = tokio::spawn(async move {
         let (mut stream, _) = listener.accept().await.unwrap();
@@ -118,6 +150,20 @@ async fn portal__reverse_flow__should_succeed(ctx: &mut Context) -> Result<()> {
 #[allow(non_snake_case)]
 #[ockam_macros::test(timeout = 15000)]
 async fn portal__tcp_connection__should_succeed(ctx: &mut Context) -> Result<()> {
+    portal__tcp_connection__should_succeed__impl(ctx, false).await
+}
+
+#[allow(non_snake_case)]
+#[ockam_macros::test(timeout = 15000)]
+async fn portal_skip_handshake__tcp_connection__should_succeed(ctx: &mut Context) -> Result<()> {
+    portal__tcp_connection__should_succeed__impl(ctx, true).await
+}
+
+#[allow(non_snake_case)]
+async fn portal__tcp_connection__should_succeed__impl(
+    ctx: &mut Context,
+    skip_handshake: bool,
+) -> Result<()> {
     let payload1 = generate_binary();
     let payload2 = generate_binary();
 
@@ -140,14 +186,16 @@ async fn portal__tcp_connection__should_succeed(ctx: &mut Context) -> Result<()>
     tcp.create_outlet(
         "outlet",
         bind_address.try_into().unwrap(),
-        TcpOutletOptions::new().as_consumer(&outlet_flow_control_id),
+        TcpOutletOptions::new()
+            .as_consumer(&outlet_flow_control_id)
+            .set_skip_handshake(skip_handshake),
     )?;
 
     let inlet = tcp
         .create_inlet(
             "127.0.0.1:0",
             route![tcp_connection.clone(), "outlet"],
-            TcpInletOptions::new(),
+            TcpInletOptions::new().set_skip_handshake(skip_handshake),
         )
         .await?;
 
@@ -168,6 +216,10 @@ async fn portal__tcp_connection__should_succeed(ctx: &mut Context) -> Result<()>
     let res = handle.await;
     assert!(res.is_ok());
 
+    drop(stream);
+
+    tokio::time::sleep(Duration::from_millis(250)).await;
+
     Ok(())
 }
 
@@ -175,6 +227,22 @@ async fn portal__tcp_connection__should_succeed(ctx: &mut Context) -> Result<()>
 #[ockam_macros::test(timeout = 15000)]
 async fn portal__tcp_connection_with_invalid_message_flow__should_not_succeed(
     ctx: &mut Context,
+) -> Result<()> {
+    portal__tcp_connection_with_invalid_message_flow__should_not_succeed__impl(ctx, false).await
+}
+
+#[allow(non_snake_case)]
+#[ockam_macros::test(timeout = 15000)]
+async fn portal_skip_handshake__tcp_connection_with_invalid_message_flow__should_not_succeed(
+    ctx: &mut Context,
+) -> Result<()> {
+    portal__tcp_connection_with_invalid_message_flow__should_not_succeed__impl(ctx, true).await
+}
+
+#[allow(non_snake_case)]
+async fn portal__tcp_connection_with_invalid_message_flow__should_not_succeed__impl(
+    ctx: &mut Context,
+    skip_handshake: bool,
 ) -> Result<()> {
     let payload = generate_binary();
 
@@ -194,14 +262,14 @@ async fn portal__tcp_connection_with_invalid_message_flow__should_not_succeed(
     tcp.create_outlet(
         "outlet_invalid",
         bind_address.try_into().unwrap(),
-        TcpOutletOptions::new(),
+        TcpOutletOptions::new().set_skip_handshake(skip_handshake),
     )?;
 
     let inlet = tcp
         .create_inlet(
             "127.0.0.1:0",
             route![tcp_connection, "outlet_invalid"],
-            TcpInletOptions::new(),
+            TcpInletOptions::new().set_skip_handshake(skip_handshake),
         )
         .await?;
 
@@ -223,9 +291,9 @@ async fn portal__tcp_connection_with_invalid_message_flow__should_not_succeed(
 
     handle.abort();
 
-    if let Err(e) = ctx.shutdown_node().await {
-        println!("Unclean stop: {}", e)
-    }
+    drop(stream);
+
+    tokio::time::sleep(Duration::from_millis(250)).await;
 
     Ok(())
 }
@@ -233,6 +301,20 @@ async fn portal__tcp_connection_with_invalid_message_flow__should_not_succeed(
 #[allow(non_snake_case)]
 #[ockam_macros::test(timeout = 5000)]
 async fn portal__update_route__should_succeed(ctx: &mut Context) -> Result<()> {
+    portal__update_route__should_succeed__impl(ctx, false).await
+}
+
+#[allow(non_snake_case)]
+#[ockam_macros::test(timeout = 5000)]
+async fn portal_skip_handshake__update_route__should_succeed(ctx: &mut Context) -> Result<()> {
+    portal__update_route__should_succeed__impl(ctx, true).await
+}
+
+#[allow(non_snake_case)]
+async fn portal__update_route__should_succeed__impl(
+    ctx: &mut Context,
+    skip_handshake: bool,
+) -> Result<()> {
     let payload1 = generate_binary();
     let payload2 = generate_binary();
 
@@ -248,7 +330,9 @@ async fn portal__update_route__should_succeed(ctx: &mut Context) -> Result<()> {
             .unwrap()
             .to_string()
             .try_into()?,
-        TcpOutletOptions::new().as_consumer(listener_node.flow_control_id()),
+        TcpOutletOptions::new()
+            .as_consumer(listener_node.flow_control_id())
+            .set_skip_handshake(skip_handshake),
     )?;
 
     let node_connection1 = tcp
@@ -269,7 +353,7 @@ async fn portal__update_route__should_succeed(ctx: &mut Context) -> Result<()> {
         .create_inlet(
             "127.0.0.1:0",
             route![node_connection1.clone(), "outlet"],
-            TcpInletOptions::new(),
+            TcpInletOptions::new().set_skip_handshake(skip_handshake),
         )
         .await?;
 
@@ -304,6 +388,10 @@ async fn portal__update_route__should_succeed(ctx: &mut Context) -> Result<()> {
 
     let res = handle.await;
     assert!(res.is_ok());
+
+    drop(stream);
+
+    tokio::time::sleep(Duration::from_millis(250)).await;
 
     Ok(())
 }

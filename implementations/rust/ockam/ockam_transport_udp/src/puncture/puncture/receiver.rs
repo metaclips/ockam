@@ -283,11 +283,11 @@ impl Worker for UdpPunctureReceiverWorker {
         msg: Routed<Self::Message>,
     ) -> Result<()> {
         let addr = msg.msg_addr();
-        if &addr == self.addresses.remote_address() {
+        if addr == self.addresses.remote_address() {
             let msg = msg.into_local_message();
             let return_route = msg.return_route;
             self.handle_peer(ctx, msg.payload, &return_route).await?;
-        } else if &addr == self.addresses.heartbeat_address() {
+        } else if addr == self.addresses.heartbeat_address() {
             self.handle_heartbeat(ctx).await?;
         } else {
             return Err(PunctureError::Internal)?;

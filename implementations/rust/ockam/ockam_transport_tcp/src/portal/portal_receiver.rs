@@ -10,7 +10,7 @@ use opentelemetry::global;
 use opentelemetry::trace::Tracer;
 use tokio::io::AsyncRead;
 use tokio::io::AsyncReadExt;
-use tracing::{error, instrument, warn};
+use tracing::{debug, error, instrument};
 
 /// A TCP Portal receiving message processor
 ///
@@ -96,21 +96,28 @@ impl<R: AsyncRead + Unpin + Send + Sync + 'static> Processor for TcpPortalRecvPr
                 )
                 .await
             {
-                warn!(
+                debug!(
                     "Error notifying Tcp Portal Sender about dropped connection {}",
                     err
                 );
             }
 
-            ctx.forward_from_address(
-                LocalMessage::new()
-                    .with_tracing_context(tracing_context.clone())
-                    .with_onward_route(self.onward_route.clone())
-                    .with_return_route(route![self.addresses.sender_remote.clone()])
-                    .with_payload(PortalMessage::Disconnect.encode()?),
-                self.addresses.receiver_remote.clone(),
-            )
-            .await?;
+            if let Err(err) = ctx
+                .forward_from_address(
+                    LocalMessage::new()
+                        .with_tracing_context(tracing_context.clone())
+                        .with_onward_route(self.onward_route.clone())
+                        .with_return_route(route![self.addresses.sender_remote.clone()])
+                        .with_payload(PortalMessage::Disconnect.encode()?),
+                    self.addresses.receiver_remote.clone(),
+                )
+                .await
+            {
+                debug!(
+                    "Error notifying the other side of the portal about dropped connection {}",
+                    err
+                );
+            }
 
             return Ok(false);
         }

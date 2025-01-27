@@ -28,6 +28,8 @@ impl NodeManagerWorker {
             policy_expression,
             tls,
             privileged,
+            skip_handshake,
+            enable_nagle,
         } = create_outlet;
 
         match self
@@ -40,6 +42,8 @@ impl NodeManagerWorker {
                 reachable_from_default_secure_channel,
                 OutletAccessControl::WithPolicyExpression(policy_expression),
                 privileged,
+                skip_handshake,
+                enable_nagle,
             )
             .await
         {
@@ -99,6 +103,8 @@ impl NodeManager {
         reachable_from_default_secure_channel: bool,
         access_control: OutletAccessControl,
         privileged: bool,
+        skip_handshake: bool,
+        enable_nagle: bool,
     ) -> Result<OutletStatus> {
         let worker_addr = self.registry.outlets.generate_worker_addr(worker_addr);
 
@@ -134,7 +140,9 @@ impl NodeManager {
             let mut options = TcpOutletOptions::new()
                 .with_incoming_access_control(incoming_ac)
                 .with_outgoing_access_control(outgoing_ac)
-                .with_tls(tls);
+                .with_tls(tls)
+                .set_skip_handshake(skip_handshake)
+                .set_enable_nagle(enable_nagle);
             if self.project_authority().is_none() {
                 for api_transport_flow_control_id in &self.api_transport_flow_control_ids {
                     options = options.as_consumer(api_transport_flow_control_id)
@@ -241,6 +249,7 @@ impl NodeManager {
 
 #[async_trait]
 pub trait Outlets {
+    #[allow(clippy::too_many_arguments)]
     async fn create_outlet(
         &self,
         ctx: &Context,
@@ -249,6 +258,8 @@ pub trait Outlets {
         from: Option<&Address>,
         policy_expression: Option<PolicyExpression>,
         privileged: bool,
+        skip_handshake: bool,
+        enable_nagle: bool,
     ) -> miette::Result<OutletStatus>;
 }
 
@@ -263,8 +274,18 @@ impl Outlets for BackgroundNodeClient {
         from: Option<&Address>,
         policy_expression: Option<PolicyExpression>,
         privileged: bool,
+        skip_handshake: bool,
+        enable_nagle: bool,
     ) -> miette::Result<OutletStatus> {
-        let mut payload = CreateOutlet::new(to, tls, from.cloned(), true, privileged);
+        let mut payload = CreateOutlet::new(
+            to,
+            tls,
+            from.cloned(),
+            true,
+            privileged,
+            skip_handshake,
+            enable_nagle,
+        );
         if let Some(policy_expression) = policy_expression {
             payload.set_policy_expression(policy_expression);
         }

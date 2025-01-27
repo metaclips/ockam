@@ -41,6 +41,8 @@ impl NodeManager {
         disable_tcp_fallback: bool,
         privileged: bool,
         tls_certificate_provider: Option<MultiAddr>,
+        skip_handshake: bool,
+        enable_nagle: bool,
     ) -> Result<InletStatus> {
         debug! {
             %listen_address,
@@ -50,6 +52,8 @@ impl NodeManager {
             %alias,
             %enable_udp_puncture,
             %disable_tcp_fallback,
+            %skip_handshake,
+            %enable_nagle,
             "creating inlet"
         }
 
@@ -127,6 +131,8 @@ impl NodeManager {
             udp_puncture: None,
             additional_route: None,
             privileged,
+            skip_handshake,
+            enable_nagle,
         };
 
         let replacer = Arc::new(Mutex::new(replacer));

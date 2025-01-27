@@ -99,18 +99,19 @@ impl TcpRecvProcessor {
         Ok(())
     }
 
-    async fn notify_sender_stream_dropped(&self, ctx: &Context, msg: impl Display) -> Result<()> {
+    async fn notify_sender_stream_dropped(&self, ctx: &Context, msg: impl Display) {
         debug!(
             "Connection to peer '{}' was closed; dropping stream. {}",
             self.socket_address, msg
         );
 
-        ctx.send_from_address(
-            self.addresses.sender_internal_address().clone(),
-            TcpSendWorkerMsg::ConnectionClosed,
-            self.addresses.receiver_internal_address().clone(),
-        )
-        .await
+        _ = ctx
+            .send_from_address(
+                self.addresses.sender_internal_address().clone(),
+                TcpSendWorkerMsg::ConnectionClosed,
+                self.addresses.receiver_internal_address().clone(),
+            )
+            .await;
     }
 }
 
@@ -132,7 +133,7 @@ impl Processor for TcpRecvProcessor {
             Ok(p) => p,
             Err(e) => {
                 trace!("Cannot read the Ockam protocol version: {:?}", &e);
-                self.notify_sender_stream_dropped(ctx, e).await?;
+                self.notify_sender_stream_dropped(ctx, e).await;
                 // stop this processor
                 ctx.stop_primary_address()?;
                 return Ok(());
@@ -145,7 +146,7 @@ impl Processor for TcpRecvProcessor {
                 let message =
                     format!("Received protocol message is unsupported: {protocol_version}");
                 trace!("{}: {:?}", &message, &e);
-                self.notify_sender_stream_dropped(ctx, message).await?;
+                self.notify_sender_stream_dropped(ctx, message).await;
                 // stop this processor
                 ctx.stop_primary_address()?;
                 return Ok(());
@@ -180,7 +181,7 @@ impl Processor for TcpRecvProcessor {
         let len = match self.read_half.read_u32().await {
             Ok(l) => l,
             Err(e) => {
-                self.notify_sender_stream_dropped(ctx, e).await?;
+                self.notify_sender_stream_dropped(ctx, e).await;
                 return Ok(false);
             }
         };
@@ -192,7 +193,7 @@ impl Processor for TcpRecvProcessor {
                     ctx,
                     format!("Received message len doesn't fit usize: {}", len),
                 )
-                .await?;
+                .await;
                 return Ok(false);
             }
         };
@@ -205,7 +206,7 @@ impl Processor for TcpRecvProcessor {
                     len_usize, MAX_MESSAGE_SIZE
                 ),
             )
-            .await?;
+            .await;
             return Ok(false);
         }
 
@@ -220,7 +221,7 @@ impl Processor for TcpRecvProcessor {
         match self.read_half.read_exact(&mut self.incoming_buffer).await {
             Ok(_) => {}
             Err(e) => {
-                self.notify_sender_stream_dropped(ctx, e).await?;
+                self.notify_sender_stream_dropped(ctx, e).await;
                 return Ok(false);
             }
         }
@@ -229,7 +230,7 @@ impl Processor for TcpRecvProcessor {
         let transport_message: TcpTransportMessage = match minicbor::decode(&self.incoming_buffer) {
             Ok(msg) => msg,
             Err(e) => {
-                self.notify_sender_stream_dropped(ctx, e).await?;
+                self.notify_sender_stream_dropped(ctx, e).await;
                 return Ok(false);
             }
         };

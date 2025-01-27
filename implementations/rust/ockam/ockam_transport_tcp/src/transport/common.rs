@@ -17,14 +17,18 @@ use tracing::{debug, instrument};
 #[instrument(skip_all)]
 pub(crate) async fn connect(
     to: &HostnamePort,
+    enable_nagle: bool,
     timeout: Option<Duration>,
 ) -> Result<(OwnedReadHalf, OwnedWriteHalf)> {
-    Ok(create_tcp_stream(to, timeout).await?.into_split())
+    Ok(create_tcp_stream(to, enable_nagle, timeout)
+        .await?
+        .into_split())
 }
 
 /// Create a TCP stream to a given socket address
 pub(crate) async fn create_tcp_stream(
     to: &HostnamePort,
+    enable_nagle: bool,
     timeout: Option<Duration>,
 ) -> Result<TcpStream> {
     debug!(addr = %to, "Connecting");
@@ -66,7 +70,10 @@ pub(crate) async fn create_tcp_stream(
     socket
         .set_tcp_keepalive(&keepalive)
         .map_err(TransportError::from)?;
-    socket.set_nodelay(true).map_err(TransportError::from)?;
+
+    socket
+        .set_nodelay(!enable_nagle)
+        .map_err(TransportError::from)?;
 
     Ok(connection)
 }
@@ -76,6 +83,7 @@ pub(crate) async fn create_tcp_stream(
 #[instrument(skip_all)]
 pub(crate) async fn connect_tls(
     to: &HostnamePort,
+    enable_nagle: bool,
 ) -> Result<(
     ReadHalf<TlsStream<TcpStream>>,
     WriteHalf<TlsStream<TcpStream>>,
@@ -83,7 +91,7 @@ pub(crate) async fn connect_tls(
     debug!(to = %to, "Trying to connect using TLS");
 
     // create a tcp stream
-    let connection = create_tcp_stream(to, None).await?;
+    let connection = create_tcp_stream(to, enable_nagle, None).await?;
 
     // create a TLS connector
     let tls_connector = create_tls_connector().await?;

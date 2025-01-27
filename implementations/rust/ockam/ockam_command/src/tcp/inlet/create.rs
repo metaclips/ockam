@@ -142,6 +142,7 @@ pub struct CreateCommand {
 
     /// Use eBPF and RawSocket to access TCP packets instead of TCP data stream.
     /// If `OCKAM_PRIVILEGED` env variable is set to 1, this argument will be `true`.
+    /// WARNING: This flag value should be equal on both ends of a portal (inlet and outlet)
     #[arg(long, env = "OCKAM_PRIVILEGED", value_parser = FalseyValueParser::default(), hide = true)]
     pub privileged: bool,
 
@@ -153,6 +154,15 @@ pub struct CreateCommand {
     /// Requires `ockam-tls-certificate` credential attribute.
     #[arg(long, value_name = "ROUTE", hide = true)]
     pub tls_certificate_provider: Option<MultiAddr>,
+
+    /// Skip Portal handshake for lower latency, but also lower throughput
+    /// WARNING: This flag value should be equal on both ends of a portal (inlet and outlet)
+    #[arg(long, env = "OCKAM_TCP_PORTAL_SKIP_HANDSHAKE", value_parser = FalseyValueParser::default())]
+    pub skip_handshake: bool,
+
+    /// Enable Nagle's algorithm for potentially higher throughput, but higher latency
+    #[arg(long, env = "OCKAM_TCP_PORTAL_ENABLE_NAGLE", value_parser = FalseyValueParser::default())]
+    pub enable_nagle: bool,
 }
 
 pub(crate) fn tcp_inlet_default_from_addr() -> SchemeHostnamePort {
@@ -199,6 +209,8 @@ impl Command for CreateCommand {
                         cmd.no_tcp_fallback,
                         cmd.privileged,
                         &cmd.tls_certificate_provider,
+                        cmd.skip_handshake,
+                        cmd.enable_nagle,
                     )
                     .await?;
 

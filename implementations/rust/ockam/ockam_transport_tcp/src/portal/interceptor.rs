@@ -95,7 +95,7 @@ impl Worker for PortalOutletInterceptor {
         context: &mut Context,
         message: Routed<Self::Message>,
     ) -> ockam_core::Result<()> {
-        let source_address = message.src_addr();
+        let source_address = message.src_addr().clone();
         let mut message = message.into_local_message();
 
         // Remove our address
@@ -314,7 +314,7 @@ impl Worker for PortalInterceptorWorker {
                 match self.direction {
                     Direction::FromInletToOutlet => {
                         // if we receive a pong message, it means it must be from the other worker
-                        if routed_message.src_addr() == self.other_worker_address {
+                        if routed_message.src_addr() == &self.other_worker_address {
                             if let Some(fixed_onward_route) = self.fixed_onward_route.as_ref() {
                                 debug!(
                                     "updating onward route from {} to {}",

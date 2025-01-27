@@ -253,7 +253,7 @@ impl Worker for UdsSendWorker {
         };
 
         let recipient = msg.msg_addr();
-        if recipient == self.internal_addr {
+        if recipient == &self.internal_addr {
             let msg = UdsSendWorkerMsg::decode(msg.payload())?;
 
             match msg {

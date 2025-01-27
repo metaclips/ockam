@@ -110,11 +110,11 @@ impl Worker for BleRouter {
     async fn handle_message(&mut self, ctx: &mut Context, msg: Routed<Any>) -> Result<()> {
         let msg_addr = msg.msg_addr();
 
-        if msg_addr == self.main_addr {
+        if msg_addr == &self.main_addr {
             let msg = LocalMessage::decode(msg.payload())?;
             trace!("handle_message route: {:?}", msg.onward_route());
             self.handle_route(ctx, msg).await?;
-        } else if msg_addr == self.api_addr {
+        } else if msg_addr == &self.api_addr {
             let msg = BleRouterMessage::decode(msg.payload())?;
             match msg {
                 BleRouterMessage::Register { accepts, self_addr } => {

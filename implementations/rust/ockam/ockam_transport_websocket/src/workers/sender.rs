@@ -190,7 +190,7 @@ where
         };
 
         let recipient = msg.msg_addr();
-        if recipient == self.internal_addr {
+        if recipient == &self.internal_addr {
             let msg = TransportMessage::latest(route![], route![], vec![]);
             // Sending empty heartbeat
             if ws_sink
