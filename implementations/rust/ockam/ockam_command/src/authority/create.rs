@@ -21,7 +21,7 @@ use crate::node::node_callback::NodeCallback;
 use crate::node::util::run_ockam;
 use crate::util::foreground_args::{wait_for_exit_signal, ForegroundArgs};
 use crate::util::parsers::internet_address_parser;
-use crate::{docs, CommandGlobalOpts, Result};
+use crate::{branding, docs, CommandGlobalOpts, Result};
 
 const LONG_ABOUT: &str = include_str!("./static/create/long_about.txt");
 const PREVIEW_TAG: &str = include_str!("../static/preview_tag.txt");
@@ -144,7 +144,7 @@ impl CreateCommand {
                 0 => "-vv".to_string(),
                 v => format!("-{}", "v".repeat(v as usize)),
             },
-            "authority".to_string(),
+            branding::command::name("authority").to_string(),
             "create".to_string(),
             "--foreground".to_string(),
             "--child-process".to_string(),

@@ -1,4 +1,4 @@
-use crate::branding::{load_compile_time_vars, BrandingCompileEnvVars};
+use crate::branding::{load_compile_time_vars, BrandingCompileEnvVars, OUTPUT_BRANDING};
 use crate::command_events::add_command_event;
 use crate::command_global_opts::CommandGlobalOpts;
 use crate::global_args::GlobalArgs;
@@ -80,7 +80,8 @@ impl OckamCommand {
                         BrandingCompileEnvVars::bin_name()
                     )
                 );
-                let ockam_home = std::env::var("OCKAM_HOME").unwrap_or("~/.ockam".to_string());
+                let ockam_home = std::env::var("OCKAM_HOME")
+                    .unwrap_or(BrandingCompileEnvVars::home_dir().to_string());
                 eprintln!(
                     "{}",
                     fmt_log!(
@@ -246,8 +247,7 @@ impl OckamCommand {
             self.global_args.no_color,
             self.global_args.no_input,
             self.global_args.output_format(),
-            BrandingCompileEnvVars::bin_name(),
-            BrandingCompileEnvVars::brand_name(),
+            OUTPUT_BRANDING.clone(),
         );
 
         let options = CommandGlobalOpts::new(self.global_args.clone(), cli_state, terminal);

@@ -1,31 +1,29 @@
 //! Implementation of the `TerminalWriter` using the `Term` crate
 
+use crate::output::OutputBranding;
+use crate::terminal::{TerminalStream, TerminalWriter};
+use crate::Result;
 use dialoguer::console::Term;
 use std::io::Write;
 
-use crate::terminal::{TerminalStream, TerminalWriter};
-use crate::Result;
-
 impl TerminalWriter for TerminalStream<Term> {
-    fn stdout(no_color: bool, bin_name: impl Into<String>, brand_name: impl Into<String>) -> Self {
+    fn stdout(no_color: bool, branding: OutputBranding) -> Self {
         let writer = Term::stdout();
         let no_color = no_color || !writer.features().colors_supported();
         Self {
             writer,
             no_color,
-            bin_name: bin_name.into(),
-            brand_name: brand_name.into(),
+            branding,
         }
     }
 
-    fn stderr(no_color: bool, bin_name: impl Into<String>, brand_name: impl Into<String>) -> Self {
+    fn stderr(no_color: bool, branding: OutputBranding) -> Self {
         let writer = Term::stderr();
         let no_color = no_color || !writer.features().colors_supported();
         Self {
             writer,
             no_color,
-            bin_name: bin_name.into(),
-            brand_name: brand_name.into(),
+            branding,
         }
     }
 
@@ -62,7 +60,7 @@ mod tests {
     use colorful::Colorful;
     use dialoguer::console::Term;
 
-    use crate::output::OutputFormat;
+    use crate::output::{OutputBranding, OutputFormat};
     use crate::terminal::{Terminal, TerminalStream};
 
     #[test]
@@ -74,8 +72,7 @@ mod tests {
             false,
             false,
             OutputFormat::Plain,
-            "",
-            "",
+            OutputBranding::default(),
         );
         sut.write("1").unwrap();
         sut.rewrite("1-r\n").unwrap();

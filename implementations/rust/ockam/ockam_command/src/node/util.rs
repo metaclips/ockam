@@ -1,7 +1,8 @@
+use crate::branding::BrandingCompileEnvVars;
 use crate::node::CreateCommand;
 use crate::run::parser::resource::utils::subprocess_stdio;
 use crate::shared_args::TrustOpts;
-use crate::{Command, CommandGlobalOpts};
+use crate::{branding, Command as CommandTrait, CommandGlobalOpts};
 use miette::IntoDiagnostic;
 use miette::{miette, Context as _};
 use ockam_core::env::get_env_with_default;
@@ -81,7 +82,7 @@ pub fn spawn_node(opts: &CommandGlobalOpts, cmd: CreateCommand) -> miette::Resul
             0 => "-vv".to_string(),
             v => format!("-{}", "v".repeat(v as usize)),
         },
-        "node".to_string(),
+        branding::command::name("node").to_string(),
         "create".to_string(),
         "--tcp-listener-address".to_string(),
         tcp_listener_address.to_string(),
@@ -202,7 +203,7 @@ pub fn run_ockam(args: Vec<String>, quiet: bool) -> miette::Result<Child> {
     // development) re-executing the current binary is a more
     // deterministic way of starting a node.
     let ockam_exe = current_exe().unwrap_or_else(|_| {
-        get_env_with_default("OCKAM", "ockam".to_string())
+        get_env_with_default("OCKAM", BrandingCompileEnvVars::bin_name().to_string())
             .unwrap()
             .into()
     });

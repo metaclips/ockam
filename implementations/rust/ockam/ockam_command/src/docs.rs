@@ -1,4 +1,4 @@
-use crate::branding::BrandingCompileEnvVars;
+use crate::branding::{BrandingCompileEnvVars, OUTPUT_BRANDING};
 use crate::Result;
 use colorful::Colorful;
 use ockam_api::terminal::TextHighlighter;
@@ -90,27 +90,13 @@ pub(crate) fn after_help(text: &str) -> &'static str {
 /// Render the string if the document should be displayed in a terminal
 /// Otherwise, if it is a Markdown document just return a static string
 fn render(body: &str) -> &'static str {
-    let body = process_branding(body);
+    let body = OUTPUT_BRANDING.replace(body);
     if *IS_MARKDOWN {
         Box::leak(body.into_boxed_str())
     } else {
         let syntax_highlighted = process_terminal_docs(body);
         Box::leak(syntax_highlighted.into_boxed_str())
     }
-}
-
-fn process_branding(text: &str) -> String {
-    let mut text = if BrandingCompileEnvVars::brand_name() != "Ockam" {
-        text.replace("Ockam", BrandingCompileEnvVars::brand_name())
-    } else {
-        text.to_string()
-    };
-    text = if BrandingCompileEnvVars::bin_name() != "ockam" {
-        text.replace("ockam", BrandingCompileEnvVars::bin_name())
-    } else {
-        text
-    };
-    text
 }
 
 /// Use a shell syntax highlighter to render the fenced code blocks in terminals

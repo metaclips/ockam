@@ -17,6 +17,7 @@ use ockam_node::Context;
 
 use crate::admin::AdminCommand;
 use crate::authority::{AuthorityCommand, AuthoritySubcommand};
+use crate::branding::command;
 use crate::command_global_opts::CommandGlobalOpts;
 use crate::completion::CompletionCommand;
 use crate::credential::CredentialCommand;
@@ -63,7 +64,6 @@ use crate::vault::VaultCommand;
 use crate::worker::WorkerCommand;
 use crate::Error;
 use crate::Result;
-use crate::{branding, branding::command};
 
 #[derive(Clone, Debug, Subcommand)]
 #[command(about = docs::about("List of commands which can be executed with `ockam`"))]
@@ -363,11 +363,11 @@ pub trait Command: Debug + Clone + Sized + Send + Sync + 'static {
     const NAME: &'static str;
 
     fn name(&self) -> String {
-        branding::command::name(Self::NAME).to_string()
+        command::name(Self::NAME).to_string()
     }
 
     fn hide() -> bool {
-        branding::command::hide(Self::NAME)
+        command::hide(Self::NAME)
     }
 
     fn retry_opts(&self) -> Option<RetryOpts> {

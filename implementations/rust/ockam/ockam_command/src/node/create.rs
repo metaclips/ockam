@@ -409,7 +409,7 @@ mod tests {
     use super::*;
     use crate::run::parser::resource::utils::parse_cmd_from_args;
     use crate::GlobalArgs;
-    use ockam_api::output::OutputFormat;
+    use ockam_api::output::{OutputBranding, OutputFormat};
     use ockam_api::terminal::Terminal;
     use ockam_api::CliState;
     use std::sync::Arc;
@@ -549,8 +549,7 @@ mod tests {
                     true,
                     false,
                     OutputFormat::Plain,
-                    "",
-                    "",
+                    OutputBranding::default(),
                 ),
                 global_args: GlobalArgs::default(),
             };
@@ -608,8 +607,7 @@ mod tests {
                 true,
                 false,
                 OutputFormat::Plain,
-                "",
-                "",
+                OutputBranding::default(),
             ),
             global_args: GlobalArgs::default(),
         };

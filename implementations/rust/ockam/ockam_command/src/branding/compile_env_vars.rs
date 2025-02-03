@@ -77,6 +77,7 @@ static BRANDING_ENV_VARS: Lazy<BrandingCompileEnvVars> = Lazy::new(|| {
     BrandingCompileEnvVars::new(
         COMPILE_BIN_NAME,
         COMPILE_BRAND_NAME,
+        COMPILE_HOME,
         COMPILE_SUPPORT_EMAIL,
         COMPILE_COMMANDS,
         bool::from_string(COMPILE_DEVELOPER).unwrap_or(false),
@@ -86,6 +87,7 @@ static BRANDING_ENV_VARS: Lazy<BrandingCompileEnvVars> = Lazy::new(|| {
 pub struct BrandingCompileEnvVars {
     bin_name: &'static str,
     brand_name: &'static str,
+    home_dir: &'static str,
     support_email: &'static str,
     commands: &'static str,
     is_ockam_developer: bool,
@@ -95,6 +97,7 @@ impl BrandingCompileEnvVars {
     pub fn new(
         bin_name: &'static str,
         brand_name: &'static str,
+        home_dir: &'static str,
         support_email: &'static str,
         commands: &'static str,
         is_ockam_developer: bool,
@@ -102,6 +105,7 @@ impl BrandingCompileEnvVars {
         Self {
             bin_name,
             brand_name,
+            home_dir,
             support_email,
             commands,
             is_ockam_developer,
@@ -118,6 +122,10 @@ impl BrandingCompileEnvVars {
 
     pub fn brand_name() -> &'static str {
         Self::get().brand_name
+    }
+
+    pub fn home_dir() -> &'static str {
+        Self::get().home_dir
     }
 
     pub fn support_email() -> &'static str {

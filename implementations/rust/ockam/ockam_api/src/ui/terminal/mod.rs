@@ -7,6 +7,7 @@ pub mod term;
 pub use fmt::{get_separator_width, ICON_PADDING, INDENTATION, PADDING};
 pub use highlighting::TextHighlighter;
 
+use crate::output::OutputBranding;
 use crate::ui::output::OutputFormat;
 use crate::{Result, UiError};
 use colorful::Colorful;
@@ -69,24 +70,13 @@ impl<T: TerminalWriter + Debug, W> Terminal<T, W> {
 pub struct TerminalStream<T: Write + Debug + Clone> {
     pub writer: T,
     pub no_color: bool,
-    bin_name: String,
-    brand_name: String,
+    branding: OutputBranding,
 }
 
 impl<T: Write + Debug + Clone> TerminalStream<T> {
     pub fn prepare_msg(&self, msg: impl AsRef<str>) -> Result<String> {
         let msg = msg.as_ref().to_string();
-        let mut msg = if self.brand_name != "Ockam" {
-            msg.replace("Ockam", &self.brand_name)
-        } else {
-            msg
-        };
-        msg = if self.bin_name != "ockam" {
-            msg.replace("ockam", &self.bin_name)
-        } else {
-            msg
-        };
-
+        let msg = self.branding.replace(&msg);
         if self.no_color {
             Ok(strip_ansi_escapes::strip_str(&msg))
         } else {
@@ -97,8 +87,8 @@ impl<T: Write + Debug + Clone> TerminalStream<T> {
 
 /// Trait defining the main methods to write messages to a terminal stream.
 pub trait TerminalWriter: Clone {
-    fn stdout(no_color: bool, bin_name: impl Into<String>, brand_name: impl Into<String>) -> Self;
-    fn stderr(no_color: bool, bin_name: impl Into<String>, brand_name: impl Into<String>) -> Self;
+    fn stdout(no_color: bool, branding: OutputBranding) -> Self;
+    fn stderr(no_color: bool, branding: OutputBranding) -> Self;
     fn is_tty(&self) -> bool;
     fn color(&self) -> bool;
 
@@ -117,15 +107,12 @@ impl<W: TerminalWriter + Debug> Terminal<W> {
         no_color: bool,
         no_input: bool,
         output_format: OutputFormat,
-        bin_name: impl Into<String>,
-        brand_name: impl Into<String>,
+        branding: OutputBranding,
     ) -> Self {
-        let bin_name = bin_name.into();
-        let brand_name = brand_name.into();
         let no_color = Self::should_disable_color(no_color);
         let no_input = Self::should_disable_user_input(no_input);
-        let stdout = W::stdout(no_color, &bin_name, &brand_name);
-        let stderr = W::stderr(no_color, bin_name, brand_name);
+        let stdout = W::stdout(no_color, branding.clone());
+        let stderr = W::stderr(no_color, branding);
         let max_width_col_count = get_size().map(|it| it.col_count).unwrap_or(ch!(80)).into();
         Self {
             stdout,
@@ -149,8 +136,7 @@ impl<W: TerminalWriter + Debug> Terminal<W> {
             false,
             false,
             OutputFormat::Plain,
-            "ockam",
-            "Ockam",
+            OutputBranding::default(),
         )
     }
 

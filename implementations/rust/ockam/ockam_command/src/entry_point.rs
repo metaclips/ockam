@@ -1,8 +1,9 @@
 use std::process::exit;
 
-use clap::Parser;
+use clap::{Command, Parser};
 use miette::IntoDiagnostic;
 
+use crate::branding::BrandingCompileEnvVars;
 use crate::{
     add_command_error_event, has_help_flag, has_version_flag, pager, replace_hyphen_with_stdin,
     util::exitcode, version::Version, OckamCommand,
@@ -101,4 +102,36 @@ fn print_version_and_exit() {
             .expect("Failed to process version")
     );
     exit(exitcode::OK);
+}
+
+/// Return the names of the top-level commands, i.e., the commands defined in [crate::OckamSubcommand]
+pub fn top_level_command_names(cmd: &Command) -> Vec<String> {
+    let mut names = vec![];
+    let bin_name = BrandingCompileEnvVars::bin_name();
+    for subcmd in cmd.get_subcommands() {
+        names.push(subcmd.get_name().replace(bin_name, ""));
+    }
+    names
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use clap::CommandFactory;
+
+    #[test]
+    fn test_top_level_command_names() {
+        let cmd = OckamCommand::command();
+        let top_level_commands = top_level_command_names(&cmd);
+
+        let top_level_commands_sample = vec!["node", "project", "tcp-inlet"];
+        for name in top_level_commands_sample {
+            assert!(top_level_commands.contains(&name.to_string()));
+        }
+
+        let subcommands_sample = vec!["node create", "tcp-inlet delete"];
+        for name in subcommands_sample {
+            assert!(!top_level_commands.contains(&name.to_string()));
+        }
+    }
 }

@@ -1,10 +1,13 @@
-use clap::Parser;
+use clap::{CommandFactory, Parser};
+use colorful::Colorful;
 use miette::{miette, IntoDiagnostic, Result, WrapErr};
 use ockam::identity::Identifier;
 use ockam_api::colors::{color_primary, color_warn};
-use ockam_api::fmt_log;
 use ockam_api::terminal::INDENTATION;
+use ockam_api::{fmt_log, fmt_warn};
 use ockam_command::branding::compile_env_vars::*;
+use ockam_command::entry_point::top_level_command_names;
+use ockam_command::OckamCommand;
 use once_cell::sync::Lazy;
 use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, HashMap};
@@ -50,20 +53,31 @@ fn main() -> Result<()> {
     };
 
     // Build the binaries
+    let cmd = OckamCommand::command();
+    let top_level_commands = top_level_command_names(&cmd);
     for (bin_name, brand_config) in config.items {
-        build_binary(bin_name, brand_config, args.dry_run)?;
+        build_binary(bin_name, brand_config, &top_level_commands, args.dry_run)?;
     }
     Ok(())
 }
 
 /// Builds the binary with the passed settings
-fn build_binary(bin_name: String, brand_settings: Brand, dry_run: bool) -> Result<()> {
+fn build_binary(
+    bin_name: String,
+    brand_settings: Brand,
+    top_level_commands: &[String],
+    dry_run: bool,
+) -> Result<()> {
     brand_settings.validate()?;
 
     eprintln!(
         "{}\n{brand_settings}",
         fmt_log!("Building binary {} with", color_primary(&bin_name))
     );
+
+    let commands = brand_settings.commands(top_level_commands);
+    let brand_name = brand_settings.brand_name(&bin_name);
+    let home_dir = brand_settings.home_dir(&bin_name);
 
     if dry_run {
         return Ok(());
@@ -75,9 +89,7 @@ fn build_binary(bin_name: String, brand_settings: Brand, dry_run: bool) -> Resul
     if let Some(build_args) = &brand_settings.build_args {
         cmd.args(build_args);
     }
-    let commands = brand_settings.commands();
-    let brand_name = brand_settings.brand_name(&bin_name);
-    let home_dir = brand_settings.home_dir(&bin_name);
+
     cmd.envs([
         (COMPILE_OCKAM_DEVELOPER, "false".to_string()),
         (
@@ -169,26 +181,41 @@ impl Brand {
         }
     }
 
-    fn commands(&self) -> String {
+    fn commands(&self, top_level_commands: &[String]) -> String {
         match &self.commands {
             None => String::new(),
             Some(commands) => {
-                let process_command_name = |c: &str| {
+                let process_command_name = |name: &str, custom_name: Option<&str>| {
+                    if !top_level_commands.iter().any(|t| t == name) {
+                        eprintln!(
+                            "{}",
+                            fmt_warn!(
+                                "Command {} is not a top level command, it can't be renamed or hidden. Skipping...",
+                                color_primary(name)
+                            )
+                        );
+                        return None;
+                    }
+
                     // replace _ and - with space to support writing
                     // commands as "node create", "node-create" or "node_create
-                    c.replace("_", " ").replace("-", " ")
+                    let name = match custom_name {
+                        Some(custom_name) => format!("{}={}", name, custom_name),
+                        None => name.to_string(),
+                    };
+                    Some(name.replace("_", " ").replace("-", " "))
                 };
 
                 // A comma separated list of commands in the format `command1=customName,command2,command3`
                 commands
                     .iter()
-                    .map(|c| match c {
-                        Command::Simple(c) => process_command_name(c),
+                    .filter_map(|c| match c {
+                        Command::Simple(c) => process_command_name(c, None),
                         Command::Mapped(map) => map
                             .iter()
-                            .map(|(k, v)| process_command_name(&format!("{}={}", k, v)))
-                            .collect::<Vec<String>>()
-                            .join(","),
+                            .map(|(k, v)| process_command_name(k, Some(v)))
+                            .collect::<Option<Vec<String>>>()
+                            .map(|v| v.join(",")),
                     })
                     .collect::<Vec<String>>()
                     .join(",")
