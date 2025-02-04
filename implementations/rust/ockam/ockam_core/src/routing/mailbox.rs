@@ -5,6 +5,7 @@ use crate::{
 };
 use core::cmp::Ordering;
 use core::fmt::{self, Debug};
+use core::hash::{Hash, Hasher};
 
 /// A `Mailbox` controls the dispatch of incoming messages for a particular [`Address`]
 /// Note that [`Worker`](crate::Worker), [`Processor`](crate::Processor) and `Context` may have multiple Mailboxes (with different
@@ -46,6 +47,12 @@ impl PartialEq for Mailbox {
 }
 
 impl Eq for Mailbox {}
+
+impl Hash for Mailbox {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        self.address.hash(state);
+    }
+}
 
 impl Mailbox {
     /// Create a new `Mailbox` with the given [`Address`], [`IncomingAccessControl`] and [`OutgoingAccessControl`]
