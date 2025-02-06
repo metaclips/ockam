@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-curl --proto '=https' --tlsv1.2 -sSfL https://install.command.ockam.io | bash   
+curl --proto '=https' --tlsv1.2 -sSfL https://install.command.ockam.io | bash
 source "$HOME/.ockam/env"
 export OCKAM_LOG_MAX_FILES=5
 export OCKAM_HOME="$HOME/.ockam"
